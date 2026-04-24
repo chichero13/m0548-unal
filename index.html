@@ -198,6 +198,17 @@ textarea{resize:vertical;min-height:65px}
 .recibo-wrap{background:#fff;border:1px solid var(--bd);border-radius:var(--r);padding:20px;font-size:12px;print-color-adjust:exact}
 @media print{body>*:not(#print-area){display:none}#print-area{display:block!important}}
 
+.vc{background:var(--bl);border:1px solid var(--bd);border-radius:var(--r);overflow:hidden;margin-bottom:11px;box-shadow:var(--sh)}
+.vc-hdr{background:var(--az);padding:11px 15px;display:flex;justify-content:space-between;align-items:center}
+.vc-placa{font-size:18px;font-weight:700;color:#fff;font-family:'DM Mono',monospace;letter-spacing:2px}
+.vc-sub{font-size:10px;color:#88AACC;margin-top:2px}
+.vc-body{padding:13px 15px}
+.vc-docs{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:8px;margin-top:10px}
+.liq-section{background:var(--bl);border:1px solid var(--bd);border-radius:var(--r);padding:15px 17px;margin-bottom:13px}
+.liq-section h3{font-size:13px;font-weight:700;color:var(--az);margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid var(--bd)}
+.liq-total{background:var(--az);color:#fff;border-radius:var(--r2);padding:12px 16px;display:flex;justify-content:space-between;align-items:center;margin-top:10px}
+.liq-total-lbl{font-size:12px;color:#aaccee}
+.liq-total-val{font-size:20px;font-weight:700}
 @media(max-width:640px){.two-col,.fr,.fr3{grid-template-columns:1fr}.kpis{grid-template-columns:1fr 1fr}}
 </style>
 </head>
@@ -242,6 +253,10 @@ textarea{resize:vertical;min-height:65px}
   <button class="nv" onclick="nav('pagos')">💳 Pagos</button>
   <button class="nv" onclick="nav('finanzas')">📈 Financiero</button>
   <button class="nv" onclick="nav('novedades')">⚠ Novedades</button>
+  <button class="nv" onclick="nav('vehiculos')">🚐 Vehículos</button>
+  <button class="nv" onclick="nav('liquidacion')">🧮 Liquidación</button>
+  <button class="nv" onclick="nav('programador')">📅 Programador</button>
+  <button class="nv" onclick="nav('backup')">💾 Backup</button>
 </div>
 
 <!-- ALERTAS GLOBALES -->
@@ -287,7 +302,7 @@ textarea{resize:vertical;min-height:65px}
   </div>
   <div class="alert info">📋 M-0548 · Universidad Nacional · Lunes a Viernes · Punto de salida: UNAL Bloque M8</div>
   <div class="card" style="padding:0"><div class="tw"><table style="min-width:900px">
-    <thead><tr><th>Fecha</th><th>Ruta</th><th>Conductor</th><th>Destino</th><th>Salida</th><th>Llegada</th><th>Pas.</th><th>Valor UNAL</th><th>Pago cond.</th><th>Estado empresa</th><th>Estado conductor</th><th>Novedad</th><th></th></tr></thead>
+    <thead><tr><th>Fecha</th><th>Ruta</th><th>Conductor</th><th>Destino</th><th>Salida</th><th>Llegada</th><th>Hrs extra</th><th>Pas.</th><th>Valor UNAL</th><th>Pago cond.</th><th>Estado empresa</th><th>Estado conductor</th><th>Novedad</th><th></th></tr></thead>
     <tbody id="t-rutas"></tbody>
   </table></div></div>
   <div class="card"><div class="card-hdr"><span class="card-title">Resumen semana</span></div><div id="res-semana"></div></div>
@@ -353,6 +368,84 @@ textarea{resize:vertical;min-height:65px}
     <thead><tr><th>Fecha</th><th>Ruta</th><th>Conductor</th><th>Tipo</th><th>Descripción</th><th>Impacto</th><th>Reportado</th><th>Estado</th><th></th></tr></thead>
     <tbody id="t-novedades"></tbody>
   </table></div></div>
+</div>
+
+
+<!-- ══ VEHÍCULOS ══ -->
+<div id="vehiculos" class="sec">
+  <div class="sec-hdr">
+    <h2>Flota de vehículos — M-0548</h2>
+    <button class="btn pri" onclick="abrirModalVehiculo()">+ Agregar vehículo</button>
+  </div>
+  <div id="kpis-vehiculos" class="kpis"></div>
+  <div id="lista-vehiculos"></div>
+</div>
+
+<!-- ══ LIQUIDACIÓN MENSUAL ══ -->
+<div id="liquidacion" class="sec">
+  <div class="sec-hdr">
+    <h2>Liquidación mensual</h2>
+    <div class="btn-g">
+      <select id="liq-mes" onchange="renderLiquidacion()" style="font-size:12px;padding:6px 10px;border-radius:var(--r2);border:1px solid var(--bd)">
+        <option value="4">Abril 2026</option><option value="3">Marzo 2026</option>
+        <option value="2">Febrero 2026</option><option value="1">Enero 2026</option>
+      </select>
+      <button class="btn pri" onclick="window.print()">🖨 Imprimir</button>
+    </div>
+  </div>
+  <div id="liq-content"></div>
+</div>
+
+<!-- ══ PROGRAMADOR ══ -->
+<div id="programador" class="sec">
+  <div class="sec-hdr">
+    <h2>Programador semanal de rutas</h2>
+    <div class="btn-g">
+      <div class="wn">
+        <button class="btn sm" onclick="progNavSem(-1)">←</button>
+        <span id="prog-sem-lbl"></span>
+        <button class="btn sm" onclick="progNavSem(1)">→</button>
+      </div>
+      <button class="btn nj" onclick="programarSemanaRapida()">⚡ Programar semana completa</button>
+      <button class="btn pri" onclick="confirmarSemana()">✅ Confirmar y crear rutas</button>
+    </div>
+  </div>
+  <div class="alert info">📅 Asigna conductores y vehículos a cada ruta por día. Cuando confirmes, las rutas se crean automáticamente en el módulo de Rutas diarias.</div>
+  <div id="prog-kpis" class="kpis"></div>
+  <div id="prog-tabla"></div>
+  <div class="card" id="prog-resumen-card" style="display:none">
+    <div class="card-hdr"><span class="card-title">Resumen de la programación</span></div>
+    <div id="prog-resumen"></div>
+  </div>
+</div>
+
+<!-- ══ BACKUP ══ -->
+<div id="backup" class="sec">
+  <div class="sec-hdr"><h2>Copia de seguridad y restauración</h2></div>
+  <div class="alert info">💾 Exporta tus datos regularmente para protegerlos. Si cambias de dispositivo o navegador, importa el archivo para recuperar todo.</div>
+  <div class="two-col">
+    <div class="card">
+      <div class="card-hdr"><span class="card-title">📤 Exportar datos</span></div>
+      <p style="font-size:12px;color:var(--tx2);margin-bottom:14px">Descarga un archivo con todos tus registros: conductores, vehículos, rutas, cuentas, pagos y novedades.</p>
+      <div class="btn-g">
+        <button class="btn pri" onclick="exportarJSON()">💾 Exportar JSON completo</button>
+        <button class="btn" onclick="exportarCSVRutas()">📊 Exportar rutas CSV</button>
+      </div>
+      <div id="backup-info" style="margin-top:12px;font-size:11px;color:var(--tx2)"></div>
+    </div>
+    <div class="card">
+      <div class="card-hdr"><span class="card-title">📥 Importar datos</span></div>
+      <p style="font-size:12px;color:var(--tx2);margin-bottom:14px">Restaura desde un archivo JSON exportado anteriormente. <b style="color:var(--rj)">Atención: reemplaza todos los datos actuales.</b></p>
+      <div class="fg">
+        <label>Seleccionar archivo JSON</label>
+        <input type="file" id="import-file" accept=".json" onchange="importarJSON(this)" style="font-size:12px">
+      </div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-hdr"><span class="card-title">📋 Resumen del almacenamiento actual</span></div>
+    <div id="storage-summary"></div>
+  </div>
 </div>
 
 </div><!-- /content -->
@@ -551,6 +644,88 @@ textarea{resize:vertical;min-height:65px}
   </div>
 </div></div>
 
+
+<!-- MODAL VEHÍCULO -->
+<div class="mbg" id="m-vehiculo"><div class="modal wide">
+  <h3 id="m-veh-titulo">Agregar vehículo — M-0548</h3>
+  <div class="mtabs">
+    <button class="mtab active" onclick="switchTabVeh(0)">Datos del vehículo</button>
+    <button class="mtab" onclick="switchTabVeh(1)">Documentos y fechas</button>
+    <button class="mtab" onclick="switchTabVeh(2)">Mantenimientos</button>
+  </div>
+  <!-- Tab 0 -->
+  <div class="mtab-panel active" id="veh-tab-0">
+    <div class="fr3">
+      <div class="fg"><label>Placa</label><input type="text" id="v-placa" placeholder="ABC-123" style="text-transform:uppercase"></div>
+      <div class="fg"><label>Marca</label><input type="text" id="v-marca" placeholder="Toyota, Chevrolet..."></div>
+      <div class="fg"><label>Modelo / Año</label><input type="text" id="v-modelo" placeholder="Hilux 2022"></div>
+    </div>
+    <div class="fr3">
+      <div class="fg"><label>Color</label><input type="text" id="v-color" placeholder="Blanco"></div>
+      <div class="fg"><label>Capacidad pasajeros</label><input type="number" id="v-capacidad" placeholder="9" min="1"></div>
+      <div class="fg"><label>Tipo de carrocería</label><select id="v-tipo">
+        <option>Van / Minibus</option><option>Camioneta doble cabina</option><option>Bus pequeño</option>
+        <option>Automóvil</option><option>SUV</option>
+      </select></div>
+    </div>
+    <div class="fr3">
+      <div class="fg"><label>N° Motor</label><input type="text" id="v-motor" placeholder="Número de motor"></div>
+      <div class="fg"><label>N° Chasis / VIN</label><input type="text" id="v-chasis" placeholder="Número de chasis"></div>
+      <div class="fg"><label>Conductor principal</label><select id="v-conductor"><option value="">Seleccionar...</option></select></div>
+    </div>
+    <div class="fr">
+      <div class="fg"><label>Propietario</label><input type="text" id="v-propietario" placeholder="Nombre del propietario"></div>
+      <div class="fg"><label>Estado</label><select id="v-estado"><option>Activo</option><option>En mantenimiento</option><option>Inactivo</option></select></div>
+    </div>
+    <div class="fg"><label>Observaciones</label><textarea id="v-obs" placeholder="Notas del vehículo..."></textarea></div>
+  </div>
+  <!-- Tab 1 -->
+  <div class="mtab-panel" id="veh-tab-1">
+    <div class="alert warn" style="margin-bottom:14px">⚠ Documentos vencidos pueden suspender el contrato M-0548 inmediatamente. Mantén siempre fechas actualizadas.</div>
+    <div class="fr">
+      <div class="fg"><label>Vencimiento SOAT</label><input type="date" id="v-venc-soat"></div>
+      <div class="fg"><label>Vencimiento Tecnomecánica</label><input type="date" id="v-venc-tecno"></div>
+    </div>
+    <div class="fr">
+      <div class="fg"><label>Vencimiento Tarjeta de Operación</label><input type="date" id="v-venc-to"></div>
+      <div class="fg"><label>Vencimiento Póliza RCE (Resp. Civil Extracontractual)</label><input type="date" id="v-venc-rce"></div>
+    </div>
+    <div class="fr">
+      <div class="fg"><label>Vencimiento Póliza RCC (Resp. Civil Contractual)</label><input type="date" id="v-venc-rcc"></div>
+      <div class="fg"><label>Vencimiento Seguro todo riesgo</label><input type="date" id="v-venc-seguro"></div>
+    </div>
+    <div class="fr">
+      <div class="fg"><label>Última revisión de llantas</label><input type="date" id="v-rev-llantas"></div>
+      <div class="fg"><label>Próximo cambio de llantas (est.)</label><input type="date" id="v-prox-llantas"></div>
+    </div>
+    <div class="fr">
+      <div class="fg"><label>Último cambio de aceite (km)</label><input type="number" id="v-km-aceite" placeholder="45000"></div>
+      <div class="fg"><label>Kilometraje actual</label><input type="number" id="v-km-actual" placeholder="48500"></div>
+    </div>
+  </div>
+  <!-- Tab 2 -->
+  <div class="mtab-panel" id="veh-tab-2">
+    <div class="fg"><label>Historial de mantenimientos</label>
+      <textarea id="v-mantenimientos" placeholder="Ej:&#10;15/03/2026 — Cambio pastillas frenos traseros $180.000&#10;01/04/2026 — Cambio aceite y filtro $145.000&#10;10/04/2026 — Alineación y balanceo $90.000" style="min-height:140px"></textarea>
+    </div>
+    <div class="fr">
+      <div class="fg"><label>Próximo mantenimiento programado</label><input type="date" id="v-prox-mant"></div>
+      <div class="fg"><label>Costo mantenimiento mes actual ($)</label><input type="number" id="v-costo-mant" placeholder="0"></div>
+    </div>
+    <div class="fg"><label>Kit de carretera</label><select id="v-kit">
+      <option>Completo y vigente</option><option>Incompleto — revisar</option><option>Vencido</option>
+    </select></div>
+    <div class="fg"><label>Extintor</label><select id="v-extintor">
+      <option>Vigente</option><option>Por vencer (menos de 3 meses)</option><option>Vencido</option>
+    </select></div>
+  </div>
+  <input type="hidden" id="v-id-edit" value="">
+  <div class="mfoot">
+    <button class="btn" onclick="cerrarModal('m-vehiculo')">Cancelar</button>
+    <button class="btn pri" onclick="guardarVehiculo()">Guardar vehículo</button>
+  </div>
+</div></div>
+
 <!-- MODAL NOVEDAD -->
 <div class="mbg" id="m-novedad"><div class="modal">
   <h3>Registrar novedad</h3>
@@ -649,6 +824,9 @@ function initData(){
     {id:2,conductor:'Duban Urrego Gómez',semana:'17',rutas:2,total:900000,anticipo:0,saldo:900000,metodo:'Bancolombia Ahorros',fecha:'2026-04-24',estado:'Pendiente',comprobante:''},
   ]);
   DB.set('novedades',[]);
+  DB.set('vehiculos',[
+    {id:1,placa:'ORM-123',marca:'Toyota',modelo:'Hiace 2020',color:'Blanco',capacidad:12,tipo:'Van / Minibus',motor:'',chasis:'',conductor:'Orlando Sepúlveda Macías',propietario:'Orlando Sepúlveda Macías',estado:'Activo',obs:'',vencSoat:'2026-10-01',vencTecno:'2026-08-15',vencTo:'2027-01-01',vencRce:'2026-11-30',vencRcc:'2026-11-30',vencSeguro:'2027-03-01',revLlantas:'2026-02-01',proxLlantas:'2026-09-01',kmAceite:44000,kmActual:48500,mantenimientos:'15/03/2026 — Cambio pastillas frenos $180.000\n01/04/2026 — Cambio aceite y filtro $145.000',proxMant:'2026-05-15',costoMant:325000,kit:'Completo y vigente',extintor:'Vigente'},
+  ]);
   DB.set('init',true);
 }
 
@@ -691,7 +869,7 @@ function nav(id){
   document.querySelectorAll('.sec').forEach(s=>s.classList.remove('active'));
   document.querySelectorAll('.nv').forEach(b=>b.classList.remove('active'));
   document.getElementById(id).classList.add('active');
-  const m={dashboard:0,rutas:1,conductores:2,cuentas:3,pagos:4,finanzas:5,novedades:6};
+  const m={dashboard:0,rutas:1,conductores:2,cuentas:3,pagos:4,finanzas:5,novedades:6,vehiculos:7,liquidacion:8,backup:9,programador:10};
   document.querySelectorAll('.nv')[m[id]].classList.add('active');
   renderAll();
 }
@@ -959,6 +1137,34 @@ function cambiarEstadoRutaEmp(id,val){
 function cambiarEstadoRutaCond(id,val){
   const rutas=DB.get('rutas')||[];const r=rutas.find(x=>x.id===id);if(r){r.estadoCond=val;DB.set('rutas',rutas);renderAll();toast('Estado actualizado ✓')}
 }
+function editarCampRuta(id,campo,val){
+  const rutas=DB.get('rutas')||[];const r=rutas.find(x=>x.id===id);
+  if(!r)return;
+  if(campo==='valor'||campo==='pagoCond') r[campo]=Number(val)||0;
+  else r[campo]=val;
+  // Si cambia conductor → autocompletar pago
+  if(campo==='conductor'){
+    const c=(DB.get('conductores')||[]).find(x=>x.nombre===val);
+    if(c&&!c.esProp) r.pagoCond=c.pago;
+    else if(c&&c.esProp) r.pagoCond=0;
+  }
+  // Si cambia ruta → actualizar destino y valor base
+  if(campo==='ruta'){
+    const RUTAS_INFO={'R-1':{destino:'Granizal / Bello Oriente',valor:650000},'R-2':{destino:'Santa Elena / Pericos / Paysandú',valor:730000},'R-3':{destino:'Parque Arví / Guarne / Veredal',valor:730000},'R-4':{destino:'Sto. Domingo / La Avanzada / Carpinelo',valor:730000}};
+    const ri=RUTAS_INFO[val];
+    if(ri){r.destino=ri.destino;r.valor=ri.valor;}
+  }
+  // Si cambia hora salida o llegada → alertar horas extra
+  if(campo==='salida'||campo==='llegada'){
+    const {extra,cobro}=calcHorasExtra(r.salida,r.llegada);
+    if(extra>0) toast(`⏱ ${extra.toFixed(1)} hora(s) extra — cobro adicional sugerido: ${fmt(cobro)}`,'tok');
+  }
+  DB.set('rutas',rutas);
+  // Re-render tabla completa para reflejar cambios (destino, horas extra, etc.)
+  renderRutas();
+  renderDashboard();checkAlertas();
+  toast('Ruta actualizada ✓');
+}
 function cambiarEstadoCuenta(id,estado){
   const cuentas=DB.get('cuentas')||[];const c=cuentas.find(x=>x.id===id);
   if(c){c.estado=estado;DB.set('cuentas',cuentas);renderAll();toast('Estado actualizado ✓')}
@@ -1098,6 +1304,7 @@ const kpi=(lbl,val,cls='',sub='')=>`<div class="kpi"><div class="kpi-lbl">${lbl}
 function renderAll(){
   renderDashboard();renderRutas();renderConductores();
   renderCuentas();renderPagos();renderFinanzas();renderNovedades();
+  renderVehiculos();renderLiquidacion();renderStorageSummary();renderProgramador();
   const sl=document.getElementById('sem-lbl');if(sl)sl.textContent=semLabel();
   if(sessionStorage.getItem('auth')==='1')checkAlertas();
 }
@@ -1123,27 +1330,92 @@ function renderDashboard(){
   }
 }
 
+function calcHorasExtra(salida, llegada){
+  if(!salida||!llegada) return {horas:0,extra:0};
+  const [sh,sm]=salida.split(':').map(Number);
+  const [lh,lm]=llegada.split(':').map(Number);
+  let minutos=(lh*60+lm)-(sh*60+sm);
+  if(minutos<0) minutos+=24*60;
+  const totalH=minutos/60;
+  const hExtra=Math.max(0,totalH-10);
+  return {horas:totalH.toFixed(1), extra:hExtra, cobro:Math.ceil(hExtra)*60000};
+}
+
 function renderRutas(){
   const rutas=DB.get('rutas')||[],rutasSem=rutas.filter(r=>fechaEnSem(r.fecha));
+  const conductores=DB.get('conductores')||[];
   const tbody=document.getElementById('t-rutas');if(!tbody)return;
-  tbody.innerHTML=rutasSem.length?rutasSem.map(r=>`<tr>
-    <td>${fmtD(r.fecha)}</td><td><b>${r.ruta}</b></td>
-    <td style="font-size:11px">${r.conductor}</td>
-    <td style="font-size:11px">${r.destino}</td>
-    <td class="mono">${r.salida||'—'}</td><td class="mono">${r.llegada||'—'}</td>
-    <td>${r.pasajeros||'—'}</td><td>${fmt(r.valor)}</td>
-    <td>${r.pagoCond?fmt(r.pagoCond):'<span style="color:var(--az2);font-size:10px">Propietario</span>'}</td>
-    <td><select onchange="cambiarEstadoRutaEmp(${r.id},this.value)" style="font-size:11px;padding:3px 6px;border-radius:5px">
-      ${['Servicio realizado','Servicio programado','Pedido realizado','Servicio con novedad'].map(e=>`<option${r.estadoEmp===e?' selected':''}>${e}</option>`).join('')}
-    </select></td>
-    <td><select onchange="cambiarEstadoRutaCond(${r.id},this.value)" style="font-size:11px;padding:3px 6px;border-radius:5px">
-      ${['Pendiente de pago','Pagado'].map(e=>`<option${r.estadoCond===e?' selected':''}>${e}</option>`).join('')}
-    </select></td>
-    <td style="font-size:11px;color:${r.novedad?'var(--rj)':'var(--tx2)'};max-width:120px">${r.novedad||'—'}</td>
+  tbody.innerHTML=rutasSem.length?rutasSem.map(r=>{
+    const condOpts=conductores.map(c=>`<option value="${c.nombre}"${r.conductor===c.nombre?' selected':''}>${c.nombre}</option>`).join('');
+    const rutaOpts=['R-1','R-2','R-3','R-4'].map(x=>`<option${r.ruta===x?' selected':''}>${x}</option>`).join('');
+    const {horas,extra,cobro}=calcHorasExtra(r.salida,r.llegada);
+    const horasTag=extra>0
+      ? `<span style="color:var(--rj);font-weight:700;font-size:11px">${horas}h (+${extra.toFixed(1)}h extra = +${fmt(cobro)})</span>`
+      : horas>0 ? `<span style="color:var(--vd);font-size:11px">${horas}h ✓</span>` : '<span style="color:var(--tx2);font-size:11px">—</span>';
+    return `<tr>
+    <td style="min-width:100px">
+      <input type="date" value="${r.fecha}" onchange="editarCampRuta(${r.id},'fecha',this.value)"
+        style="width:100%;font-size:11px;border:1px dashed var(--bd);border-radius:5px;padding:2px 5px">
+    </td>
+    <td style="min-width:70px">
+      <select onchange="editarCampRuta(${r.id},'ruta',this.value)" style="font-size:12px;font-weight:700;padding:3px 5px;border-radius:5px;width:100%;border:1px solid var(--bd);background:var(--az3);color:var(--az)">
+        ${rutaOpts}
+      </select>
+    </td>
+    <td style="min-width:150px">
+      <select onchange="editarCampRuta(${r.id},'conductor',this.value)" style="font-size:11px;padding:3px 6px;border-radius:5px;width:100%;border:1px solid var(--bd);background:var(--bl)">
+        <option value="">— Seleccionar —</option>${condOpts}
+      </select>
+    </td>
+    <td style="font-size:11px;color:var(--tx2);min-width:120px">${r.destino}</td>
+    <td style="min-width:80px">
+      <input type="time" value="${r.salida||''}" onchange="editarCampRuta(${r.id},'salida',this.value)"
+        style="width:100%;font-size:11px;border:1px dashed var(--bd);border-radius:5px;padding:2px 5px;font-family:'DM Mono',monospace">
+    </td>
+    <td style="min-width:80px">
+      <input type="time" value="${r.llegada||''}" onchange="editarCampRuta(${r.id},'llegada',this.value)"
+        style="width:100%;font-size:11px;border:1px dashed var(--bd);border-radius:5px;padding:2px 5px;font-family:'DM Mono',monospace">
+    </td>
+    <td style="min-width:120px;text-align:center">${horasTag}</td>
+    <td>${r.pasajeros||'—'}</td>
+    <td style="min-width:110px">
+      <input type="number" value="${r.valor}" onchange="editarCampRuta(${r.id},'valor',this.value)"
+        style="width:100%;font-size:12px;font-weight:600;color:var(--az);border:1px dashed var(--bd);border-radius:5px;padding:3px 6px;text-align:right;background:var(--az3)"
+        title="Valor cobrado a UNAL (base + horas extra si aplica)">
+    </td>
+    <td style="min-width:110px">
+      <input type="number" value="${r.pagoCond}" onchange="editarCampRuta(${r.id},'pagoCond',this.value)"
+        style="width:100%;font-size:12px;font-weight:600;color:var(--vd);border:1px dashed var(--bd);border-radius:5px;padding:3px 6px;text-align:right;background:var(--vd2)"
+        title="Pago al conductor">
+    </td>
+    <td style="min-width:140px">
+      <select onchange="cambiarEstadoRutaEmp(${r.id},this.value)" style="font-size:11px;padding:3px 6px;border-radius:5px;width:100%">
+        ${['Servicio realizado','Servicio programado','Pedido realizado','Servicio con novedad'].map(e=>`<option${r.estadoEmp===e?' selected':''}>${e}</option>`).join('')}
+      </select>
+    </td>
+    <td style="min-width:130px">
+      <select onchange="cambiarEstadoRutaCond(${r.id},this.value)" style="font-size:11px;padding:3px 6px;border-radius:5px;width:100%">
+        ${['Pendiente de pago','Pagado'].map(e=>`<option${r.estadoCond===e?' selected':''}>${e}</option>`).join('')}
+      </select>
+    </td>
+    <td style="min-width:130px">
+      <input type="text" value="${r.novedad||''}" onchange="editarCampRuta(${r.id},'novedad',this.value)"
+        placeholder="Novedad..."
+        style="width:100%;font-size:11px;border:1px dashed var(--bd);border-radius:5px;padding:3px 6px;color:${r.novedad?'var(--rj)':'var(--tx2)'}">
+    </td>
     <td><button class="btn sm dan" onclick="eliminar('rutas',${r.id})">✕</button></td>
-  </tr>`).join(''):'<tr><td colspan="13" style="text-align:center;color:var(--tx2);padding:22px">Sin rutas en esta semana</td></tr>';
+  </tr>`;}).join(''):'<tr><td colspan="14" style="text-align:center;color:var(--tx2);padding:22px">Sin rutas en esta semana</td></tr>';
   const tv=rutasSem.reduce((s,r)=>s+Number(r.valor),0),tp=rutasSem.reduce((s,r)=>s+Number(r.pagoCond),0);
-  const rs=document.getElementById('res-semana');if(rs)rs.innerHTML=`<div class="kpis" style="margin:0">${kpi('Servicios',rutasSem.length,'az')}${kpi('Facturado',fmt(tv),'az')}${kpi('Pago conductores',fmt(tp),'rj')}${kpi('Utilidad',fmt(tv-tp),'vd')}${kpi('Margen',tv?((tv-tp)/tv*100).toFixed(1)+'%':'—','vd')}</div>`;
+  const totalExtra=rutasSem.reduce((s,r)=>{const{cobro}=calcHorasExtra(r.salida,r.llegada);return s+cobro},0);
+  const rs=document.getElementById('res-semana');
+  if(rs)rs.innerHTML=`<div class="kpis" style="margin:0">
+    ${kpi('Servicios',rutasSem.length,'az')}
+    ${kpi('Facturado base',fmt(tv),'az')}
+    ${totalExtra>0?kpi('Horas extra',fmt(totalExtra),'rj','A sumar al cobro'):''}
+    ${kpi('Pago conductores',fmt(tp),'rj')}
+    ${kpi('Utilidad',fmt(tv-tp),'vd')}
+    ${kpi('Margen',tv?((tv-tp)/tv*100).toFixed(1)+'%':'—','vd')}
+  </div>`;
 }
 
 function renderConductores(){
@@ -1312,6 +1584,630 @@ function renderNovedades(){
     <td><button class="btn sm dan" onclick="eliminar('novedades',${n.id})">✕</button></td>
   </tr>`).join(''):'<tr><td colspan="9" style="text-align:center;color:var(--vd);padding:22px">Sin novedades ✓</td></tr>';
 }
+
+
+// ─── VEHÍCULOS ──────────────────────────────────
+function switchTabVeh(idx){
+  const modal=document.getElementById('m-vehiculo');
+  modal.querySelectorAll('.mtab').forEach((t,i)=>t.classList.toggle('active',i===idx));
+  modal.querySelectorAll('.mtab-panel').forEach((p,i)=>p.classList.toggle('active',i===idx));
+}
+
+function abrirModalVehiculo(){
+  const conductores=DB.get('conductores')||[];
+  const sel=document.getElementById('v-conductor');
+  sel.innerHTML='<option value="">Seleccionar...</option>';
+  conductores.forEach(c=>{const o=document.createElement('option');o.value=c.nombre;o.textContent=c.nombre;sel.appendChild(o)});
+  document.getElementById('v-id-edit').value='';
+  document.getElementById('m-veh-titulo').textContent='Agregar vehículo — M-0548';
+  ['v-placa','v-marca','v-modelo','v-color','v-motor','v-chasis','v-obs','v-venc-soat','v-venc-tecno','v-venc-to','v-venc-rce','v-venc-rcc','v-venc-seguro','v-rev-llantas','v-prox-llantas','v-mantenimientos','v-prox-mant'].forEach(id=>{const el=document.getElementById(id);if(el)el.value=''});
+  ['v-capacidad','v-km-aceite','v-km-actual','v-costo-mant'].forEach(id=>{const el=document.getElementById(id);if(el)el.value=''});
+  document.getElementById('m-vehiculo').classList.add('open');
+}
+
+function editarVehiculo(id){
+  const v=(DB.get('vehiculos')||[]).find(x=>x.id===id);if(!v)return;
+  const conductores=DB.get('conductores')||[];
+  const sel=document.getElementById('v-conductor');
+  sel.innerHTML='<option value="">Seleccionar...</option>';
+  conductores.forEach(c=>{const o=document.createElement('option');o.value=c.nombre;o.textContent=c.nombre;sel.appendChild(o)});
+  document.getElementById('m-veh-titulo').textContent='Editar: '+v.placa;
+  document.getElementById('v-id-edit').value=String(v.id);
+  const map={placa:'v-placa',marca:'v-marca',modelo:'v-modelo',color:'v-color',motor:'v-motor',chasis:'v-chasis',obs:'v-obs',vencSoat:'v-venc-soat',vencTecno:'v-venc-tecno',vencTo:'v-venc-to',vencRce:'v-venc-rce',vencRcc:'v-venc-rcc',vencSeguro:'v-venc-seguro',revLlantas:'v-rev-llantas',proxLlantas:'v-prox-llantas',mantenimientos:'v-mantenimientos',proxMant:'v-prox-mant',capacidad:'v-capacidad',kmAceite:'v-km-aceite',kmActual:'v-km-actual',costoMant:'v-costo-mant'};
+  Object.entries(map).forEach(([k,elId])=>{const el=document.getElementById(elId);if(el)el.value=v[k]||''});
+  const selC=document.getElementById('v-conductor');[...selC.options].forEach(o=>o.selected=o.value===v.conductor);
+  const selE=document.getElementById('v-estado');[...selE.options].forEach(o=>o.selected=o.text===v.estado);
+  const selT=document.getElementById('v-tipo');[...selT.options].forEach(o=>o.selected=o.text===v.tipo);
+  const selK=document.getElementById('v-kit');[...selK.options].forEach(o=>o.selected=o.text===v.kit);
+  const selX=document.getElementById('v-extintor');[...selX.options].forEach(o=>o.selected=o.text===v.extintor);
+  switchTabVeh(0);
+  document.getElementById('m-vehiculo').classList.add('open');
+}
+
+function guardarVehiculo(){
+  const placa=document.getElementById('v-placa').value.trim().toUpperCase();
+  if(!placa){toast('Ingresa la placa','terr');return}
+  const idEdit=document.getElementById('v-id-edit').value;
+  const datos={placa,marca:document.getElementById('v-marca').value,modelo:document.getElementById('v-modelo').value,
+    color:document.getElementById('v-color').value,capacidad:Number(document.getElementById('v-capacidad').value)||0,
+    tipo:document.getElementById('v-tipo').value,motor:document.getElementById('v-motor').value,
+    chasis:document.getElementById('v-chasis').value,conductor:document.getElementById('v-conductor').value,
+    propietario:document.getElementById('v-propietario').value||'Orlando Sepúlveda Macías',
+    estado:document.getElementById('v-estado').value,obs:document.getElementById('v-obs').value,
+    vencSoat:document.getElementById('v-venc-soat').value,vencTecno:document.getElementById('v-venc-tecno').value,
+    vencTo:document.getElementById('v-venc-to').value,vencRce:document.getElementById('v-venc-rce').value,
+    vencRcc:document.getElementById('v-venc-rcc').value,vencSeguro:document.getElementById('v-venc-seguro').value,
+    revLlantas:document.getElementById('v-rev-llantas').value,proxLlantas:document.getElementById('v-prox-llantas').value,
+    kmAceite:Number(document.getElementById('v-km-aceite').value)||0,
+    kmActual:Number(document.getElementById('v-km-actual').value)||0,
+    mantenimientos:document.getElementById('v-mantenimientos').value,
+    proxMant:document.getElementById('v-prox-mant').value,
+    costoMant:Number(document.getElementById('v-costo-mant').value)||0,
+    kit:document.getElementById('v-kit').value,extintor:document.getElementById('v-extintor').value};
+  const vehiculos=DB.get('vehiculos')||[];
+  if(idEdit){const idx=vehiculos.findIndex(x=>String(x.id)===String(idEdit));if(idx>-1){datos.id=vehiculos[idx].id;vehiculos[idx]=datos}}
+  else{datos.id=uid();vehiculos.push(datos)}
+  DB.set('vehiculos',vehiculos);cerrarModal('m-vehiculo');renderAll();checkAlertas();toast('Vehículo guardado ✓');
+}
+
+function renderVehiculos(){
+  const vehiculos=DB.get('vehiculos')||[];
+  const kp=document.getElementById('kpis-vehiculos');
+  if(kp){
+    const activos=vehiculos.filter(v=>v.estado==='Activo').length;
+    const docsExp=vehiculos.reduce((s,v)=>{
+      const docs=[v.vencSoat,v.vencTecno,v.vencTo,v.vencRce,v.vencRcc];
+      return s+docs.filter(d=>d&&docStatus(d)==='exp').length;
+    },0);
+    const docsWarn=vehiculos.reduce((s,v)=>{
+      const docs=[v.vencSoat,v.vencTecno,v.vencTo,v.vencRce,v.vencRcc];
+      return s+docs.filter(d=>d&&docStatus(d)==='warn').length;
+    },0);
+    const costoTotal=vehiculos.reduce((s,v)=>s+(v.costoMant||0),0);
+    kp.innerHTML=kpi('Vehículos activos',activos,'az','')+kpi('Docs vencidos',docsExp,'rj','Acción inmediata')+kpi('Docs por vencer',docsWarn,'am','Próximos 60 días')+kpi('Costo mant. mes',fmt(costoTotal),'rj','');
+  }
+  const lv=document.getElementById('lista-vehiculos');if(!lv)return;
+  if(vehiculos.length===0){lv.innerHTML='<div class="alert info">No hay vehículos registrados. Agrega tu flota para activar las alertas de documentos.</div>';return}
+
+  const DOC_KEYS=[
+    {lbl:'SOAT',k:'vencSoat'},{lbl:'Tecno.',k:'vencTecno'},{lbl:'T. Operación',k:'vencTo'},
+    {lbl:'Póliza RCE',k:'vencRce'},{lbl:'Póliza RCC',k:'vencRcc'},{lbl:'Seg. Todo Riesgo',k:'vencSeguro'},
+    {lbl:'Llantas',k:'proxLlantas'},{lbl:'Próx. Mant.',k:'proxMant'},
+  ];
+
+  lv.innerHTML=vehiculos.map(v=>{
+    const kmFaltante=v.kmAceite&&v.kmActual?(v.kmAceite+5000-v.kmActual):null;
+    const docsHtml=DOC_KEYS.map(({lbl,k})=>{
+      const st=docStatus(v[k]);
+      return `<div class="doc-tag ${st}" ${v[k]?`title="${fmtD(v[k])}"`:''}>
+        <span class="dt-lbl">${lbl}</span>
+        <span class="dt-date">${v[k]?fmtD(v[k]):(st==='ok'?'✓':'N/A')}</span>
+      </div>`;
+    }).join('');
+    const kitSt=v.kit&&v.kit.includes('vigente')?'ok':v.kit&&v.kit.includes('Vencido')?'exp':'warn';
+    const extSt=v.extintor&&v.extintor.includes('Vigente')&&!v.extintor.includes('vencer')?'ok':v.extintor&&v.extintor.includes('Vencido')?'exp':'warn';
+    return `<div class="vc">
+      <div class="vc-hdr">
+        <div>
+          <div class="vc-placa">${v.placa}</div>
+          <div class="vc-sub">${v.marca} ${v.modelo} · ${v.color} · ${v.capacidad} pasajeros · ${v.tipo}</div>
+        </div>
+        <div style="display:flex;gap:6px;align-items:center">
+          ${estadoBadge(v.estado)}
+          <button class="btn sm suc" onclick="editarVehiculo(${v.id})">✏ Editar</button>
+          <button class="btn sm dan" onclick="eliminar('vehiculos',${v.id})">✕</button>
+        </div>
+      </div>
+      <div class="vc-body">
+        <div class="fr" style="margin-bottom:10px">
+          <div><label style="font-size:10px;color:var(--tx2)">Conductor principal</label><div style="font-size:12px;font-weight:500;margin-top:1px">${v.conductor||'—'}</div></div>
+          <div><label style="font-size:10px;color:var(--tx2)">Propietario</label><div style="font-size:12px;margin-top:1px">${v.propietario||'—'}</div></div>
+          <div><label style="font-size:10px;color:var(--tx2)">Km actual</label><div style="font-size:12px;font-weight:600;margin-top:1px">${v.kmActual?v.kmActual.toLocaleString('es-CO')+' km':'—'}</div></div>
+          <div><label style="font-size:10px;color:var(--tx2)">Próx. cambio aceite</label>
+            <div style="font-size:12px;font-weight:600;margin-top:1px;color:${kmFaltante!==null&&kmFaltante<=500?'var(--rj)':kmFaltante!==null&&kmFaltante<=1000?'var(--am)':'var(--vd)'}">${kmFaltante!==null?`En ${kmFaltante.toLocaleString('es-CO')} km`:'—'}</div>
+          </div>
+        </div>
+        <div style="font-size:10px;font-weight:600;color:var(--tx2);text-transform:uppercase;letter-spacing:.4px;margin-bottom:7px">Estado de documentos — haz clic en vencidos para ver alerta</div>
+        <div class="vc-docs">
+          ${docsHtml}
+          <div class="doc-tag ${kitSt}"><span class="dt-lbl">Kit carr.</span><span class="dt-date">${v.kit&&v.kit.includes('vigente')?'✓ OK':v.kit||'N/A'}</span></div>
+          <div class="doc-tag ${extSt}"><span class="dt-lbl">Extintor</span><span class="dt-date">${v.extintor&&v.extintor.includes('Vigente')&&!v.extintor.includes('vencer')?'✓ OK':v.extintor||'N/A'}</span></div>
+        </div>
+        ${v.proxMant?`<div style="margin-top:10px;font-size:11px;background:var(--am2);border-left:3px solid #E8A020;padding:7px 11px;border-radius:0 var(--r2) var(--r2) 0;color:var(--am)">🔧 Próximo mantenimiento programado: <b>${fmtD(v.proxMant)}</b>${v.costoMant?` — Costo mes: <b>${fmt(v.costoMant)}</b>`:''}</div>`:''}
+        ${v.mantenimientos?`<div style="margin-top:8px"><details><summary style="font-size:11px;cursor:pointer;color:var(--az2);font-weight:500">Ver historial de mantenimientos</summary><pre style="font-size:11px;margin-top:6px;color:var(--tx2);white-space:pre-wrap;font-family:inherit">${v.mantenimientos}</pre></details></div>`:''}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// ─── LIQUIDACIÓN MENSUAL ────────────────────────
+function renderLiquidacion(){
+  const mesEl=document.getElementById('liq-mes');
+  const mes=mesEl?Number(mesEl.value):4;
+  const rutas=DB.get('rutas')||[];
+  const cuentas=DB.get('cuentas')||[];
+  const pagos=DB.get('pagos')||[];
+  const vehiculos=DB.get('vehiculos')||[];
+  const conductores=DB.get('conductores')||[];
+  const MESES=['','Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+
+  const rutasMes=rutas.filter(r=>r.fecha&&Number(r.fecha.split('-')[1])===mes&&Number(r.fecha.split('-')[0])===2026);
+  const cuentasMes=cuentas.filter(c=>c.fecha&&Number(c.fecha.split('-')[1])===mes);
+  const pagosMes=pagos.filter(p=>p.fecha&&Number(p.fecha.split('-')[1])===mes);
+
+  const totalFact=rutasMes.reduce((s,r)=>s+Number(r.valor),0);
+  const totalCobrado=cuentasMes.filter(c=>c.estado==='Cobrada').reduce((s,c)=>s+Number(c.valor),0);
+  const totalCond=pagosMes.filter(p=>p.estado==='Pagado').reduce((s,p)=>s+Number(p.saldo),0);
+  const costoMant=vehiculos.reduce((s,v)=>s+(v.costoMant||0),0);
+  const utilidad=totalCobrado-totalCond-costoMant;
+  const margen=totalFact>0?((utilidad/totalFact)*100).toFixed(1):0;
+
+  // Por conductor
+  const porCond={};
+  rutasMes.forEach(r=>{
+    if(!porCond[r.conductor])porCond[r.conductor]={rutas:0,valor:0,pago:0};
+    porCond[r.conductor].rutas++;
+    porCond[r.conductor].valor+=Number(r.valor);
+    porCond[r.conductor].pago+=Number(r.pagoCond);
+  });
+
+  // Por ruta
+  const porRuta={};
+  rutasMes.forEach(r=>{
+    if(!porRuta[r.ruta])porRuta[r.ruta]={rutas:0,valor:0,pago:0};
+    porRuta[r.ruta].rutas++;
+    porRuta[r.ruta].valor+=Number(r.valor);
+    porRuta[r.ruta].pago+=Number(r.pagoCond);
+  });
+
+  const wrap=document.getElementById('liq-content');if(!wrap)return;
+  wrap.innerHTML=`
+  <div class="liq-section">
+    <h3>📊 Resumen ejecutivo — ${MESES[mes]} 2026</h3>
+    <div class="kpis" style="margin-bottom:0">
+      ${kpi('Servicios realizados',rutasMes.length,'az','')}
+      ${kpi('Total facturado',fmt(totalFact),'az','')}
+      ${kpi('Total cobrado UNAL',fmt(totalCobrado),'vd','')}
+      ${kpi('Pago conductores',fmt(totalCond),'rj','Pagados')}
+      ${kpi('Costo mantenimientos',fmt(costoMant),'am','')}
+      ${kpi('Utilidad neta',fmt(utilidad),utilidad>=0?'vd':'rj','')}
+      ${kpi('Margen real',margen+'%',parseFloat(margen)>=25?'vd':'rj','')}
+    </div>
+    <div class="liq-total">
+      <div><div class="liq-total-lbl">UTILIDAD NETA ${MESES[mes].toUpperCase()} 2026</div><div style="font-size:11px;color:#aaccee">Después de conductores y mantenimientos</div></div>
+      <div class="liq-total-val" style="color:${utilidad>=0?'#6EE89A':'#F09595'}">${fmt(utilidad)}</div>
+    </div>
+  </div>
+
+  <div class="two-col">
+    <div class="liq-section">
+      <h3>👤 Detalle por conductor</h3>
+      <div class="tw"><table>
+        <thead><tr><th>Conductor</th><th>Rutas</th><th>Facturado</th><th>Pagado</th><th>Saldo pend.</th></tr></thead>
+        <tbody>${Object.entries(porCond).map(([nombre,d])=>{
+          const pagReg=pagosMes.filter(p=>p.conductor===nombre).reduce((s,p)=>s+Number(p.saldo),0);
+          const saldo=d.pago-pagReg;
+          return `<tr><td style="font-size:11px">${nombre}</td><td>${d.rutas}</td><td>${fmt(d.valor)}</td><td style="color:var(--vd)">${fmt(pagReg)}</td><td style="color:${saldo>0?'var(--rj)':'var(--vd)'}"><b>${fmt(Math.max(0,saldo))}</b></td></tr>`;
+        }).join('')}</tbody>
+      </table></div>
+    </div>
+    <div class="liq-section">
+      <h3>🗺 Detalle por ruta</h3>
+      <div class="tw"><table>
+        <thead><tr><th>Ruta</th><th>Servicios</th><th>Ingresos</th><th>Costo</th><th>Utilidad</th></tr></thead>
+        <tbody>${Object.entries(porRuta).map(([ruta,d])=>{
+          const u=d.valor-d.pago;
+          return `<tr><td><b>${ruta}</b></td><td>${d.rutas}</td><td>${fmt(d.valor)}</td><td>${fmt(d.pago)}</td><td style="color:${u>=0?'var(--vd)':'var(--rj)'}"><b>${fmt(u)}</b></td></tr>`;
+        }).join('')}</tbody>
+      </table></div>
+    </div>
+  </div>
+
+  <div class="liq-section">
+    <h3>📄 Cuentas de cobro ${MESES[mes]} 2026</h3>
+    <div class="tw"><table>
+      <thead><tr><th>Cuenta</th><th>Semana</th><th>Período</th><th>Valor</th><th>Vencimiento</th><th>Estado</th></tr></thead>
+      <tbody>${cuentasMes.map(c=>`<tr><td>No.${c.num}</td><td>Sem ${c.semana}</td><td style="font-size:11px">${c.periodo}</td><td>${fmt(c.valor)}</td><td style="color:${c.estado==='Vencida'?'var(--rj)':'inherit'}">${fmtD(c.vence)}</td><td>${estadoBadge(c.estado)}</td></tr>`).join('')||'<tr><td colspan="6" style="text-align:center;color:var(--tx2);padding:14px">Sin cuentas en este mes</td></tr>'}</tbody>
+    </table></div>
+  </div>
+
+  <div class="liq-section">
+    <h3>🔧 Costos operativos flota</h3>
+    <div class="tw"><table>
+      <thead><tr><th>Vehículo</th><th>Placa</th><th>Costo mantenimiento mes</th><th>Próximo mant.</th></tr></thead>
+      <tbody>${vehiculos.map(v=>`<tr><td>${v.marca} ${v.modelo}</td><td class="mono">${v.placa}</td><td style="color:var(--am);font-weight:600">${fmt(v.costoMant||0)}</td><td>${fmtD(v.proxMant)}</td></tr>`).join('')||'<tr><td colspan="4" style="text-align:center;color:var(--tx2);padding:14px">Sin vehículos registrados</td></tr>'}</tbody>
+    </table></div>
+    <div style="text-align:right;margin-top:8px;font-size:13px;font-weight:700;color:var(--am)">Total costos flota: ${fmt(costoMant)}</div>
+  </div>`;
+}
+
+// ─── BACKUP ─────────────────────────────────────
+function exportarJSON(){
+  const KEYS=['conductores','vehiculos','rutas','cuentas','pagos','novedades'];
+  const data={version:'2.0',fecha:new Date().toISOString(),proyecto:'M-0548'};
+  KEYS.forEach(k=>{data[k]=DB.get(k)||[]});
+  const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  a.href=url;a.download=`M0548_backup_${new Date().toISOString().slice(0,10)}.json`;
+  a.click();URL.revokeObjectURL(url);
+  toast('Backup descargado ✓');
+}
+
+function exportarCSVRutas(){
+  const rutas=DB.get('rutas')||[];
+  const headers='Fecha,Ruta,Conductor,Destino,Salida,Llegada,Pasajeros,Valor UNAL,Pago Conductor,Estado Empresa,Estado Conductor,Novedad,Semana';
+  const rows=rutas.map(r=>[r.fecha,r.ruta,r.conductor,r.destino,r.salida||'',r.llegada||'',r.pasajeros||'',r.valor,r.pagoCond,r.estadoEmp,r.estadoCond,r.novedad||'',r.semana].join(','));
+  const csv=headers+'\n'+rows.join('\n');
+  const blob=new Blob([csv],{type:'text/csv;charset=utf-8;'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  a.href=url;a.download=`M0548_rutas_${new Date().toISOString().slice(0,10)}.csv`;
+  a.click();URL.revokeObjectURL(url);
+  toast('CSV de rutas descargado ✓');
+}
+
+function importarJSON(input){
+  if(!input.files[0])return;
+  if(!confirm('⚠ Esto reemplazará TODOS los datos actuales. ¿Estás seguro?'))return;
+  const reader=new FileReader();
+  reader.onload=e=>{
+    try{
+      const data=JSON.parse(e.target.result);
+      const KEYS=['conductores','vehiculos','rutas','cuentas','pagos','novedades'];
+      KEYS.forEach(k=>{if(data[k])DB.set(k,data[k])});
+      renderAll();checkAlertas();
+      toast('Datos restaurados correctamente ✓');
+    }catch(err){
+      toast('Error al leer el archivo. ¿Es un backup válido?','terr');
+    }
+  };
+  reader.readAsText(input.files[0]);
+}
+
+
+// ─── PROGRAMADOR SEMANAL v2 ────────────────────────
+// Modelo: prog[sem][dia] = [ {ruta, conductor, vehiculo, hora, pago}, ... ]
+// Cada día puede tener 0, 1 o N servicios
+
+let progOffset = 0;
+
+function progSemActual(){
+  const base = new Date(2026,3,27); // lun 27 abr
+  const s = new Date(base); s.setDate(base.getDate()+progOffset*7);
+  const e = new Date(s); e.setDate(s.getDate()+4);
+  return {inicio:s, fin:e, num:18+progOffset};
+}
+function progNavSem(d){ progOffset+=d; renderProgramador(); }
+
+function progFechas(){
+  const {inicio} = progSemActual();
+  return Array.from({length:5},(_,i)=>{const d=new Date(inicio);d.setDate(inicio.getDate()+i);return d;});
+}
+
+const PROG_RUTAS_INFO = {
+  'R-1':{lbl:'R-1 Granizal',        destino:'Granizal / Bello Oriente',              valor:650000, hora:'06:00'},
+  'R-2':{lbl:'R-2 Santa Elena',     destino:'Santa Elena / Pericos / Paysandú',      valor:730000, hora:'06:30'},
+  'R-3':{lbl:'R-3 Parque Arví',     destino:'Parque Arví / Guarne / Veredal',        valor:730000, hora:'07:00'},
+  'R-4':{lbl:'R-4 Sto. Domingo',    destino:'Sto. Domingo / La Avanzada / Carpinelo',valor:730000, hora:'07:30'},
+};
+
+function getProgDia(sem, dia){
+  const p = DB.get('prog_'+sem) || {};
+  return p[dia] ? [...p[dia]] : [];
+}
+function setProgDia(sem, dia, arr){
+  const p = DB.get('prog_'+sem) || {};
+  p[dia] = arr;
+  DB.set('prog_'+sem, p);
+}
+
+function agregarServicio(dia){
+  const {num} = progSemActual();
+  const conds = (DB.get('conductores')||[]).filter(c=>c.estado==='Activo');
+  const vehs  = DB.get('vehiculos')   || [];
+  const arr   = getProgDia(num, dia);
+  arr.push({
+    ruta: 'R-1',
+    conductor: conds[0]?conds[0].nombre:'',
+    vehiculo:  vehs[0]?vehs[0].placa:'',
+    hora: '06:00',
+    valor: 650000,
+    pago: conds[0]?(conds[0].esProp?0:conds[0].pago):0
+  });
+  setProgDia(num, dia, arr);
+  renderProgramador();
+}
+
+function eliminarServicio(dia, idx){
+  const {num} = progSemActual();
+  const arr = getProgDia(num, dia);
+  arr.splice(idx, 1);
+  setProgDia(num, dia, arr);
+  renderProgramador();
+}
+
+function editarServicio(dia, idx, campo, val){
+  const {num} = progSemActual();
+  const arr = getProgDia(num, dia);
+  if(!arr[idx]) return;
+  arr[idx][campo] = val;
+  if(campo==='ruta'){
+    const ri = PROG_RUTAS_INFO[val];
+    if(ri){ arr[idx].valor=ri.valor; arr[idx].hora=ri.hora; }
+  }
+  if(campo==='conductor'){
+    const c=(DB.get('conductores')||[]).find(x=>x.nombre===val);
+    if(c) arr[idx].pago = c.esProp?0:c.pago;
+  }
+  setProgDia(num, dia, arr);
+  // Re-render solo los KPIs y resumen para no perder foco
+  actualizarKpisProg();
+  actualizarResumenProg();
+}
+
+function actualizarKpisProg(){
+  const {num} = progSemActual();
+  const dias  = progFechas();
+  let total=0, valor=0, pago=0;
+  dias.forEach((_,di)=>{
+    const arr=getProgDia(num,di);
+    total+=arr.length; 
+    arr.forEach(s=>{valor+=Number(s.valor||0);pago+=Number(s.pago||0);});
+  });
+  const kpDiv=document.getElementById('prog-kpis');
+  if(kpDiv) kpDiv.innerHTML=
+    kpi('Servicios programados',total,'az','')+
+    kpi('Ingresos estimados',fmt(valor),'vd','')+
+    kpi('Pago conductores est.',fmt(pago),'rj','')+
+    kpi('Utilidad estimada',fmt(valor-pago),'vd','');
+}
+
+function actualizarResumenProg(){
+  const {num}=progSemActual();
+  const dias=progFechas();
+  const DIAS_LBL=['Lun','Mar','Mié','Jue','Vie'];
+  const resC={};
+  let hay=false;
+  dias.forEach((_,di)=>{
+    getProgDia(num,di).forEach(s=>{
+      if(!s.conductor) return;
+      hay=true;
+      if(!resC[s.conductor]) resC[s.conductor]={rutas:0,valor:0,pago:0,detalle:[]};
+      resC[s.conductor].rutas++;
+      resC[s.conductor].valor+=Number(s.valor||0);
+      resC[s.conductor].pago +=Number(s.pago||0);
+      resC[s.conductor].detalle.push(DIAS_LBL[di]+' '+s.ruta);
+    });
+  });
+  const card=document.getElementById('prog-resumen-card');
+  const wrap=document.getElementById('prog-resumen');
+  if(!card||!wrap) return;
+  if(!hay){card.style.display='none';return;}
+  card.style.display='block';
+  wrap.innerHTML=`<div class="tw"><table>
+    <thead><tr><th>Conductor</th><th>Servicios</th><th>Detalle</th><th>Valor a cobrar</th><th>Pago estimado</th></tr></thead>
+    <tbody>${Object.entries(resC).map(([n,d])=>`<tr>
+      <td>${n}</td><td style="text-align:center;font-weight:700">${d.rutas}</td>
+      <td style="font-size:10px;color:var(--tx2)">${d.detalle.join(', ')}</td>
+      <td style="color:var(--az);font-weight:600">${fmt(d.valor)}</td>
+      <td style="color:var(--vd);font-weight:600">${fmt(d.pago)}</td>
+    </tr>`).join('')}</tbody>
+  </table></div>`;
+}
+
+function renderProgramador(){
+  const {num,inicio,fin}=progSemActual();
+  const lbl=document.getElementById('prog-sem-lbl');
+  if(lbl){const f=dt=>dt.toLocaleDateString('es-CO',{day:'numeric',month:'short'});lbl.textContent=`Semana ${num} · ${f(inicio)} – ${f(fin)} 2026`;}
+
+  const conductores=(DB.get('conductores')||[]).filter(c=>c.estado==='Activo');
+  const vehiculos  = DB.get('vehiculos')||[];
+  const dias       = progFechas();
+  const DIAS_LBL   = ['Lunes','Martes','Miércoles','Jueves','Viernes'];
+  const DIAS_SHORT = ['Lun','Mar','Mié','Jue','Vie'];
+
+  actualizarKpisProg();
+
+  const condOpts = conductores.map(c=>`<option value="${c.nombre}">${c.nombre.split(' ').slice(0,2).join(' ')}</option>`).join('');
+  const vehOpts  = vehiculos.map(v=>`<option value="${v.placa}">${v.placa}</option>`).join('');
+  const rutaOpts = Object.entries(PROG_RUTAS_INFO).map(([k,r])=>`<option value="${k}">${r.lbl} — ${fmt(r.valor)}</option>`).join('');
+
+  const hoy=new Date(); hoy.setHours(0,0,0,0);
+
+  let html=`<div style="display:grid;grid-template-columns:repeat(5,1fr);gap:10px">`;
+
+  dias.forEach((d,di)=>{
+    const esHoy=d.toDateString()===hoy.toDateString();
+    const servicios=getProgDia(num,di);
+    const totalDia=servicios.reduce((s,x)=>s+Number(x.valor||0),0);
+
+    html+=`<div style="background:var(--bl);border:1px solid ${esHoy?'var(--az2)':'var(--bd)'};border-radius:var(--r);overflow:hidden;box-shadow:var(--sh)">
+      <!-- Header día -->
+      <div style="background:${esHoy?'var(--az2)':'var(--az)'};padding:10px 12px;display:flex;justify-content:space-between;align-items:center">
+        <div>
+          <div style="font-weight:700;font-size:13px;color:#fff">${DIAS_LBL[di]}</div>
+          <div style="font-size:10px;color:#AACCEE">${d.toLocaleDateString('es-CO',{day:'numeric',month:'short'})}</div>
+        </div>
+        <div style="text-align:right">
+          <div style="font-size:11px;color:${servicios.length?'#6EE89A':'#AACCEE'};font-weight:600">${servicios.length} servicio${servicios.length!==1?'s':''}</div>
+          ${servicios.length?`<div style="font-size:10px;color:#AACCEE">${fmt(totalDia)}</div>`:''}
+        </div>
+      </div>
+
+      <!-- Servicios del día -->
+      <div style="padding:8px;min-height:60px">
+        ${servicios.length===0?`<div style="text-align:center;padding:16px 8px;color:var(--tx2);font-size:11px">Sin servicios<br><span style="font-size:10px">Toca + para agregar</span></div>`:
+          servicios.map((s,idx)=>{
+            const ri=PROG_RUTAS_INFO[s.ruta]||{};
+            return `<div style="background:var(--gr);border:1px solid var(--bd);border-radius:var(--r2);padding:8px 9px;margin-bottom:7px;position:relative">
+              <!-- Badge ruta -->
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+                <select onchange="editarServicio(${di},${idx},'ruta',this.value);renderProgramador()"
+                  style="font-size:11px;font-weight:700;color:var(--az);border:none;background:var(--az3);border-radius:4px;padding:2px 6px;max-width:130px">
+                  ${Object.entries(PROG_RUTAS_INFO).map(([k,r])=>`<option value="${k}"${s.ruta===k?' selected':''}>${r.lbl}</option>`).join('')}
+                </select>
+                <button onclick="eliminarServicio(${di},${idx})" style="width:18px;height:18px;background:var(--rj2);border:none;border-radius:50%;color:var(--rj);font-size:10px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-weight:700">✕</button>
+              </div>
+              <!-- Conductor -->
+              <div style="margin-bottom:5px">
+                <div style="font-size:9px;color:var(--tx2);margin-bottom:2px;text-transform:uppercase;letter-spacing:.3px">Conductor</div>
+                <select onchange="editarServicio(${di},${idx},'conductor',this.value)"
+                  style="width:100%;font-size:11px;padding:3px 5px;border-radius:4px;border:1px solid var(--bd);background:var(--bl)">
+                  <option value="">— Sin asignar —</option>${condOpts.replace(`value="${s.conductor}"`,`value="${s.conductor}" selected`)}
+                </select>
+              </div>
+              <!-- Vehículo -->
+              <div style="margin-bottom:5px">
+                <div style="font-size:9px;color:var(--tx2);margin-bottom:2px;text-transform:uppercase;letter-spacing:.3px">Vehículo</div>
+                <select onchange="editarServicio(${di},${idx},'vehiculo',this.value)"
+                  style="width:100%;font-size:11px;padding:3px 5px;border-radius:4px;border:1px solid var(--bd);background:var(--bl)">
+                  <option value="">— Sin asignar —</option>${vehOpts.replace(`value="${s.vehiculo}"`,`value="${s.vehiculo}" selected`)}
+                </select>
+              </div>
+              <!-- Hora y valor -->
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:4px">
+                <div>
+                  <div style="font-size:9px;color:var(--tx2);margin-bottom:2px;text-transform:uppercase;letter-spacing:.3px">Salida</div>
+                  <input type="time" value="${s.hora||'06:00'}"
+                    onchange="editarServicio(${di},${idx},'hora',this.value)"
+                    style="width:100%;font-size:11px;padding:2px 4px;border-radius:4px;border:1px solid var(--bd);font-family:'DM Mono',monospace">
+                </div>
+                <div>
+                  <div style="font-size:9px;color:var(--tx2);margin-bottom:2px;text-transform:uppercase;letter-spacing:.3px">Cobro UNAL</div>
+                  <input type="number" value="${s.valor||0}"
+                    onchange="editarServicio(${di},${idx},'valor',this.value)"
+                    style="width:100%;font-size:11px;padding:2px 4px;border-radius:4px;border:1px solid var(--bd);text-align:right;color:var(--az);font-weight:600;background:var(--az3)">
+                </div>
+              </div>
+              <!-- Pago conductor -->
+              <div style="margin-top:5px">
+                <div style="font-size:9px;color:var(--tx2);margin-bottom:2px;text-transform:uppercase;letter-spacing:.3px">Pago conductor</div>
+                <input type="number" value="${s.pago||0}"
+                  onchange="editarServicio(${di},${idx},'pago',this.value)"
+                  style="width:100%;font-size:11px;padding:2px 4px;border-radius:4px;border:1px solid var(--bd);text-align:right;color:var(--vd);font-weight:600;background:var(--vd2)">
+              </div>
+            </div>`;
+          }).join('')
+        }
+        <!-- Botón agregar -->
+        <button onclick="agregarServicio(${di})"
+          style="width:100%;padding:7px;border:1.5px dashed var(--bd);border-radius:var(--r2);background:transparent;font-size:12px;color:var(--az2);cursor:pointer;font-weight:500;transition:all .15s"
+          onmouseover="this.style.background='var(--az3)'" onmouseout="this.style.background='transparent'">
+          + Agregar servicio
+        </button>
+      </div>
+      <!-- Footer total día -->
+      ${servicios.length?`<div style="background:var(--gr2);padding:7px 12px;display:flex;justify-content:space-between;border-top:1px solid var(--bd)">
+        <span style="font-size:10px;color:var(--tx2)">${servicios.length} servicio${servicios.length!==1?'s':''}</span>
+        <span style="font-size:11px;font-weight:700;color:var(--az)">${fmt(totalDia)}</span>
+      </div>`:''}
+    </div>`;
+  });
+
+  html+=`</div>`;
+  document.getElementById('prog-tabla').innerHTML=html;
+  actualizarResumenProg();
+}
+
+function programarSemanaRapida(){
+  const {num}=progSemActual();
+  const conductores=(DB.get('conductores')||[]).filter(c=>c.estado==='Activo');
+  const vehiculos  =DB.get('vehiculos')||[];
+  if(!conductores.length){toast('No hay conductores activos','terr');return;}
+
+  // Asignación inteligente por ruta principal
+  const asig={
+    'R-1': conductores.find(c=>c.ruta&&c.ruta.includes('R-1')) || conductores[0],
+    'R-2': conductores.find(c=>c.ruta&&c.ruta.includes('R-2')) || conductores[Math.min(1,conductores.length-1)],
+    'R-3': conductores.find(c=>c.ruta&&c.ruta.includes('R-3')) || conductores[Math.min(2,conductores.length-1)],
+    'R-4': conductores.find(c=>c.ruta&&c.ruta.includes('R-4')) || conductores[Math.min(3,conductores.length-1)],
+  };
+  const veh=vehiculos[0];
+  const p={};
+  for(let di=0;di<5;di++){
+    p[di]=Object.entries(PROG_RUTAS_INFO).map(([ruta,ri])=>{
+      const cond=asig[ruta];
+      return {ruta, conductor:cond?cond.nombre:'', vehiculo:veh?veh.placa:'', hora:ri.hora, valor:ri.valor, pago:cond?(cond.esProp?0:cond.pago):0};
+    });
+  }
+  DB.set('prog_'+num, p);
+  renderProgramador();
+  toast('Semana programada automáticamente ✓');
+}
+
+function confirmarSemana(){
+  const {num}=progSemActual();
+  const dias=progFechas();
+  // Count total services
+  let total=0;
+  dias.forEach((_,di)=>{ total+=getProgDia(num,di).length; });
+  if(total===0){toast('No hay servicios programados para confirmar','terr');return;}
+  if(!confirm(`¿Confirmar y crear ${total} servicio(s) en el registro de Rutas diarias?`)) return;
+
+  const existentes=DB.get('rutas')||[];
+  const nuevas=[];
+  dias.forEach((d,di)=>{
+    const fechaStr=d.toISOString().slice(0,10);
+    getProgDia(num,di).forEach(s=>{
+      const existe=existentes.find(x=>x.fecha===fechaStr&&x.ruta===s.ruta&&x.conductor===s.conductor);
+      if(existe) return;
+      const ri=PROG_RUTAS_INFO[s.ruta]||{};
+      nuevas.push({
+        id:uid(), fecha:fechaStr, ruta:s.ruta, conductor:s.conductor||'',
+        destino:ri.destino||'', salida:s.hora||'', llegada:'', pasajeros:0,
+        valor:Number(s.valor||ri.valor||0), pagoCond:Number(s.pago||0),
+        estadoEmp:'Servicio programado', estadoCond:'Pendiente de pago',
+        semana:String(num), novedad:'', obs:'Desde programador sem '+num
+      });
+    });
+  });
+
+  if(nuevas.length===0){toast('Todas las rutas ya existen en el registro','terr');return;}
+  DB.set('rutas',[...existentes,...nuevas]);
+  renderAll();
+  toast(`✅ ${nuevas.length} servicio(s) creados en Rutas diarias`);
+  setTimeout(()=>nav('rutas'),800);
+}
+
+
+function renderStorageSummary(){
+  const wrap=document.getElementById('storage-summary');if(!wrap)return;
+  const KEYS=['conductores','vehiculos','rutas','cuentas','pagos','novedades'];
+  const labels={conductores:'👤 Conductores',vehiculos:'🚐 Vehículos',rutas:'🗺 Rutas',cuentas:'📄 Cuentas',pagos:'💳 Pagos',novedades:'⚠ Novedades'};
+  let totalBytes=0;
+  const rows=KEYS.map(k=>{
+    const data=DB.get(k)||[];
+    const bytes=JSON.stringify(data).length;
+    totalBytes+=bytes;
+    return `<tr><td>${labels[k]}</td><td>${data.length} registros</td><td style="font-size:11px;color:var(--tx2)">${(bytes/1024).toFixed(1)} KB</td></tr>`;
+  }).join('');
+  const lastBackup=localStorage.getItem('m0548v2_lastBackup')||'Nunca';
+  wrap.innerHTML=`
+    <div class="tw"><table>
+      <thead><tr><th>Módulo</th><th>Registros</th><th>Tamaño</th></tr></thead>
+      <tbody>${rows}<tr style="font-weight:600"><td>Total</td><td>—</td><td>${(totalBytes/1024).toFixed(1)} KB</td></tr></tbody>
+    </table></div>
+    <p style="font-size:11px;color:var(--tx2);margin-top:10px">💡 Se recomienda hacer backup cada semana. Los datos se guardan en este navegador — si lo cambias o limpias el caché, se pierden sin backup.</p>`;
+}
+
+// Actualizar checkAlertas para incluir vehículos
+const _checkAlertasOld=checkAlertas;
+checkAlertas=function(){
+  _checkAlertasOld();
+  const vehiculos=DB.get('vehiculos')||[];
+  const wrap=document.getElementById('alertas-globales');if(!wrap)return;
+  const DOC_VEH=[{lbl:'SOAT',k:'vencSoat'},{lbl:'Tecnomecánica',k:'vencTecno'},{lbl:'Tarjeta de Operación',k:'vencTo'},{lbl:'Póliza RCE',k:'vencRce'},{lbl:'Póliza RCC',k:'vencRcc'}];
+  let html=wrap.innerHTML;
+  vehiculos.forEach(v=>{
+    DOC_VEH.forEach(({lbl,k})=>{
+      const st=docStatus(v[k]);
+      if(st==='exp')html+=`<div class="alerta-doc vencido">🚐 Vehículo <b>${v.placa}</b> — ${lbl} VENCIDO (${fmtD(v[k])}) — puede suspender contrato M-0548</div>`;
+      else if(st==='warn')html+=`<div class="alerta-doc proximo">🚐 Vehículo <b>${v.placa}</b> — ${lbl} por vencer el ${fmtD(v[k])}</div>`;
+    });
+  });
+  wrap.innerHTML=html;
+};
 
 // ─── INIT ────────────────────────────────────────
 initData();
