@@ -270,7 +270,7 @@ textarea{resize:vertical;min-height:65px}
   <div class="two-col">
     <div class="card">
       <div class="card-hdr"><span class="card-title">Rutas de hoy</span><span id="fecha-hoy" style="font-size:11px;color:var(--tx2)"></span></div>
-      <div class="tw"><table><thead><tr><th>Ruta</th><th>Conductor</th><th>Destino</th><th>Valor</th><th>Estado</th></tr></thead><tbody id="t-hoy"></tbody></table></div>
+      <div class="tw"><table><thead><tr><th>Recorrido</th><th>Conductor</th><th>Valor</th><th>Estado</th></tr></thead><tbody id="t-hoy"></tbody></table></div>
     </div>
     <div class="card">
       <div class="card-hdr"><span class="card-title">Cuentas UNAL</span></div>
@@ -283,7 +283,7 @@ textarea{resize:vertical;min-height:65px}
   </div>
   <div class="card">
     <div class="card-hdr"><span class="card-title">Últimos 8 servicios</span></div>
-    <div class="tw"><table><thead><tr><th>Fecha</th><th>Ruta</th><th>Conductor</th><th>Destino</th><th>Valor</th><th>Estado</th></tr></thead><tbody id="t-recientes"></tbody></table></div>
+    <div class="tw"><table><thead><tr><th>Fecha</th><th>Recorrido</th><th>Conductor</th><th>Valor</th><th>Estado</th></tr></thead><tbody id="t-recientes"></tbody></table></div>
   </div>
 </div>
 
@@ -302,7 +302,7 @@ textarea{resize:vertical;min-height:65px}
   </div>
   <div class="alert info">📋 M-0548 · Universidad Nacional · Lunes a Viernes · Punto de salida: UNAL Bloque M8</div>
   <div class="card" style="padding:0"><div class="tw"><table style="min-width:900px">
-    <thead><tr><th>Fecha</th><th>Ruta</th><th>Conductor</th><th>Destino</th><th>Salida</th><th>Llegada</th><th>Hrs extra</th><th>Pas.</th><th>Valor UNAL</th><th>Pago cond.</th><th>Estado empresa</th><th>Estado conductor</th><th>Novedad</th><th></th></tr></thead>
+    <thead><tr><th>Fecha</th><th>Recorrido</th><th>Conductor</th><th>Hora salida</th><th>Hora llegada</th><th>Hrs extra</th><th>Valor UNAL</th><th>Pago cond.</th><th>Estado UNAL</th><th>Estado conductor</th><th>Novedad</th><th></th></tr></thead>
     <tbody id="t-rutas"></tbody>
   </table></div></div>
   <div class="card"><div class="card-hdr"><span class="card-title">Resumen semana</span></div><div id="res-semana"></div></div>
@@ -459,13 +459,16 @@ textarea{resize:vertical;min-height:65px}
   <h3>Registrar ruta — M-0548</h3>
   <div class="fr">
     <div class="fg"><label>Fecha</label><input type="date" id="r-fecha"></div>
-    <div class="fg"><label>Ruta</label><select id="r-ruta">
-      <option value="">Seleccionar...</option>
-      <option value="R-1">R-1 — Granizal / Bello Oriente</option>
-      <option value="R-2">R-2 — Santa Elena / Pericos / Paysandú</option>
-      <option value="R-3">R-3 — Parque Arví / Guarne / Veredal</option>
-      <option value="R-4">R-4 — Sto. Domingo / La Avanzada / Carpinelo</option>
-    </select></div>
+    <div class="fg"><label>Descripción de la ruta</label>
+      <input type="text" id="r-ruta" placeholder="Ej: Bello Oriente — Granizal" list="rutas-sugeridas">
+      <datalist id="rutas-sugeridas">
+        <option value="Bello Oriente — Granizal">
+        <option value="Santa Elena — Pericos — Pantanillo — El Plan — Paysandú">
+        <option value="Parque Arví — Granizal — Antigua Vía Guarne — Vías Veredales de Bello">
+        <option value="Santo Domingo — La Avanzada — Carpinelo">
+        <option value="Novedad: Pago por parqueo">
+      </datalist>
+    </div>
   </div>
   <div class="fr">
     <div class="fg"><label>Conductor</label><select id="r-conductor"><option value="">Seleccionar...</option></select></div>
@@ -731,9 +734,9 @@ textarea{resize:vertical;min-height:65px}
   <h3>Registrar novedad</h3>
   <div class="fr">
     <div class="fg"><label>Fecha</label><input type="date" id="n-fecha"></div>
-    <div class="fg"><label>Ruta afectada</label><select id="n-ruta">
-      <option>R-1 Granizal</option><option>R-2 Santa Elena</option><option>R-3 Parque Arví</option><option>R-4 Sto. Domingo</option>
-    </select></div>
+    <div class="fg"><label>Ruta afectada</label>
+      <input type="text" id="n-ruta" placeholder="Descripción de la ruta" list="rutas-sugeridas">
+    </div>
   </div>
   <div class="fr">
     <div class="fg"><label>Conductor</label><select id="n-conductor"><option value="">Seleccionar...</option></select></div>
@@ -793,8 +796,8 @@ if(sessionStorage.getItem('auth')==='1'){document.getElementById('login-screen')
 
 // ─── DB ─────────────────────────────────────────
 const DB={
-  get:k=>{try{return JSON.parse(localStorage.getItem('m0548v2_'+k)||'null')}catch{return null}},
-  set:(k,v)=>localStorage.setItem('m0548v2_'+k,JSON.stringify(v))
+  get:k=>{try{return JSON.parse(localStorage.getItem('m0548v9_'+k)||'null')}catch{return null}},
+  set:(k,v)=>localStorage.setItem('m0548v9_'+k,JSON.stringify(v))
 };
 
 // ─── INIT DATA ──────────────────────────────────
@@ -802,26 +805,23 @@ function initData(){
   if(DB.get('init')) return;
   DB.set('conductores',[
     {id:1,nombre:'Orlando Sepúlveda Macías',cedula:'1.017.147.157',tel:'3147887124',metodo:'Nequi',cuenta:'3147887124',titular:'Orlando Sepúlveda',metodo2:'',cuenta2:'',licencia:'C2',ruta:'Varias / Flexible',pago:0,estado:'Activo',obs:'Propietario',vencLic:'2026-12-01',vencSoat:'2026-10-01',vencSeguro:'',vencKit:'2026-08-01',vencMedico:'2026-09-01',vencPsico:'2026-09-01',segSocial:'Al día',arl:'Paga — Al día',docs:[],esProp:true},
-    {id:2,nombre:'Adolfo Mora Otero',cedula:'—',tel:'3148114178',metodo:'Nequi',cuenta:'3148114178',titular:'Adolfo Mora',metodo2:'',cuenta2:'',licencia:'C2',ruta:'R-2 — Santa Elena',pago:500000,estado:'Activo',obs:'',vencLic:'2026-09-01',vencSoat:'2026-11-01',vencSeguro:'',vencKit:'',vencMedico:'',vencPsico:'',segSocial:'Al día',arl:'Paga — Al día',docs:[],esProp:false},
-    {id:3,nombre:'Duban Urrego Gómez',cedula:'—',tel:'—',metodo:'Bancolombia Ahorros',cuenta:'01687143261',titular:'Duban Urrego',metodo2:'',cuenta2:'',licencia:'C2',ruta:'R-1 / R-2',pago:450000,estado:'Activo',obs:'',vencLic:'2026-08-01',vencSoat:'2026-12-01',vencSeguro:'',vencKit:'',vencMedico:'',vencPsico:'',segSocial:'Al día',arl:'No paga / No aplica',docs:[],esProp:false},
+    {id:2,nombre:'Adolfo Mora Otero',cedula:'—',tel:'3148114178',metodo:'Nequi',cuenta:'3148114178',titular:'Adolfo Mora',metodo2:'',cuenta2:'',licencia:'C2',ruta:'Santa Elena — Pericos — Pantanillo — El Plan — Paysandú',pago:450000,estado:'Activo',obs:'',vencLic:'2026-09-01',vencSoat:'2026-11-01',vencSeguro:'',vencKit:'',vencMedico:'',vencPsico:'',segSocial:'Al día',arl:'Paga — Al día',docs:[],esProp:false},
+    {id:3,nombre:'Duban Urrego Gómez',cedula:'—',tel:'—',metodo:'Bancolombia Ahorros',cuenta:'01687143261',titular:'Duban Urrego',metodo2:'',cuenta2:'',licencia:'C2',ruta:'Bello Oriente — Granizal / Santo Domingo',pago:500000,estado:'Activo',obs:'',vencLic:'2026-08-01',vencSoat:'2026-12-01',vencSeguro:'',vencKit:'',vencMedico:'',vencPsico:'',segSocial:'Al día',arl:'No paga / No aplica',docs:[],esProp:false},
   ]);
   DB.set('rutas',[
-    {id:1,fecha:'2026-04-22',ruta:'R-1',conductor:'Orlando Sepúlveda Macías',destino:'Granizal / Bello Oriente',salida:'06:00',llegada:'07:25',pasajeros:8,valor:650000,pagoCond:0,estadoEmp:'Servicio realizado',estadoCond:'Pendiente de pago',semana:'17',novedad:'',obs:''},
-    {id:2,fecha:'2026-04-23',ruta:'R-1',conductor:'Duban Urrego Gómez',destino:'Granizal / Bello Oriente',salida:'06:00',llegada:'07:30',pasajeros:8,valor:650000,pagoCond:400000,estadoEmp:'Servicio realizado',estadoCond:'Pendiente de pago',semana:'17',novedad:'',obs:''},
-    {id:3,fecha:'2026-04-23',ruta:'R-2',conductor:'Adolfo Mora Otero',destino:'Santa Elena / Pericos / Paysandú',salida:'06:30',llegada:'08:15',pasajeros:6,valor:730000,pagoCond:500000,estadoEmp:'Servicio realizado',estadoCond:'Pendiente de pago',semana:'17',novedad:'',obs:''},
-    {id:4,fecha:'2026-04-23',ruta:'R-3',conductor:'Orlando Sepúlveda Macías',destino:'Parque Arví / Guarne / Veredal',salida:'07:00',llegada:'08:50',pasajeros:5,valor:730000,pagoCond:0,estadoEmp:'Servicio realizado',estadoCond:'Pendiente de pago',semana:'17',novedad:'',obs:''},
-    {id:5,fecha:'2026-04-24',ruta:'R-2',conductor:'Duban Urrego Gómez',destino:'Santa Elena / Pericos / Paysandú',salida:'06:30',llegada:'08:20',pasajeros:6,valor:730000,pagoCond:500000,estadoEmp:'Servicio realizado',estadoCond:'Pendiente de pago',semana:'17',novedad:'',obs:''},
-    {id:6,fecha:'2026-04-24',ruta:'R-4',conductor:'Orlando Sepúlveda Macías',destino:'Sto. Domingo / La Avanzada / Carpinelo',salida:'07:30',llegada:'08:45',pasajeros:7,valor:730000,pagoCond:0,estadoEmp:'Servicio realizado',estadoCond:'Pendiente de pago',semana:'17',novedad:'',obs:''},
+    {id:1,fecha:'2026-04-22',ruta:'Bello Oriente — Granizal',conductor:'Orlando Sepúlveda Macías',destino:'Bello Oriente — Granizal',salida:'10:00 a.m.',llegada:'5:30 p.m.',pasajeros:0,valor:650000,pagoCond:450000,estadoEmp:'Servicio realizado',estadoCond:'Pendiente de pago',semana:'17',novedad:'',obs:''},
+    {id:2,fecha:'2026-04-23',ruta:'Parque Arví — Granizal — Antigua Vía Guarne — Vías Veredales de Bello',conductor:'Orlando Sepúlveda Macías',destino:'Parque Arví — Granizal — Antigua Vía Guarne — Vías Veredales de Bello',salida:'7:00 a.m.',llegada:'5:30 p.m.',pasajeros:0,valor:950000,pagoCond:600000,estadoEmp:'Servicio realizado',estadoCond:'Pendiente de pago',semana:'17',novedad:'',obs:''},
+    {id:3,fecha:'2026-04-23',ruta:'Bello Oriente — Granizal',conductor:'Duban Urrego Gómez',destino:'Bello Oriente — Granizal',salida:'9:00 a.m.',llegada:'5:00 p.m.',pasajeros:0,valor:650000,pagoCond:400000,estadoEmp:'Servicio realizado',estadoCond:'Pagado',semana:'17',novedad:'',obs:''},
+    {id:4,fecha:'2026-04-23',ruta:'Santa Elena — Pericos — Pantanillo — El Plan — Paysandú',conductor:'Adolfo Mora Otero',destino:'Santa Elena — Pericos — Pantanillo — El Plan — Paysandú',salida:'6:00 a.m.',llegada:'4:30 p.m.',pasajeros:0,valor:730000,pagoCond:450000,estadoEmp:'Servicio realizado',estadoCond:'Pendiente de pago',semana:'17',novedad:'',obs:''},
+    {id:5,fecha:'2026-04-24',ruta:'Novedad: Pago por parqueo',conductor:'Orlando Sepúlveda Macías',destino:'—',salida:'6:00 a.m.',llegada:'6:35 a.m.',pasajeros:0,valor:250000,pagoCond:150000,estadoEmp:'Servicio con novedad',estadoCond:'Pendiente de pago',semana:'17',novedad:'Cancelaron la ruta. Pago por parqueo.',obs:'Cancelaron la ruta. Pago por parqueo.'},
+    {id:6,fecha:'2026-04-24',ruta:'Santo Domingo — La Avanzada — Carpinelo',conductor:'Duban Urrego Gómez',destino:'Santo Domingo — La Avanzada — Carpinelo',salida:'7:00 a.m.',llegada:'5:30 p.m.',pasajeros:0,valor:750000,pagoCond:500000,estadoEmp:'Servicio realizado',estadoCond:'Pagado',semana:'17',novedad:'',obs:''},
   ]);
   DB.set('cuentas',[
-    {id:1,num:'001',semana:'14',periodo:'01–05 Abr 2026',fecha:'2026-04-05',valor:14200000,vence:'2026-04-11',servicios:20,estado:'Cobrada'},
-    {id:2,num:'002',semana:'15',periodo:'08–12 Abr 2026',fecha:'2026-04-12',valor:14200000,vence:'2026-04-18',servicios:20,estado:'Vencida'},
-    {id:3,num:'003',semana:'16',periodo:'15–19 Abr 2026',fecha:'2026-04-19',valor:14200000,vence:'2026-04-25',servicios:20,estado:'Pendiente de cobro'},
-    {id:4,num:'004',semana:'17',periodo:'22–24 Abr 2026',fecha:'2026-04-24',valor:4220000,vence:'2026-05-02',servicios:6,estado:'Pendiente de cobro'},
+    {id:1,num:'004',semana:'17',periodo:'22–24 Abr 2026',fecha:'2026-04-24',valor:3980000,vence:'2026-05-02',servicios:6,estado:'Pendiente de cobro'},
   ]);
   DB.set('pagos',[
-    {id:1,conductor:'Adolfo Mora Otero',semana:'17',rutas:1,total:500000,anticipo:0,saldo:500000,metodo:'Nequi',fecha:'2026-04-24',estado:'Pendiente',comprobante:''},
-    {id:2,conductor:'Duban Urrego Gómez',semana:'17',rutas:2,total:900000,anticipo:0,saldo:900000,metodo:'Bancolombia Ahorros',fecha:'2026-04-24',estado:'Pendiente',comprobante:''},
+    {id:1,conductor:'Adolfo Mora Otero',semana:'17',rutas:1,total:450000,anticipo:0,saldo:450000,metodo:'Nequi',fecha:'2026-04-24',estado:'Pendiente',comprobante:''},
+    {id:2,conductor:'Duban Urrego Gómez',semana:'17',rutas:2,total:900000,anticipo:0,saldo:900000,metodo:'Bancolombia Ahorros',fecha:'2026-04-24',estado:'Parcial',comprobante:''},
   ]);
   DB.set('novedades',[]);
   DB.set('vehiculos',[
@@ -939,8 +939,17 @@ function switchTab(grupo,idx){
 }
 
 // Autocompletar ruta
-document.getElementById('r-ruta').addEventListener('change',function(){
-  const ri=RUTAS_INFO[this.value];if(ri)document.getElementById('r-valor').value=ri.valor;
+// Autosugerir valor según texto de ruta
+document.getElementById('r-ruta').addEventListener('input',function(){
+  const txt = this.value.toLowerCase();
+  const el = document.getElementById('r-valor');
+  if(txt.includes('parque arv')) el.value=950000;
+  else if(txt.includes('santo dom')||txt.includes('carpinelo')) el.value=750000;
+  else if(txt.includes('santa elena')||txt.includes('paysand')) el.value=730000;
+  else if(txt.includes('bello oriente')||txt.includes('granizal')) el.value=650000;
+  else if(txt.includes('novedad')||txt.includes('parqueo')) el.value=250000;
+  // Autocompletar destino = misma descripción
+  document.getElementById('r-ruta').value = this.value;
 });
 document.getElementById('r-conductor').addEventListener('change',function(){
   const c=(DB.get('conductores')||[]).find(x=>x.nombre===this.value);
@@ -1148,16 +1157,38 @@ function editarCampRuta(id,campo,val){
     if(c&&!c.esProp) r.pagoCond=c.pago;
     else if(c&&c.esProp) r.pagoCond=0;
   }
-  // Si cambia ruta → actualizar destino y valor base
+  // Si cambia ruta (texto libre) → destino = misma descripción + sugerir valor
   if(campo==='ruta'){
-    const RUTAS_INFO={'R-1':{destino:'Granizal / Bello Oriente',valor:650000},'R-2':{destino:'Santa Elena / Pericos / Paysandú',valor:730000},'R-3':{destino:'Parque Arví / Guarne / Veredal',valor:730000},'R-4':{destino:'Sto. Domingo / La Avanzada / Carpinelo',valor:730000}};
-    const ri=RUTAS_INFO[val];
-    if(ri){r.destino=ri.destino;r.valor=ri.valor;}
+    r.destino=val;
+    const txt=val.toLowerCase();
+    if(!r.valor||r.valor===0){
+      if(txt.includes('parque arv')) r.valor=950000;
+      else if(txt.includes('santo dom')||txt.includes('carpinelo')) r.valor=750000;
+      else if(txt.includes('santa elena')||txt.includes('paysand')) r.valor=730000;
+      else if(txt.includes('bello oriente')||txt.includes('granizal')) r.valor=650000;
+    }
   }
-  // Si cambia hora salida o llegada → alertar horas extra
+  // Si cambia hora salida o llegada → recalcular y sumar horas extra completas al valor
   if(campo==='salida'||campo==='llegada'){
-    const {extra,cobro}=calcHorasExtra(r.salida,r.llegada);
-    if(extra>0) toast(`⏱ ${extra.toFixed(1)} hora(s) extra — cobro adicional sugerido: ${fmt(cobro)}`,'tok');
+    const {horas,hCompletas,cobro}=calcHorasExtra(r.salida,r.llegada);
+    if(hCompletas>0){
+      // Calcular valor base según ruta (sin extras previos)
+      const txt=(r.ruta||'').toLowerCase();
+      let valorBase=650000;
+      if(txt.includes('parque arv')) valorBase=950000;
+      else if(txt.includes('santo dom')||txt.includes('carpinelo')) valorBase=750000;
+      else if(txt.includes('santa elena')||txt.includes('paysand')) valorBase=730000;
+      else if(txt.includes('bello oriente')||txt.includes('granizal')) valorBase=650000;
+      r.valor = valorBase + cobro;
+      toast(`⏱ ${hCompletas} hora(s) extra completa(s) — se sumaron ${fmt(cobro)} al valor. Total: ${fmt(r.valor)}`,'tok');
+    } else if(horas>0){
+      // Sin horas extra — restaurar valor base
+      const txt=(r.ruta||'').toLowerCase();
+      if(txt.includes('parque arv')) r.valor=950000;
+      else if(txt.includes('santo dom')||txt.includes('carpinelo')) r.valor=750000;
+      else if(txt.includes('santa elena')||txt.includes('paysand')) r.valor=730000;
+      else if(txt.includes('bello oriente')||txt.includes('granizal')) r.valor=650000;
+    }
   }
   DB.set('rutas',rutas);
   // Re-render tabla completa para reflejar cambios (destino, horas extra, etc.)
@@ -1212,9 +1243,9 @@ function renderHistorialConductor(nombre){
   wrap.innerHTML=`
     <p style="font-size:12px;font-weight:600;color:var(--tx);margin-bottom:10px">Total servicios: ${rutas.length} | Total generado: ${fmt(rutas.reduce((s,r)=>s+Number(r.valor),0))}</p>
     <div class="tw"><table>
-      <thead><tr><th>Fecha</th><th>Ruta</th><th>Destino</th><th>Valor UNAL</th><th>Pago conductor</th><th>Est. conductor</th><th>Novedad</th></tr></thead>
+      <thead><tr><th>Fecha</th><th>Recorrido</th><th>Valor UNAL</th><th>Pago conductor</th><th>Est. conductor</th><th>Novedad</th></tr></thead>
       <tbody>${rutas.map(r=>`<tr>
-        <td>${fmtD(r.fecha)}</td><td><b>${r.ruta}</b></td><td style="font-size:11px">${r.destino}</td>
+        <td>${fmtD(r.fecha)}</td><td style="font-size:11px">${r.ruta}</td>
         <td>${fmt(r.valor)}</td>
         <td>${r.pagoCond?fmt(r.pagoCond):'<span style="color:var(--az2);font-size:10px">Propietario</span>'}</td>
         <td>${estadoBadge(r.estadoCond)}</td>
@@ -1263,13 +1294,13 @@ function generarReciboViernes(){
         <thead><tr>
           <th style="background:var(--gr);padding:7px 9px;font-size:10px;text-transform:uppercase;letter-spacing:.4px;border-bottom:1px solid var(--bd)">Fecha</th>
           <th style="background:var(--gr);padding:7px 9px;font-size:10px;text-transform:uppercase;letter-spacing:.4px;border-bottom:1px solid var(--bd)">Ruta</th>
-          <th style="background:var(--gr);padding:7px 9px;font-size:10px;text-transform:uppercase;letter-spacing:.4px;border-bottom:1px solid var(--bd)">Destino</th>
+          
           <th style="background:var(--gr);padding:7px 9px;font-size:10px;text-transform:uppercase;letter-spacing:.4px;border-bottom:1px solid var(--bd);text-align:right">Pago</th>
         </tr></thead>
         <tbody>${rutasSem.map(r=>`<tr>
           <td style="padding:6px 9px;border-bottom:1px solid var(--gr)">${fmtD(r.fecha)}</td>
           <td style="padding:6px 9px;border-bottom:1px solid var(--gr);font-weight:600">${r.ruta}</td>
-          <td style="padding:6px 9px;border-bottom:1px solid var(--gr);font-size:11px">${r.destino}</td>
+          
           <td style="padding:6px 9px;border-bottom:1px solid var(--gr);text-align:right;font-weight:600;color:var(--vd)">${fmt(r.pagoCond)}</td>
         </tr>`).join('')}</tbody>
       </table>
@@ -1320,7 +1351,7 @@ function renderDashboard(){
     kpi('Por cobrar UNAL',fmt(pendCuentas),'am','Pendiente + vencido')+kpi('Por pagar conductores',fmt(pendPagos),'rj','Pendiente')+
     kpi('Conductores activos',(DB.get('conductores')||[]).filter(c=>c.estado==='Activo').length,'az','');
   const th=document.getElementById('fecha-hoy');if(th)th.textContent=new Date().toLocaleDateString('es-CO',{weekday:'long',day:'numeric',month:'long'});
-  const tt=document.getElementById('t-hoy');if(tt)tt.innerHTML=rutasHoy.length?rutasHoy.map(r=>`<tr><td><b>${r.ruta}</b></td><td>${r.conductor.split(' ')[0]}</td><td style="font-size:11px">${r.destino}</td><td>${fmt(r.valor)}</td><td>${estadoBadge(r.estadoEmp)}</td></tr>`).join(''):'<tr><td colspan="5" style="text-align:center;color:var(--tx2);padding:16px">Sin servicios hoy</td></tr>';
+  const tt=document.getElementById('t-hoy');if(tt)tt.innerHTML=rutasHoy.length?rutasHoy.map(r=>`<tr><td style="font-size:11px">${r.ruta}</td><td>${r.conductor.split(' ')[0]}</td><td>${fmt(r.valor)}</td><td>${estadoBadge(r.estadoEmp)}</td></tr>`).join(''):'<tr><td colspan="5" style="text-align:center;color:var(--tx2);padding:16px">Sin servicios hoy</td></tr>';
   const tc=document.getElementById('t-cuentas-dash');if(tc)tc.innerHTML=[...cuentas].reverse().slice(0,4).map(c=>`<tr><td>Sem ${c.semana}</td><td>${fmt(c.valor)}</td><td>${estadoBadge(c.estado)}</td></tr>`).join('');
   const tr2=document.getElementById('t-recientes');if(tr2)tr2.innerHTML=[...rutas].reverse().slice(0,8).map(r=>`<tr><td>${fmtD(r.fecha)}</td><td><b>${r.ruta}</b></td><td style="font-size:11px">${r.conductor.split(' ')[0]}</td><td style="font-size:11px">${r.destino}</td><td>${fmt(r.valor)}</td><td>${estadoBadge(r.estadoEmp)}</td></tr>`).join('');
   // Pagos pendientes
@@ -1330,15 +1361,28 @@ function renderDashboard(){
   }
 }
 
+function parseHora(str){
+  if(!str) return null;
+  // acepta "10:00", "10:00 a.m.", "10:00 am", "10:00 p.m.", "10:00 pm"
+  const s=str.toLowerCase().replace(/\s/g,'');
+  const pm=s.includes('p.m.')||s.includes('pm');
+  const am=s.includes('a.m.')||s.includes('am');
+  const clean=s.replace('a.m.','').replace('p.m.','').replace('am','').replace('pm','');
+  const [hStr,mStr]=clean.split(':');
+  let h=parseInt(hStr)||0, m=parseInt(mStr)||0;
+  if(pm && h!==12) h+=12;
+  if(am && h===12) h=0;
+  return h*60+m;
+}
 function calcHorasExtra(salida, llegada){
-  if(!salida||!llegada) return {horas:0,extra:0};
-  const [sh,sm]=salida.split(':').map(Number);
-  const [lh,lm]=llegada.split(':').map(Number);
-  let minutos=(lh*60+lm)-(sh*60+sm);
+  const s=parseHora(salida), l=parseHora(llegada);
+  if(s===null||l===null) return {horas:0,extra:0,cobro:0};
+  let minutos=l-s;
   if(minutos<0) minutos+=24*60;
   const totalH=minutos/60;
   const hExtra=Math.max(0,totalH-10);
-  return {horas:totalH.toFixed(1), extra:hExtra, cobro:Math.ceil(hExtra)*60000};
+  const hCompletas=Math.floor(hExtra); // solo horas completas
+  return {horas:totalH.toFixed(1), extra:hExtra, hCompletas, cobro:hCompletas*60000};
 }
 
 function renderRutas(){
@@ -1347,37 +1391,37 @@ function renderRutas(){
   const tbody=document.getElementById('t-rutas');if(!tbody)return;
   tbody.innerHTML=rutasSem.length?rutasSem.map(r=>{
     const condOpts=conductores.map(c=>`<option value="${c.nombre}"${r.conductor===c.nombre?' selected':''}>${c.nombre}</option>`).join('');
-    const rutaOpts=['R-1','R-2','R-3','R-4'].map(x=>`<option${r.ruta===x?' selected':''}>${x}</option>`).join('');
-    const {horas,extra,cobro}=calcHorasExtra(r.salida,r.llegada);
-    const horasTag=extra>0
-      ? `<span style="color:var(--rj);font-weight:700;font-size:11px">${horas}h (+${extra.toFixed(1)}h extra = +${fmt(cobro)})</span>`
+    const rutaOpts=''; // descripción libre
+    const {horas,extra,hCompletas,cobro}=calcHorasExtra(r.salida,r.llegada);
+    const horasTag=hCompletas>0
+      ? `<span style="color:var(--rj);font-weight:700;font-size:11px">${horas}h<br>+${hCompletas}h extra<br><b>+${fmt(cobro)}</b></span>`
       : horas>0 ? `<span style="color:var(--vd);font-size:11px">${horas}h ✓</span>` : '<span style="color:var(--tx2);font-size:11px">—</span>';
     return `<tr>
-    <td style="min-width:100px">
+    <td style="min-width:96px">
       <input type="date" value="${r.fecha}" onchange="editarCampRuta(${r.id},'fecha',this.value)"
         style="width:100%;font-size:11px;border:1px dashed var(--bd);border-radius:5px;padding:2px 5px">
     </td>
-    <td style="min-width:70px">
-      <select onchange="editarCampRuta(${r.id},'ruta',this.value)" style="font-size:12px;font-weight:700;padding:3px 5px;border-radius:5px;width:100%;border:1px solid var(--bd);background:var(--az3);color:var(--az)">
-        ${rutaOpts}
-      </select>
+    <td style="min-width:220px">
+      <input type="text" value="${r.ruta}" onchange="editarCampRuta(${r.id},'ruta',this.value)"
+        list="rutas-sugeridas" placeholder="Descripción del recorrido..."
+        style="width:100%;font-size:11px;font-weight:600;color:var(--az);border:1px dashed var(--bd);border-radius:5px;padding:3px 7px;background:var(--az3)">
     </td>
-    <td style="min-width:150px">
+    <td style="min-width:140px">
       <select onchange="editarCampRuta(${r.id},'conductor',this.value)" style="font-size:11px;padding:3px 6px;border-radius:5px;width:100%;border:1px solid var(--bd);background:var(--bl)">
         <option value="">— Seleccionar —</option>${condOpts}
       </select>
     </td>
-    <td style="font-size:11px;color:var(--tx2);min-width:120px">${r.destino}</td>
-    <td style="min-width:80px">
-      <input type="time" value="${r.salida||''}" onchange="editarCampRuta(${r.id},'salida',this.value)"
+    <td style="min-width:90px">
+      <input type="text" value="${r.salida||''}" onchange="editarCampRuta(${r.id},'salida',this.value)"
+        placeholder="Ej: 6:00 am"
         style="width:100%;font-size:11px;border:1px dashed var(--bd);border-radius:5px;padding:2px 5px;font-family:'DM Mono',monospace">
     </td>
-    <td style="min-width:80px">
-      <input type="time" value="${r.llegada||''}" onchange="editarCampRuta(${r.id},'llegada',this.value)"
+    <td style="min-width:90px">
+      <input type="text" value="${r.llegada||''}" onchange="editarCampRuta(${r.id},'llegada',this.value)"
+        placeholder="Ej: 5:30 pm"
         style="width:100%;font-size:11px;border:1px dashed var(--bd);border-radius:5px;padding:2px 5px;font-family:'DM Mono',monospace">
     </td>
-    <td style="min-width:120px;text-align:center">${horasTag}</td>
-    <td>${r.pasajeros||'—'}</td>
+    <td style="min-width:110px;text-align:center">${horasTag}</td>
     <td style="min-width:110px">
       <input type="number" value="${r.valor}" onchange="editarCampRuta(${r.id},'valor',this.value)"
         style="width:100%;font-size:12px;font-weight:600;color:var(--az);border:1px dashed var(--bd);border-radius:5px;padding:3px 6px;text-align:right;background:var(--az3)"
@@ -1407,11 +1451,12 @@ function renderRutas(){
   </tr>`;}).join(''):'<tr><td colspan="14" style="text-align:center;color:var(--tx2);padding:22px">Sin rutas en esta semana</td></tr>';
   const tv=rutasSem.reduce((s,r)=>s+Number(r.valor),0),tp=rutasSem.reduce((s,r)=>s+Number(r.pagoCond),0);
   const totalExtra=rutasSem.reduce((s,r)=>{const{cobro}=calcHorasExtra(r.salida,r.llegada);return s+cobro},0);
+  const totalHExtras=rutasSem.reduce((s,r)=>{const{hCompletas}=calcHorasExtra(r.salida,r.llegada);return s+hCompletas},0);
   const rs=document.getElementById('res-semana');
   if(rs)rs.innerHTML=`<div class="kpis" style="margin:0">
     ${kpi('Servicios',rutasSem.length,'az')}
     ${kpi('Facturado base',fmt(tv),'az')}
-    ${totalExtra>0?kpi('Horas extra',fmt(totalExtra),'rj','A sumar al cobro'):''}
+    ${totalExtra>0?kpi('Horas extra cobradas',fmt(totalExtra),'rj',totalHExtras+'h completas × $60.000'):''}
     ${kpi('Pago conductores',fmt(tp),'rj')}
     ${kpi('Utilidad',fmt(tv-tp),'vd')}
     ${kpi('Margen',tv?((tv-tp)/tv*100).toFixed(1)+'%':'—','vd')}
@@ -1886,10 +1931,10 @@ function progFechas(){
 }
 
 const PROG_RUTAS_INFO = {
-  'R-1':{lbl:'R-1 Granizal',        destino:'Granizal / Bello Oriente',              valor:650000, hora:'06:00'},
-  'R-2':{lbl:'R-2 Santa Elena',     destino:'Santa Elena / Pericos / Paysandú',      valor:730000, hora:'06:30'},
-  'R-3':{lbl:'R-3 Parque Arví',     destino:'Parque Arví / Guarne / Veredal',        valor:730000, hora:'07:00'},
-  'R-4':{lbl:'R-4 Sto. Domingo',    destino:'Sto. Domingo / La Avanzada / Carpinelo',valor:730000, hora:'07:30'},
+  'R-1':{lbl:'Bello Oriente — Granizal',                                         destino:'Bello Oriente — Granizal',                                         valor:650000, hora:'06:00'},
+  'R-2':{lbl:'Santa Elena — Pericos — Pantanillo — El Plan — Paysandú',          destino:'Santa Elena — Pericos — Pantanillo — El Plan — Paysandú',          valor:730000, hora:'06:00'},
+  'R-3':{lbl:'Parque Arví — Granizal — Antigua Vía Guarne — Vías Veredales Bello',destino:'Parque Arví — Granizal — Antigua Vía Guarne — Vías Veredales Bello',valor:950000, hora:'07:00'},
+  'R-4':{lbl:'Santo Domingo — La Avanzada — Carpinelo',                           destino:'Santo Domingo — La Avanzada — Carpinelo',                           valor:750000, hora:'07:00'},
 };
 
 function getProgDia(sem, dia){
@@ -2044,7 +2089,7 @@ function renderProgramador(){
               <!-- Badge ruta -->
               <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
                 <select onchange="editarServicio(${di},${idx},'ruta',this.value);renderProgramador()"
-                  style="font-size:11px;font-weight:700;color:var(--az);border:none;background:var(--az3);border-radius:4px;padding:2px 6px;max-width:130px">
+                  style="font-size:10px;font-weight:600;color:var(--az);border:1px solid var(--bd);background:var(--az3);border-radius:4px;padding:2px 5px;width:100%">
                   ${Object.entries(PROG_RUTAS_INFO).map(([k,r])=>`<option value="${k}"${s.ruta===k?' selected':''}>${r.lbl}</option>`).join('')}
                 </select>
                 <button onclick="eliminarServicio(${di},${idx})" style="width:18px;height:18px;background:var(--rj2);border:none;border-radius:50%;color:var(--rj);font-size:10px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-weight:700">✕</button>
