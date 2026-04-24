@@ -1,0 +1,1081 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Proyecto M-0548 — Universidad Nacional</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* ── LOGIN ── */
+#login-screen{position:fixed;inset:0;background:linear-gradient(135deg,#0d1f3c 0%,#1A3A6B 50%,#0d2a4a 100%);display:flex;align-items:center;justify-content:center;z-index:9999;font-family:'DM Sans',sans-serif}
+#login-screen.oculto{display:none}
+.login-box{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.13);border-radius:20px;padding:42px 38px;width:370px;max-width:95vw;backdrop-filter:blur(20px);box-shadow:0 24px 64px rgba(0,0,0,.5)}
+.login-logo{width:58px;height:58px;background:#C0501A;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:26px;font-weight:700;color:#fff;margin:0 auto 16px}
+.login-title{text-align:center;font-size:19px;font-weight:700;color:#fff;margin-bottom:4px}
+.login-sub{text-align:center;font-size:12px;color:#88AACC;margin-bottom:6px;line-height:1.5}
+.login-contrato{display:flex;justify-content:center;margin-bottom:26px}
+.login-badge{background:rgba(192,80,26,.25);border:1px solid rgba(192,80,26,.4);border-radius:20px;padding:4px 14px;font-size:11px;color:#E8843A;font-weight:600;letter-spacing:.4px}
+.login-field{margin-bottom:14px}
+.login-field label{display:block;font-size:12px;color:#88AACC;margin-bottom:6px;font-weight:500;letter-spacing:.3px}
+.login-field input{width:100%;padding:11px 14px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.14);border-radius:10px;font-size:14px;color:#fff;font-family:'DM Sans',sans-serif;outline:none;transition:border .2s;box-sizing:border-box}
+.login-field input:focus{border-color:#2E5FA3;background:rgba(255,255,255,.11)}
+.login-field input::placeholder{color:#4A6080}
+.login-btn{width:100%;padding:12px;background:#C0501A;border:none;border-radius:10px;color:#fff;font-size:14px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;margin-top:10px;transition:background .2s;letter-spacing:.3px}
+.login-btn:hover{background:#A84016}
+.login-err{background:rgba(163,45,45,.2);border:1px solid rgba(163,45,45,.4);border-radius:8px;padding:10px 14px;font-size:12px;color:#F09595;margin-top:12px;display:none;text-align:center}
+.login-err.show{display:block}
+.login-pie{text-align:center;margin-top:20px;font-size:11px;color:#3A5070}
+
+:root {
+  --azul:      #1A3A6B;
+  --azul2:     #2E5FA3;
+  --azul3:     #EBF2FC;
+  --naranja:   #C0501A;
+  --naranja2:  #FEF0E8;
+  --verde:     #1A6B3A;
+  --verde2:    #EAF5EE;
+  --rojo:      #A32D2D;
+  --rojo2:     #FCEBEB;
+  --amber:     #7A4800;
+  --amber2:    #FEF3E2;
+  --gris:      #F4F6FA;
+  --gris2:     #E8ECF4;
+  --borde:     #D4DCEA;
+  --texto:     #1A1F36;
+  --texto2:    #5A6481;
+  --blanco:    #FFFFFF;
+  --sombra:    0 2px 12px rgba(26,58,107,.10);
+  --sombra2:   0 4px 24px rgba(26,58,107,.15);
+  --radio:     12px;
+  --radio2:    8px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'DM Sans',sans-serif;background:var(--gris);color:var(--texto);min-height:100vh;font-size:14px}
+a{color:inherit;text-decoration:none}
+button{cursor:pointer;font-family:'DM Sans',sans-serif}
+
+/* ── TOPBAR ── */
+.topbar{background:var(--azul);padding:0 24px;display:flex;align-items:center;justify-content:space-between;height:60px;position:sticky;top:0;z-index:100;box-shadow:0 2px 16px rgba(0,0,0,.25)}
+.topbar-brand{display:flex;align-items:center;gap:12px}
+.topbar-logo{width:36px;height:36px;background:var(--naranja);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:700;color:#fff}
+.topbar-title{font-size:13px;font-weight:600;color:#fff;line-height:1.3}
+.topbar-sub{font-size:11px;color:#88AACC;font-weight:400}
+.topbar-badge{background:var(--naranja);color:#fff;font-size:11px;font-weight:600;padding:4px 12px;border-radius:20px;letter-spacing:.3px}
+
+/* ── NAV ── */
+.nav{background:var(--azul2);display:flex;padding:0 20px;gap:2px;overflow-x:auto;scrollbar-width:none}
+.nav::-webkit-scrollbar{display:none}
+.nav-btn{padding:11px 16px;border:none;background:transparent;color:#9BBCDE;font-size:12px;font-weight:500;white-space:nowrap;border-bottom:3px solid transparent;transition:all .2s;font-family:'DM Sans',sans-serif}
+.nav-btn.active{color:#fff;border-bottom-color:#fff;background:rgba(255,255,255,.08)}
+.nav-btn:hover:not(.active){color:#cce}
+
+/* ── LAYOUT ── */
+.content{padding:20px;max-width:1100px;margin:0 auto}
+.section{display:none}.section.active{display:block}
+
+/* ── CARDS ── */
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-bottom:20px}
+.kpi{background:var(--blanco);border:1px solid var(--borde);border-radius:var(--radio);padding:14px 16px;box-shadow:var(--sombra)}
+.kpi-label{font-size:11px;color:var(--texto2);font-weight:500;margin-bottom:6px;text-transform:uppercase;letter-spacing:.4px}
+.kpi-val{font-size:22px;font-weight:700;color:var(--texto)}
+.kpi-val.verde{color:var(--verde)}.kpi-val.rojo{color:var(--rojo)}.kpi-val.azul{color:var(--azul2)}.kpi-val.amber{color:var(--amber)}
+.kpi-sub{font-size:11px;color:var(--texto2);margin-top:4px}
+
+.card{background:var(--blanco);border:1px solid var(--borde);border-radius:var(--radio);padding:16px 18px;margin-bottom:14px;box-shadow:var(--sombra)}
+.card-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;flex-wrap:wrap;gap:8px}
+.card-title{font-size:14px;font-weight:600;color:var(--texto)}
+.card-sub{font-size:12px;color:var(--texto2)}
+.sec-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:8px}
+.sec-hdr h2{font-size:16px;font-weight:700;color:var(--texto)}
+
+/* ── TABLE ── */
+.table-wrap{overflow-x:auto;border-radius:var(--radio);border:1px solid var(--borde)}
+table{width:100%;border-collapse:collapse;font-size:13px;background:var(--blanco)}
+th{text-align:left;padding:10px 12px;background:var(--gris);color:var(--texto2);font-weight:600;font-size:11px;text-transform:uppercase;letter-spacing:.4px;border-bottom:1px solid var(--borde);white-space:nowrap}
+td{padding:10px 12px;border-bottom:1px solid var(--gris);color:var(--texto);vertical-align:middle}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:var(--gris)}
+
+/* ── BADGES ── */
+.badge{display:inline-flex;align-items:center;padding:3px 9px;border-radius:20px;font-size:11px;font-weight:600;white-space:nowrap}
+.b-verde{background:var(--verde2);color:var(--verde)}
+.b-rojo{background:var(--rojo2);color:var(--rojo)}
+.b-amber{background:var(--amber2);color:var(--amber)}
+.b-azul{background:var(--azul3);color:var(--azul2)}
+.b-gris{background:var(--gris2);color:var(--texto2)}
+.b-naranja{background:var(--naranja2);color:var(--naranja)}
+
+/* ── BUTTONS ── */
+.btn{padding:7px 14px;border-radius:var(--radio2);border:1px solid var(--borde);background:var(--blanco);font-size:12px;font-weight:500;color:var(--texto);transition:all .15s;font-family:'DM Sans',sans-serif}
+.btn:hover{background:var(--gris);border-color:var(--azul2)}
+.btn.primary{background:var(--azul);color:#fff;border-color:var(--azul)}
+.btn.primary:hover{background:var(--azul2)}
+.btn.danger{background:var(--rojo2);color:var(--rojo);border-color:#F09595}
+.btn.success{background:var(--verde2);color:var(--verde);border-color:#8FCF9F}
+.btn.sm{padding:4px 10px;font-size:11px}
+.btn.naranja{background:var(--naranja);color:#fff;border-color:var(--naranja)}
+.btn-group{display:flex;gap:8px;flex-wrap:wrap}
+
+/* ── FORMS ── */
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:4px}
+.form-row.three{grid-template-columns:1fr 1fr 1fr}
+.form-row.one{grid-template-columns:1fr}
+.form-group{display:flex;flex-direction:column;gap:4px;margin-bottom:10px}
+label{font-size:12px;font-weight:500;color:var(--texto2)}
+input,select,textarea{padding:8px 12px;border:1px solid var(--borde);border-radius:var(--radio2);font-size:13px;font-family:'DM Sans',sans-serif;color:var(--texto);background:var(--blanco);transition:border .15s;outline:none}
+input:focus,select:focus,textarea:focus{border-color:var(--azul2);box-shadow:0 0 0 3px rgba(46,95,163,.12)}
+textarea{resize:vertical;min-height:70px}
+
+/* ── MODAL ── */
+.modal-bg{display:none;position:fixed;inset:0;background:rgba(15,25,50,.5);z-index:500;align-items:flex-start;justify-content:center;padding:40px 16px;backdrop-filter:blur(4px)}
+.modal-bg.open{display:flex}
+.modal{background:var(--blanco);border-radius:16px;padding:24px;width:540px;max-width:100%;max-height:85vh;overflow-y:auto;box-shadow:var(--sombra2);animation:slideIn .2s ease}
+@keyframes slideIn{from{transform:translateY(-20px);opacity:0}to{transform:translateY(0);opacity:1}}
+.modal h3{font-size:16px;font-weight:700;margin-bottom:18px;color:var(--azul);padding-bottom:12px;border-bottom:1px solid var(--borde)}
+.modal-foot{display:flex;gap:8px;justify-content:flex-end;margin-top:16px;padding-top:14px;border-top:1px solid var(--borde)}
+
+/* ── ALERTS ── */
+.alert{padding:12px 16px;border-radius:var(--radio2);margin-bottom:14px;font-size:13px;display:flex;align-items:flex-start;gap:10px}
+.alert.warn{background:var(--amber2);border-left:3px solid #E8A020;color:var(--amber)}
+.alert.info{background:var(--azul3);border-left:3px solid var(--azul2);color:var(--azul)}
+.alert.danger{background:var(--rojo2);border-left:3px solid var(--rojo);color:var(--rojo)}
+.alert.ok{background:var(--verde2);border-left:3px solid var(--verde);color:var(--verde)}
+
+/* ── SEMANA NAV ── */
+.week-nav{display:flex;align-items:center;gap:10px}
+.week-nav span{font-size:13px;font-weight:600;color:var(--texto);white-space:nowrap}
+
+/* ── CONDUCTOR AVATAR ── */
+.avatar{width:32px;height:32px;border-radius:50%;background:var(--azul3);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:var(--azul);flex-shrink:0}
+
+/* ── CONDUCTOR CARD ── */
+.cond-card{background:var(--blanco);border:1px solid var(--borde);border-radius:var(--radio);overflow:hidden;margin-bottom:12px;box-shadow:var(--sombra)}
+.cond-card-hdr{background:var(--azul);padding:12px 16px;display:flex;justify-content:space-between;align-items:center}
+.cond-card-hdr .nombre{font-weight:700;font-size:14px;color:#fff}
+.cond-card-hdr .sub{font-size:11px;color:#88AACC}
+.cond-card-body{padding:14px 16px}
+
+/* ── TOAST ── */
+.toast{position:fixed;bottom:24px;right:24px;background:var(--azul);color:#fff;padding:12px 20px;border-radius:var(--radio);font-size:13px;font-weight:500;box-shadow:var(--sombra2);z-index:1000;transform:translateY(80px);opacity:0;transition:all .3s}
+.toast.show{transform:translateY(0);opacity:1}
+.toast.ok{background:var(--verde)}
+.toast.err{background:var(--rojo)}
+
+/* ── MONO ── */
+.mono{font-family:'DM Mono',monospace;font-size:12px}
+
+/* ── GRID ── */
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media(max-width:640px){.two-col,.form-row,.form-row.three{grid-template-columns:1fr}.kpis{grid-template-columns:1fr 1fr}}
+</style>
+</head>
+<body>
+
+<!-- ══ LOGIN SCREEN ══ -->
+<div id="login-screen">
+  <div class="login-box">
+    <div class="login-logo">T</div>
+    <div class="login-title">Proyecto M-0548</div>
+    <div class="login-sub">Servicio de Transporte Terrestre de Pasajeros<br>Universidad Nacional de Colombia</div>
+    <div class="login-contrato"><span class="login-badge">M-0548 · Sede Medellín</span></div>
+    <div class="login-field">
+      <label>USUARIO</label>
+      <input type="text" id="l-user" placeholder="Ingresa tu usuario" autocomplete="username">
+    </div>
+    <div class="login-field">
+      <label>CONTRASEÑA</label>
+      <input type="password" id="l-pass" placeholder="Ingresa tu contraseña" autocomplete="current-password">
+    </div>
+    <button class="login-btn" onclick="doLogin()">Ingresar al sistema →</button>
+    <div class="login-err" id="login-err">Usuario o contraseña incorrectos. Intenta de nuevo.</div>
+    <div class="login-pie">Orlando Sepúlveda Macías · 2026</div>
+  </div>
+</div>
+
+
+<div class="topbar">
+  <div class="topbar-brand">
+    <div class="topbar-logo">T</div>
+    <div>
+      <div class="topbar-title">Servicio de Transporte Terrestre de Pasajeros</div>
+      <div class="topbar-sub">Orlando Sepúlveda Macías — Universidad Nacional de Colombia</div>
+    </div>
+  </div>
+  <div class="topbar-badge">M-0548</div>
+</div>
+
+<div class="nav">
+  <button class="nav-btn active" onclick="nav('dashboard')">📊 Panel</button>
+  <button class="nav-btn" onclick="nav('rutas')">🗺 Rutas diarias</button>
+  <button class="nav-btn" onclick="nav('conductores')">👤 Conductores</button>
+  <button class="nav-btn" onclick="nav('cuentas')">📄 Cuentas de cobro</button>
+  <button class="nav-btn" onclick="nav('pagos')">💳 Pagos</button>
+  <button class="nav-btn" onclick="nav('finanzas')">📈 Financiero</button>
+  <button class="nav-btn" onclick="nav('novedades')">⚠ Novedades</button>
+</div>
+
+<div class="content">
+
+<!-- ══ DASHBOARD ══ -->
+<div id="dashboard" class="section active">
+  <div id="kpis-dashboard" class="kpis"></div>
+  <div class="two-col">
+    <div class="card">
+      <div class="card-hdr">
+        <span class="card-title">Rutas registradas hoy</span>
+        <span id="fecha-hoy" class="card-sub"></span>
+      </div>
+      <div class="table-wrap"><table>
+        <thead><tr><th>Ruta</th><th>Conductor</th><th>Destino</th><th>Valor</th><th>Estado</th></tr></thead>
+        <tbody id="tabla-hoy"></tbody>
+      </table></div>
+    </div>
+    <div class="card">
+      <div class="card-hdr"><span class="card-title">Cuentas de cobro — UNAL</span></div>
+      <div class="table-wrap"><table>
+        <thead><tr><th>Semana</th><th>Total</th><th>Estado</th></tr></thead>
+        <tbody id="tabla-cuentas-dash"></tbody>
+      </table></div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-hdr"><span class="card-title">Últimos 10 servicios registrados</span><button class="btn sm primary" onclick="nav('rutas')">Ver todos</button></div>
+    <div class="table-wrap"><table>
+      <thead><tr><th>Fecha</th><th>Ruta</th><th>Conductor</th><th>Destino</th><th>Valor</th><th>Estado</th></tr></thead>
+      <tbody id="tabla-recientes"></tbody>
+    </table></div>
+  </div>
+</div>
+
+<!-- ══ RUTAS ══ -->
+<div id="rutas" class="section">
+  <div class="sec-hdr">
+    <h2>Registro de rutas diarias</h2>
+    <div class="btn-group">
+      <div class="week-nav">
+        <button class="btn sm" onclick="semanaNav(-1)">←</button>
+        <span id="semana-label">Semana actual</span>
+        <button class="btn sm" onclick="semanaNav(1)">→</button>
+      </div>
+      <button class="btn primary" onclick="abrirModal('modal-ruta')">+ Registrar ruta</button>
+    </div>
+  </div>
+  <div class="alert info">📋 Proyecto M-0548 · Universidad Nacional · Lunes a Viernes</div>
+  <div class="card" style="padding:0">
+    <div class="table-wrap"><table>
+      <thead><tr><th>Fecha</th><th>Ruta</th><th>Conductor</th><th>Destino</th><th>Salida</th><th>Llegada</th><th>Pasajeros</th><th>Valor UNAL</th><th>Pago cond.</th><th>Estado</th><th></th></tr></thead>
+      <tbody id="tabla-rutas-semana"></tbody>
+    </table></div>
+  </div>
+  <div class="card">
+    <div class="card-hdr"><span class="card-title">Resumen financiero de la semana</span></div>
+    <div id="resumen-semana"></div>
+  </div>
+</div>
+
+<!-- ══ CONDUCTORES ══ -->
+<div id="conductores" class="section">
+  <div class="sec-hdr">
+    <h2>Conductores — Proyecto M-0548</h2>
+    <button class="btn primary" onclick="abrirModal('modal-conductor')">+ Agregar conductor</button>
+  </div>
+  <div id="lista-conductores"></div>
+</div>
+
+<!-- ══ CUENTAS ══ -->
+<div id="cuentas" class="section">
+  <div class="sec-hdr">
+    <h2>Cuentas de cobro — Universidad Nacional</h2>
+    <button class="btn primary" onclick="abrirModal('modal-cuenta')">+ Nueva cuenta</button>
+  </div>
+  <div id="kpis-cuentas" class="kpis"></div>
+  <div id="lista-cuentas"></div>
+</div>
+
+<!-- ══ PAGOS ══ -->
+<div id="pagos" class="section">
+  <div class="sec-hdr">
+    <h2>Pagos a conductores</h2>
+    <button class="btn primary" onclick="abrirModal('modal-pago')">+ Registrar pago</button>
+  </div>
+  <div id="kpis-pagos" class="kpis"></div>
+  <div class="card" style="padding:0">
+    <div class="table-wrap"><table>
+      <thead><tr><th>Conductor</th><th>Semana</th><th>Rutas</th><th>Total</th><th>Anticipo</th><th>Saldo</th><th>Método</th><th>Estado</th><th></th></tr></thead>
+      <tbody id="tabla-pagos"></tbody>
+    </table></div>
+  </div>
+</div>
+
+<!-- ══ FINANCIERO ══ -->
+<div id="finanzas" class="section">
+  <div class="sec-hdr">
+    <h2>Control financiero — M-0548</h2>
+  </div>
+  <div id="kpis-finanzas" class="kpis"></div>
+  <div class="two-col">
+    <div class="card">
+      <div class="card-title" style="margin-bottom:12px">Detalle por ruta</div>
+      <div class="table-wrap"><table>
+        <thead><tr><th>Ruta</th><th>Servicios</th><th>Ingresos</th><th>Costo cond.</th><th>Utilidad</th><th>Margen</th></tr></thead>
+        <tbody id="tabla-fin-rutas"></tbody>
+      </table></div>
+    </div>
+    <div class="card">
+      <div class="card-title" style="margin-bottom:12px">Flujo por semana</div>
+      <div class="table-wrap"><table>
+        <thead><tr><th>Semana</th><th>Facturado</th><th>Cobrado</th><th>Pagado cond.</th><th>Balance</th></tr></thead>
+        <tbody id="tabla-fin-semanas"></tbody>
+      </table></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ NOVEDADES ══ -->
+<div id="novedades" class="section">
+  <div class="sec-hdr">
+    <h2>Registro de novedades</h2>
+    <button class="btn primary" onclick="abrirModal('modal-novedad')">+ Registrar novedad</button>
+  </div>
+  <div class="alert warn">⚠ Las novedades deben reportarse a la UNAL dentro de las 2 horas siguientes al evento.</div>
+  <div class="card" style="padding:0">
+    <div class="table-wrap"><table>
+      <thead><tr><th>Fecha</th><th>Ruta</th><th>Conductor</th><th>Tipo</th><th>Descripción</th><th>Impacto</th><th>Estado</th><th></th></tr></thead>
+      <tbody id="tabla-novedades"></tbody>
+    </table></div>
+  </div>
+</div>
+
+</div><!-- /content -->
+
+<!-- ══ MODALES ══ -->
+
+<!-- Modal Ruta -->
+<div class="modal-bg" id="modal-ruta">
+<div class="modal">
+  <h3>Registrar ruta — Proyecto M-0548</h3>
+  <div class="form-row">
+    <div class="form-group"><label>Fecha</label><input type="date" id="r-fecha"></div>
+    <div class="form-group"><label>Ruta</label>
+      <select id="r-ruta">
+        <option value="">Seleccionar...</option>
+        <option value="R-1">R-1 — Granizal / Bello Oriente</option>
+        <option value="R-2">R-2 — Santa Elena / Pericos / Paysandú</option>
+        <option value="R-3">R-3 — Parque Arví / Guarne / Veredal</option>
+        <option value="R-4">R-4 — Sto. Domingo / La Avanzada / Carpinelo</option>
+      </select>
+    </div>
+  </div>
+  <div class="form-row">
+    <div class="form-group"><label>Conductor</label><select id="r-conductor"><option value="">Seleccionar...</option></select></div>
+    <div class="form-group"><label>N° Pasajeros</label><input type="number" id="r-pasajeros" min="0" value=""></div>
+  </div>
+  <div class="form-row">
+    <div class="form-group"><label>Hora salida</label><input type="time" id="r-salida"></div>
+    <div class="form-group"><label>Hora llegada</label><input type="time" id="r-llegada"></div>
+  </div>
+  <div class="form-row">
+    <div class="form-group"><label>Valor cobrado a UNAL ($)</label><input type="number" id="r-valor" placeholder="730000"></div>
+    <div class="form-group"><label>Pago al conductor ($)</label><input type="number" id="r-pago-cond" placeholder="500000"></div>
+  </div>
+  <div class="form-row">
+    <div class="form-group"><label>Estado</label>
+      <select id="r-estado">
+        <option value="Realizado">Realizado</option>
+        <option value="En ruta">En ruta</option>
+        <option value="Programado">Programado</option>
+        <option value="Novedad">Novedad</option>
+      </select>
+    </div>
+    <div class="form-group"><label>Semana</label><input type="text" id="r-semana" placeholder="Ej: 17"></div>
+  </div>
+  <div class="form-group"><label>Observaciones</label><textarea id="r-obs" placeholder="Condiciones de la vía, novedades..."></textarea></div>
+  <div class="modal-foot">
+    <button class="btn" onclick="cerrarModal('modal-ruta')">Cancelar</button>
+    <button class="btn primary" onclick="guardarRuta()">Guardar ruta</button>
+  </div>
+</div></div>
+
+<!-- Modal Conductor -->
+<div class="modal-bg" id="modal-conductor">
+<div class="modal">
+  <h3>Agregar conductor — M-0548</h3>
+  <div class="form-row">
+    <div class="form-group"><label>Nombre completo</label><input type="text" id="c-nombre" placeholder="Nombre y apellidos"></div>
+    <div class="form-group"><label>Cédula</label><input type="text" id="c-cedula" placeholder="Número de cédula"></div>
+  </div>
+  <div class="form-row">
+    <div class="form-group"><label>Teléfono</label><input type="text" id="c-tel" placeholder="300-000-0000"></div>
+    <div class="form-group"><label>Método de pago</label>
+      <select id="c-metodo">
+        <option>Nequi</option><option>Daviplata</option><option>Bancolombia Ahorros</option><option>Efectivo</option><option>Transferencia</option>
+      </select>
+    </div>
+  </div>
+  <div class="form-row">
+    <div class="form-group"><label>Número cuenta / Nequi</label><input type="text" id="c-cuenta" placeholder="Número de cuenta o Nequi"></div>
+    <div class="form-group"><label>Categoría licencia</label>
+      <select id="c-licencia"><option>C2</option><option>C1</option><option>B3</option></select>
+    </div>
+  </div>
+  <div class="form-row">
+    <div class="form-group"><label>Ruta principal asignada</label>
+      <select id="c-ruta">
+        <option>R-1 — Granizal</option><option>R-2 — Santa Elena</option><option>R-3 — Parque Arví</option><option>R-4 — Sto. Domingo</option><option>Varias / Flexible</option>
+      </select>
+    </div>
+    <div class="form-group"><label>Pago por ruta ($)</label><input type="number" id="c-pago" placeholder="450000"></div>
+  </div>
+  <div class="form-row">
+    <div class="form-group"><label>Vencimiento licencia</label><input type="date" id="c-venc-lic"></div>
+    <div class="form-group"><label>Vencimiento SOAT</label><input type="date" id="c-venc-soat"></div>
+  </div>
+  <div class="modal-foot">
+    <button class="btn" onclick="cerrarModal('modal-conductor')">Cancelar</button>
+    <button class="btn primary" onclick="guardarConductor()">Guardar conductor</button>
+  </div>
+</div></div>
+
+<!-- Modal Cuenta -->
+<div class="modal-bg" id="modal-cuenta">
+<div class="modal">
+  <h3>Nueva cuenta de cobro — UNAL M-0548</h3>
+  <div class="form-row">
+    <div class="form-group"><label>Número de cuenta</label><input type="text" id="cu-num" placeholder="Ej: 005"></div>
+    <div class="form-group"><label>Semana</label><input type="text" id="cu-sem" placeholder="Ej: 18"></div>
+  </div>
+  <div class="form-row">
+    <div class="form-group"><label>Período (descripción)</label><input type="text" id="cu-periodo" placeholder="29 Abr – 03 May 2026"></div>
+    <div class="form-group"><label>Fecha emisión</label><input type="date" id="cu-fecha"></div>
+  </div>
+  <div class="form-row">
+    <div class="form-group"><label>Valor total ($)</label><input type="number" id="cu-valor" placeholder="14200000"></div>
+    <div class="form-group"><label>Fecha vencimiento</label><input type="date" id="cu-vence"></div>
+  </div>
+  <div class="form-row">
+    <div class="form-group"><label>N° servicios realizados</label><input type="number" id="cu-servicios" placeholder="20"></div>
+    <div class="form-group"><label>Estado</label>
+      <select id="cu-estado"><option>Pendiente</option><option>Cobrada</option><option>Vencida</option><option>Abierta</option></select>
+    </div>
+  </div>
+  <div class="modal-foot">
+    <button class="btn" onclick="cerrarModal('modal-cuenta')">Cancelar</button>
+    <button class="btn primary" onclick="guardarCuenta()">Guardar cuenta</button>
+  </div>
+</div></div>
+
+<!-- Modal Pago -->
+<div class="modal-bg" id="modal-pago">
+<div class="modal">
+  <h3>Registrar pago a conductor</h3>
+  <div class="form-row">
+    <div class="form-group"><label>Conductor</label><select id="p-conductor"><option value="">Seleccionar...</option></select></div>
+    <div class="form-group"><label>Semana</label><input type="text" id="p-semana" placeholder="Ej: 17"></div>
+  </div>
+  <div class="form-row">
+    <div class="form-group"><label>Rutas realizadas</label><input type="number" id="p-rutas" min="0"></div>
+    <div class="form-group"><label>Total a pagar ($)</label><input type="number" id="p-total"></div>
+  </div>
+  <div class="form-row">
+    <div class="form-group"><label>Anticipo entregado ($)</label><input type="number" id="p-anticipo" value="0"></div>
+    <div class="form-group"><label>Saldo pagado ($)</label><input type="number" id="p-saldo"></div>
+  </div>
+  <div class="form-row">
+    <div class="form-group"><label>Método de pago</label>
+      <select id="p-metodo"><option>Nequi</option><option>Daviplata</option><option>Bancolombia</option><option>Efectivo</option></select>
+    </div>
+    <div class="form-group"><label>Fecha de pago</label><input type="date" id="p-fecha"></div>
+  </div>
+  <div class="form-group"><label>Estado</label>
+    <select id="p-estado"><option>Pagado</option><option>Pendiente</option><option>Parcial</option></select>
+  </div>
+  <div class="modal-foot">
+    <button class="btn" onclick="cerrarModal('modal-pago')">Cancelar</button>
+    <button class="btn primary" onclick="guardarPago()">Registrar pago</button>
+  </div>
+</div></div>
+
+<!-- Modal Novedad -->
+<div class="modal-bg" id="modal-novedad">
+<div class="modal">
+  <h3>Registrar novedad</h3>
+  <div class="form-row">
+    <div class="form-group"><label>Fecha</label><input type="date" id="n-fecha"></div>
+    <div class="form-group"><label>Ruta afectada</label>
+      <select id="n-ruta"><option>R-1 Granizal</option><option>R-2 Santa Elena</option><option>R-3 Parque Arví</option><option>R-4 Sto. Domingo</option></select>
+    </div>
+  </div>
+  <div class="form-row">
+    <div class="form-group"><label>Conductor</label><select id="n-conductor"><option value="">Seleccionar...</option></select></div>
+    <div class="form-group"><label>Tipo de novedad</label>
+      <select id="n-tipo"><option>Ruta no realizada</option><option>Retraso mayor 30 min</option><option>Cambio de conductor</option><option>Falla mecánica</option><option>Accidente de tránsito</option><option>Otro</option></select>
+    </div>
+  </div>
+  <div class="form-group"><label>Descripción</label><textarea id="n-desc" placeholder="Describe lo ocurrido con detalle..."></textarea></div>
+  <div class="form-row">
+    <div class="form-group"><label>Impacto económico ($)</label><input type="number" id="n-impacto" placeholder="0"></div>
+    <div class="form-group"><label>Reportado a UNAL</label>
+      <select id="n-reportado"><option>Sí — por WhatsApp</option><option>Sí — por correo</option><option>No reportado aún</option></select>
+    </div>
+  </div>
+  <div class="modal-foot">
+    <button class="btn" onclick="cerrarModal('modal-novedad')">Cancelar</button>
+    <button class="btn primary" onclick="guardarNovedad()">Guardar novedad</button>
+  </div>
+</div></div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ══════════════════════════════════════
+// STORAGE
+// ══════════════════════════════════════
+const DB = {
+  get: k => { try { return JSON.parse(localStorage.getItem('m0548_'+k)||'null') } catch(e){return null} },
+  set: (k,v) => localStorage.setItem('m0548_'+k, JSON.stringify(v)),
+};
+
+// ── DATOS INICIALES ──
+function initData() {
+  if (!DB.get('init')) {
+    DB.set('conductores', [
+      {id:1, nombre:'Orlando Sepúlveda Macías', cedula:'1.017.147.157', tel:'3147887124', metodo:'Nequi', cuenta:'3147887124', licencia:'C2', ruta:'Varias / Flexible', pago:0, vencLic:'2026-12-01', vencSoat:'2026-10-01', esPropietario:true},
+      {id:2, nombre:'Adolfo Mora Otero',        cedula:'—',             tel:'3148114178', metodo:'Nequi', cuenta:'3148114178', licencia:'C2', ruta:'R-2 — Santa Elena', pago:500000, vencLic:'2026-09-01', vencSoat:'2026-11-01', esPropietario:false},
+      {id:3, nombre:'Duban Urrego Gómez',       cedula:'—',             tel:'—',          metodo:'Bancolombia Ahorros', cuenta:'01687143261', licencia:'C2', ruta:'R-1 / R-2', pago:450000, vencLic:'2026-08-01', vencSoat:'2026-12-01', esPropietario:false},
+    ]);
+    DB.set('rutas', [
+      {id:1,fecha:'2026-04-22',ruta:'R-1',conductor:'Orlando Sepúlveda Macías',destino:'Granizal / Bello Oriente',salida:'06:00',llegada:'07:25',pasajeros:8,valor:650000,pagoCond:0,estado:'Realizado',semana:'17',obs:''},
+      {id:2,fecha:'2026-04-23',ruta:'R-1',conductor:'Duban Urrego Gómez',destino:'Granizal / Bello Oriente',salida:'06:00',llegada:'07:30',pasajeros:8,valor:650000,pagoCond:400000,estado:'Realizado',semana:'17',obs:''},
+      {id:3,fecha:'2026-04-23',ruta:'R-2',conductor:'Adolfo Mora Otero',destino:'Santa Elena / Pericos / Paysandú',salida:'06:30',llegada:'08:15',pasajeros:6,valor:730000,pagoCond:500000,estado:'Realizado',semana:'17',obs:''},
+      {id:4,fecha:'2026-04-23',ruta:'R-3',conductor:'Orlando Sepúlveda Macías',destino:'Parque Arví / Guarne / Veredal',salida:'07:00',llegada:'08:50',pasajeros:5,valor:730000,pagoCond:0,estado:'Realizado',semana:'17',obs:''},
+      {id:5,fecha:'2026-04-24',ruta:'R-2',conductor:'Duban Urrego Gómez',destino:'Santa Elena / Pericos / Paysandú',salida:'06:30',llegada:'08:20',pasajeros:6,valor:730000,pagoCond:500000,estado:'Realizado',semana:'17',obs:''},
+      {id:6,fecha:'2026-04-24',ruta:'R-4',conductor:'Orlando Sepúlveda Macías',destino:'Sto. Domingo / La Avanzada / Carpinelo',salida:'07:30',llegada:'08:45',pasajeros:7,valor:730000,pagoCond:0,estado:'Realizado',semana:'17',obs:''},
+    ]);
+    DB.set('cuentas', [
+      {id:1,num:'001',semana:'14',periodo:'01–05 Abr 2026',fecha:'2026-04-05',valor:14200000,vence:'2026-04-11',servicios:20,estado:'Cobrada'},
+      {id:2,num:'002',semana:'15',periodo:'08–12 Abr 2026',fecha:'2026-04-12',valor:14200000,vence:'2026-04-18',servicios:20,estado:'Vencida'},
+      {id:3,num:'003',semana:'16',periodo:'15–19 Abr 2026',fecha:'2026-04-19',valor:14200000,vence:'2026-04-25',servicios:20,estado:'Pendiente'},
+      {id:4,num:'004',semana:'17',periodo:'22–24 Abr 2026',fecha:'2026-04-24',valor:4220000, vence:'2026-05-02',servicios:6,estado:'Pendiente'},
+    ]);
+    DB.set('pagos', [
+      {id:1,conductor:'Adolfo Mora Otero',semana:'17',rutas:1,total:500000,anticipo:0,saldo:500000,metodo:'Nequi',fecha:'2026-04-24',estado:'Pendiente'},
+      {id:2,conductor:'Duban Urrego Gómez',semana:'17',rutas:2,total:900000,anticipo:0,saldo:900000,metodo:'Bancolombia',fecha:'2026-04-24',estado:'Pendiente'},
+    ]);
+    DB.set('novedades', []);
+    DB.set('semanaOffset', 0);
+    DB.set('init', true);
+  }
+}
+
+// ══════════════════════════════════════
+// UTILS
+// ══════════════════════════════════════
+const fmt  = n => '$'+(Number(n)||0).toLocaleString('es-CO');
+const fmtD = s => { if(!s)return '—'; const [y,m,d]=s.split('-'); return d+'/'+m+'/'+y; };
+const today= () => new Date().toISOString().slice(0,10);
+const uid  = () => Date.now();
+
+const RUTAS_INFO = {
+  'R-1':{destino:'Granizal / Bello Oriente',valor:650000},
+  'R-2':{destino:'Santa Elena / Pericos / Paysandú',valor:730000},
+  'R-3':{destino:'Parque Arví / Guarne / Veredal',valor:730000},
+  'R-4':{destino:'Sto. Domingo / La Avanzada / Carpinelo',valor:730000},
+};
+
+function estadoBadge(e){
+  const m={'Realizado':'b-verde','Cobrada':'b-verde','Pagado':'b-verde','En ruta':'b-amber','Pendiente':'b-amber','Programado':'b-azul','Novedad':'b-rojo','Vencida':'b-rojo','Abierta':'b-gris','No reportado aún':'b-rojo','Parcial':'b-naranja'};
+  return `<span class="badge ${m[e]||'b-gris'}">${e}</span>`;
+}
+
+function toast(msg, tipo='ok'){
+  const t=document.getElementById('toast');
+  t.textContent=msg; t.className='toast show '+tipo;
+  setTimeout(()=>t.className='toast', 2800);
+}
+
+// ══════════════════════════════════════
+// NAVEGACIÓN
+// ══════════════════════════════════════
+function nav(id){
+  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  const idxMap={dashboard:0,rutas:1,conductores:2,cuentas:3,pagos:4,finanzas:5,novedades:6};
+  document.querySelectorAll('.nav-btn')[idxMap[id]].classList.add('active');
+  renderAll();
+}
+
+// ══════════════════════════════════════
+// SEMANA
+// ══════════════════════════════════════
+let semanaOffset = 0;
+function semanaActual(){
+  const base = new Date(2026,3,22); // lun 22 abr
+  const s = new Date(base); s.setDate(base.getDate()+semanaOffset*7);
+  const e = new Date(s); e.setDate(s.getDate()+4);
+  return {inicio:s, fin:e, num:17+semanaOffset};
+}
+function semanaNav(d){ semanaOffset+=d; renderAll(); }
+function semanaLabel(){
+  const {inicio,fin,num}=semanaActual();
+  const f=dt=>dt.toLocaleDateString('es-CO',{day:'numeric',month:'short'});
+  return `Semana ${num} · ${f(inicio)} – ${f(fin)} 2026`;
+}
+function fechaEnSemana(fecha){
+  const {inicio,fin}=semanaActual();
+  const d=new Date(fecha+'T12:00:00');
+  return d>=inicio && d<=fin;
+}
+
+// ══════════════════════════════════════
+// MODALES
+// ══════════════════════════════════════
+function abrirModal(id){
+  // Poblar selects de conductores
+  const conductores = DB.get('conductores')||[];
+  ['r-conductor','p-conductor','n-conductor'].forEach(sid=>{
+    const sel=document.getElementById(sid);
+    if(!sel)return;
+    sel.innerHTML='<option value="">Seleccionar...</option>';
+    conductores.forEach(c=>{ const o=document.createElement('option'); o.value=c.nombre; o.textContent=c.nombre; sel.appendChild(o); });
+  });
+  // Valores por defecto
+  if(id==='modal-ruta'){
+    document.getElementById('r-fecha').value=today();
+    document.getElementById('r-semana').value=String(semanaActual().num);
+  }
+  if(id==='modal-pago') document.getElementById('p-fecha').value=today();
+  if(id==='modal-novedad') document.getElementById('n-fecha').value=today();
+  if(id==='modal-cuenta') document.getElementById('cu-fecha').value=today();
+  document.getElementById(id).classList.add('open');
+}
+function cerrarModal(id){ document.getElementById(id).classList.remove('open'); }
+document.querySelectorAll('.modal-bg').forEach(m=>{
+  m.addEventListener('click',e=>{ if(e.target===m) m.classList.remove('open'); });
+});
+
+// Auto-fill valor y pago al elegir ruta/conductor
+document.getElementById('r-ruta').addEventListener('change',function(){
+  const ri=RUTAS_INFO[this.value];
+  if(ri) document.getElementById('r-valor').value=ri.valor;
+});
+document.getElementById('r-conductor').addEventListener('change',function(){
+  const conductores=DB.get('conductores')||[];
+  const c=conductores.find(x=>x.nombre===this.value);
+  if(c) document.getElementById('r-pago-cond').value=c.esPropietario?0:c.pago;
+});
+
+// ══════════════════════════════════════
+// GUARDAR DATOS
+// ══════════════════════════════════════
+function guardarRuta(){
+  const fecha=document.getElementById('r-fecha').value;
+  const ruta=document.getElementById('r-ruta').value;
+  if(!fecha||!ruta){ toast('Completa fecha y ruta','err'); return; }
+  const ri=RUTAS_INFO[ruta];
+  const nuevo={
+    id:uid(), fecha, ruta,
+    conductor:document.getElementById('r-conductor').value,
+    destino:ri?ri.destino:'',
+    salida:document.getElementById('r-salida').value,
+    llegada:document.getElementById('r-llegada').value,
+    pasajeros:document.getElementById('r-pasajeros').value||0,
+    valor:Number(document.getElementById('r-valor').value)||0,
+    pagoCond:Number(document.getElementById('r-pago-cond').value)||0,
+    estado:document.getElementById('r-estado').value,
+    semana:document.getElementById('r-semana').value,
+    obs:document.getElementById('r-obs').value,
+  };
+  const rutas=DB.get('rutas')||[];
+  rutas.push(nuevo); DB.set('rutas',rutas);
+  cerrarModal('modal-ruta'); renderAll(); toast('Ruta registrada ✓');
+}
+
+function guardarConductor(){
+  const nombre=document.getElementById('c-nombre').value.trim();
+  if(!nombre){ toast('Ingresa el nombre','err'); return; }
+  const nuevo={
+    id:uid(), nombre,
+    cedula:document.getElementById('c-cedula').value,
+    tel:document.getElementById('c-tel').value,
+    metodo:document.getElementById('c-metodo').value,
+    cuenta:document.getElementById('c-cuenta').value,
+    licencia:document.getElementById('c-licencia').value,
+    ruta:document.getElementById('c-ruta').value,
+    pago:Number(document.getElementById('c-pago').value)||0,
+    vencLic:document.getElementById('c-venc-lic').value,
+    vencSoat:document.getElementById('c-venc-soat').value,
+    esPropietario:false,
+  };
+  const conductores=DB.get('conductores')||[];
+  conductores.push(nuevo); DB.set('conductores',conductores);
+  cerrarModal('modal-conductor'); renderAll(); toast('Conductor agregado ✓');
+}
+
+function guardarCuenta(){
+  const num=document.getElementById('cu-num').value;
+  if(!num){ toast('Ingresa número de cuenta','err'); return; }
+  const nuevo={
+    id:uid(), num,
+    semana:document.getElementById('cu-sem').value,
+    periodo:document.getElementById('cu-periodo').value,
+    fecha:document.getElementById('cu-fecha').value,
+    valor:Number(document.getElementById('cu-valor').value)||0,
+    vence:document.getElementById('cu-vence').value,
+    servicios:Number(document.getElementById('cu-servicios').value)||0,
+    estado:document.getElementById('cu-estado').value,
+  };
+  const cuentas=DB.get('cuentas')||[];
+  cuentas.push(nuevo); DB.set('cuentas',cuentas);
+  cerrarModal('modal-cuenta'); renderAll(); toast('Cuenta registrada ✓');
+}
+
+function guardarPago(){
+  const conductor=document.getElementById('p-conductor').value;
+  if(!conductor){ toast('Selecciona conductor','err'); return; }
+  const nuevo={
+    id:uid(), conductor,
+    semana:document.getElementById('p-semana').value,
+    rutas:Number(document.getElementById('p-rutas').value)||0,
+    total:Number(document.getElementById('p-total').value)||0,
+    anticipo:Number(document.getElementById('p-anticipo').value)||0,
+    saldo:Number(document.getElementById('p-saldo').value)||0,
+    metodo:document.getElementById('p-metodo').value,
+    fecha:document.getElementById('p-fecha').value,
+    estado:document.getElementById('p-estado').value,
+  };
+  const pagos=DB.get('pagos')||[];
+  pagos.push(nuevo); DB.set('pagos',pagos);
+  cerrarModal('modal-pago'); renderAll(); toast('Pago registrado ✓');
+}
+
+function guardarNovedad(){
+  const nuevo={
+    id:uid(),
+    fecha:document.getElementById('n-fecha').value,
+    ruta:document.getElementById('n-ruta').value,
+    conductor:document.getElementById('n-conductor').value,
+    tipo:document.getElementById('n-tipo').value,
+    desc:document.getElementById('n-desc').value,
+    impacto:Number(document.getElementById('n-impacto').value)||0,
+    reportado:document.getElementById('n-reportado').value,
+    estado:'Abierta',
+  };
+  const novedades=DB.get('novedades')||[];
+  novedades.push(nuevo); DB.set('novedades',novedades);
+  cerrarModal('modal-novedad'); renderAll(); toast('Novedad registrada ✓');
+}
+
+function eliminar(tipo, id){
+  if(!confirm('¿Eliminar este registro?')) return;
+  const data=DB.get(tipo)||[];
+  DB.set(tipo, data.filter(x=>x.id!==id));
+  renderAll(); toast('Eliminado','err');
+}
+
+function cambiarEstadoCuenta(id, estado){
+  const cuentas=DB.get('cuentas')||[];
+  const c=cuentas.find(x=>x.id===id);
+  if(c){ c.estado=estado; DB.set('cuentas',cuentas); renderAll(); toast('Estado actualizado ✓'); }
+}
+
+// ══════════════════════════════════════
+// RENDER
+// ══════════════════════════════════════
+function renderAll(){
+  renderDashboard();
+  renderRutas();
+  renderConductores();
+  renderCuentas();
+  renderPagos();
+  renderFinanzas();
+  renderNovedades();
+  const sl=document.getElementById('semana-label');
+  if(sl) sl.textContent=semanaLabel();
+}
+
+function kpiBox(label,val,clase='',sub=''){
+  return `<div class="kpi"><div class="kpi-label">${label}</div><div class="kpi-val ${clase}">${val}</div>${sub?`<div class="kpi-sub">${sub}</div>`:''}</div>`;
+}
+
+// DASHBOARD
+function renderDashboard(){
+  const rutas=DB.get('rutas')||[];
+  const cuentas=DB.get('cuentas')||[];
+  const pagos=DB.get('pagos')||[];
+  const tod=today();
+
+  const rutasHoy=rutas.filter(r=>r.fecha===tod);
+  const totalCobro=rutas.reduce((s,r)=>s+Number(r.valor),0);
+  const totalPagos=pagos.reduce((s,p)=>s+Number(p.saldo),0);
+  const pendCuentas=cuentas.filter(c=>c.estado==='Pendiente'||c.estado==='Vencida').reduce((s,c)=>s+Number(c.valor),0);
+
+  document.getElementById('kpis-dashboard').innerHTML=
+    kpiBox('Servicios hoy',rutasHoy.length,'azul',tod)+
+    kpiBox('Total facturado',fmt(totalCobro),'verde','Todas las semanas')+
+    kpiBox('Por cobrar a UNAL',fmt(pendCuentas),'amber','Pendiente + vencido')+
+    kpiBox('Por pagar conductores',fmt(pagos.filter(p=>p.estado!=='Pagado').reduce((s,p)=>s+Number(p.saldo),0)),'rojo','Pendiente')+
+    kpiBox('Conductores',`${(DB.get('conductores')||[]).length}`,'azul','Activos');
+
+  const th=document.getElementById('fecha-hoy');
+  if(th) th.textContent=new Date().toLocaleDateString('es-CO',{weekday:'long',day:'numeric',month:'long'});
+
+  // Rutas hoy
+  const tt=document.getElementById('tabla-hoy');
+  if(tt) tt.innerHTML=rutasHoy.length
+    ? rutasHoy.map(r=>`<tr><td><b>${r.ruta}</b></td><td>${r.conductor}</td><td>${r.destino}</td><td>${fmt(r.valor)}</td><td>${estadoBadge(r.estado)}</td></tr>`).join('')
+    : '<tr><td colspan="5" style="text-align:center;color:var(--texto2);padding:20px">Sin servicios registrados hoy</td></tr>';
+
+  // Cuentas dash
+  const tc=document.getElementById('tabla-cuentas-dash');
+  if(tc) tc.innerHTML=[...cuentas].reverse().slice(0,4).map(c=>`<tr><td>Sem ${c.semana}</td><td>${fmt(c.valor)}</td><td>${estadoBadge(c.estado)}</td></tr>`).join('');
+
+  // Recientes
+  const tr2=document.getElementById('tabla-recientes');
+  if(tr2) tr2.innerHTML=[...rutas].reverse().slice(0,10).map(r=>`<tr><td>${fmtD(r.fecha)}</td><td><b>${r.ruta}</b></td><td>${r.conductor}</td><td style="font-size:12px">${r.destino}</td><td>${fmt(r.valor)}</td><td>${estadoBadge(r.estado)}</td></tr>`).join('');
+}
+
+// RUTAS
+function renderRutas(){
+  const rutas=DB.get('rutas')||[];
+  const rutasSem=rutas.filter(r=>fechaEnSemana(r.fecha));
+  const tbody=document.getElementById('tabla-rutas-semana');
+  if(!tbody) return;
+  tbody.innerHTML=rutasSem.length
+    ? rutasSem.map(r=>`<tr>
+        <td>${fmtD(r.fecha)}</td>
+        <td><b>${r.ruta}</b></td>
+        <td>${r.conductor}</td>
+        <td style="font-size:12px">${r.destino}</td>
+        <td class="mono">${r.salida||'—'}</td>
+        <td class="mono">${r.llegada||'—'}</td>
+        <td>${r.pasajeros||'—'}</td>
+        <td>${fmt(r.valor)}</td>
+        <td>${r.pagoCond?fmt(r.pagoCond):'<span style="color:var(--azul2);font-size:11px">Propietario</span>'}</td>
+        <td>${estadoBadge(r.estado)}</td>
+        <td><button class="btn sm danger" onclick="eliminar('rutas',${r.id})">✕</button></td>
+      </tr>`).join('')
+    : '<tr><td colspan="11" style="text-align:center;color:var(--texto2);padding:24px">Sin rutas en esta semana</td></tr>';
+
+  // Resumen semana
+  const totalVal=rutasSem.reduce((s,r)=>s+Number(r.valor),0);
+  const totalPago=rutasSem.reduce((s,r)=>s+Number(r.pagoCond),0);
+  const util=totalVal-totalPago;
+  const rs=document.getElementById('resumen-semana');
+  if(rs) rs.innerHTML=`<div class="kpis" style="margin:0">
+    ${kpiBox('Servicios',rutasSem.length,'azul','')}
+    ${kpiBox('Facturado UNAL',fmt(totalVal),'azul','')}
+    ${kpiBox('Pago conductores',fmt(totalPago),'rojo','')}
+    ${kpiBox('Utilidad bruta',fmt(util),'verde','')}
+    ${kpiBox('Margen',totalVal?((util/totalVal)*100).toFixed(1)+'%':'—','verde','')}
+  </div>`;
+}
+
+// CONDUCTORES
+function renderConductores(){
+  const conductores=DB.get('conductores')||[];
+  const rutas=DB.get('rutas')||[];
+  const lc=document.getElementById('lista-conductores');
+  if(!lc) return;
+  lc.innerHTML=conductores.map(c=>{
+    const misRutas=rutas.filter(r=>r.conductor===c.nombre);
+    const totalRutas=misRutas.length;
+    const totalGan=misRutas.reduce((s,r)=>s+(c.esPropietario?Number(r.valor)-rutas.filter(x=>x.fecha===r.fecha&&x.conductor!==c.nombre).reduce((a,b)=>a+Number(b.pagoCond),0):Number(r.pagoCond)),0);
+    const hoy=new Date();
+    const vencLic=c.vencLic?new Date(c.vencLic):null;
+    const alertaLic=vencLic&&(vencLic-hoy)<90*86400000;
+    return `<div class="cond-card">
+      <div class="cond-card-hdr">
+        <div>
+          <div class="nombre">${c.nombre} ${c.esPropietario?'<span style="background:rgba(255,255,255,.2);font-size:10px;padding:2px 8px;border-radius:10px;margin-left:6px">PROPIETARIO</span>':''}</div>
+          <div class="sub">${c.ruta} · Lic. ${c.licencia} ${alertaLic?'⚠ Lic. por vencer':''}</div>
+        </div>
+        <button class="btn sm danger" onclick="eliminar('conductores',${c.id})">✕</button>
+      </div>
+      <div class="cond-card-body">
+        <div class="form-row">
+          <div><label>Cédula</label><div style="font-size:13px;margin-top:2px">${c.cedula||'—'}</div></div>
+          <div><label>Teléfono</label><div style="font-size:13px;margin-top:2px">${c.tel||'—'}</div></div>
+          <div><label>Método pago</label><div style="font-size:13px;margin-top:2px">${c.metodo}</div></div>
+          <div><label>Cuenta / Nequi</label><div class="mono" style="margin-top:2px">${c.cuenta||'—'}</div></div>
+        </div>
+        <div class="form-row" style="margin-top:8px">
+          <div><label>Pago por ruta</label><div style="font-size:15px;font-weight:700;color:var(--azul);margin-top:2px">${c.esPropietario?'Propietario':fmt(c.pago)}</div></div>
+          <div><label>Servicios totales</label><div style="font-size:15px;font-weight:700;margin-top:2px">${totalRutas}</div></div>
+          <div><label>Vto. licencia</label><div style="font-size:13px;margin-top:2px;color:${alertaLic?'var(--rojo)':'var(--verde)'}">${fmtD(c.vencLic)}</div></div>
+          <div><label>Vto. SOAT</label><div style="font-size:13px;margin-top:2px">${fmtD(c.vencSoat)}</div></div>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// CUENTAS
+function renderCuentas(){
+  const cuentas=DB.get('cuentas')||[];
+  const total=cuentas.reduce((s,c)=>s+Number(c.valor),0);
+  const cobrado=cuentas.filter(c=>c.estado==='Cobrada').reduce((s,c)=>s+Number(c.valor),0);
+  const pendiente=cuentas.filter(c=>c.estado==='Pendiente').reduce((s,c)=>s+Number(c.valor),0);
+  const vencido=cuentas.filter(c=>c.estado==='Vencida').reduce((s,c)=>s+Number(c.valor),0);
+
+  const kp=document.getElementById('kpis-cuentas');
+  if(kp) kp.innerHTML=kpiBox('Total facturado',fmt(total),'azul','')+kpiBox('Cobrado',fmt(cobrado),'verde','')+kpiBox('Pendiente',fmt(pendiente),'amber','')+kpiBox('Vencido',fmt(vencido),'rojo','');
+
+  const lc=document.getElementById('lista-cuentas');
+  if(!lc) return;
+  lc.innerHTML=[...cuentas].reverse().map(c=>`
+    <div class="card" style="border-left:4px solid ${c.estado==='Cobrada'?'var(--verde)':c.estado==='Vencida'?'var(--rojo)':'var(--amber)'}">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:10px">
+        <div>
+          <div style="font-size:13px;font-weight:700;color:var(--azul)">Cuenta de Cobro No.${c.num} — Semana ${c.semana}</div>
+          <div style="font-size:12px;color:var(--texto2);margin-top:4px">Universidad Nacional de Colombia · Proyecto M-0548 · ${c.periodo}</div>
+        </div>
+        <div style="text-align:right">
+          <div style="font-size:22px;font-weight:700;color:var(--texto)">${fmt(c.valor)}</div>
+          <div style="margin-top:4px">${estadoBadge(c.estado)}</div>
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-top:14px;padding-top:12px;border-top:1px solid var(--borde)">
+        <div><div style="font-size:11px;color:var(--texto2)">Servicios</div><div style="font-weight:600">${c.servicios}</div></div>
+        <div><div style="font-size:11px;color:var(--texto2)">Fecha emisión</div><div style="font-weight:600">${fmtD(c.fecha)}</div></div>
+        <div><div style="font-size:11px;color:var(--texto2)">Vencimiento</div><div style="font-weight:600;color:${c.estado==='Vencida'?'var(--rojo)':'inherit'}">${fmtD(c.vence)}</div></div>
+        <div style="display:flex;gap:6px;align-items:flex-end;flex-wrap:wrap">
+          ${c.estado!=='Cobrada'?`<button class="btn sm success" onclick="cambiarEstadoCuenta(${c.id},'Cobrada')">✓ Marcar cobrada</button>`:''}
+          ${c.estado==='Pendiente'?`<button class="btn sm danger" onclick="cambiarEstadoCuenta(${c.id},'Vencida')">Marcar vencida</button>`:''}
+          <button class="btn sm danger" onclick="eliminar('cuentas',${c.id})">✕</button>
+        </div>
+      </div>
+    </div>`).join('');
+}
+
+// PAGOS
+function renderPagos(){
+  const pagos=DB.get('pagos')||[];
+  const totalP=pagos.reduce((s,p)=>s+Number(p.total),0);
+  const pagado=pagos.filter(p=>p.estado==='Pagado').reduce((s,p)=>s+Number(p.saldo),0);
+  const pendiente=pagos.filter(p=>p.estado!=='Pagado').reduce((s,p)=>s+Number(p.saldo),0);
+  const kp=document.getElementById('kpis-pagos');
+  if(kp) kp.innerHTML=kpiBox('Total registrado',fmt(totalP),'azul','')+kpiBox('Pagado',fmt(pagado),'verde','')+kpiBox('Por pagar',fmt(pendiente),'rojo','');
+  const tb=document.getElementById('tabla-pagos');
+  if(!tb) return;
+  tb.innerHTML=pagos.length
+    ?[...pagos].reverse().map(p=>`<tr>
+        <td>${p.conductor}</td>
+        <td>Sem ${p.semana}</td>
+        <td>${p.rutas}</td>
+        <td>${fmt(p.total)}</td>
+        <td>${fmt(p.anticipo)}</td>
+        <td><b>${fmt(p.saldo)}</b></td>
+        <td><span class="badge b-azul">${p.metodo}</span></td>
+        <td>${estadoBadge(p.estado)}</td>
+        <td><button class="btn sm danger" onclick="eliminar('pagos',${p.id})">✕</button></td>
+      </tr>`).join('')
+    :'<tr><td colspan="9" style="text-align:center;color:var(--texto2);padding:24px">Sin pagos registrados</td></tr>';
+}
+
+// FINANZAS
+function renderFinanzas(){
+  const rutas=DB.get('rutas')||[];
+  const cuentas=DB.get('cuentas')||[];
+  const pagos=DB.get('pagos')||[];
+
+  const totalIngr=rutas.reduce((s,r)=>s+Number(r.valor),0);
+  const totalCond=rutas.reduce((s,r)=>s+Number(r.pagoCond),0);
+  const util=totalIngr-totalCond;
+  const kf=document.getElementById('kpis-finanzas');
+  if(kf) kf.innerHTML=kpiBox('Ingresos totales',fmt(totalIngr),'azul','')+kpiBox('Pago conductores',fmt(totalCond),'rojo','')+kpiBox('Utilidad bruta',fmt(util),'verde','')+kpiBox('Margen',totalIngr?((util/totalIngr)*100).toFixed(1)+'%':'—','verde','');
+
+  // Por ruta
+  const tf=document.getElementById('tabla-fin-rutas');
+  if(tf){
+    const porRuta={};
+    rutas.forEach(r=>{
+      if(!porRuta[r.ruta]) porRuta[r.ruta]={svcs:0,ing:0,cond:0};
+      porRuta[r.ruta].svcs++; porRuta[r.ruta].ing+=Number(r.valor); porRuta[r.ruta].cond+=Number(r.pagoCond);
+    });
+    tf.innerHTML=Object.entries(porRuta).map(([ruta,d])=>{
+      const u=d.ing-d.cond; const m=d.ing?(u/d.ing*100).toFixed(1)+'%':'—';
+      return `<tr><td><b>${ruta}</b></td><td>${d.svcs}</td><td>${fmt(d.ing)}</td><td>${fmt(d.cond)}</td><td style="color:var(--verde);font-weight:700">${fmt(u)}</td><td>${estadoBadge(Number(m)>30?'Cobrada':Number(m)>25?'Pendiente':'Vencida')}</td></tr>`;
+    }).join('');
+  }
+
+  // Por semana
+  const ts=document.getElementById('tabla-fin-semanas');
+  if(ts){
+    const semanas={};
+    rutas.forEach(r=>{ const s=r.semana||'—'; if(!semanas[s])semanas[s]={ing:0,cond:0}; semanas[s].ing+=Number(r.valor); semanas[s].cond+=Number(r.pagoCond); });
+    cuentas.forEach(c=>{ if(!semanas[c.semana])semanas[c.semana]={ing:0,cond:0}; semanas[c.semana].cobrado=c.estado==='Cobrada'?Number(c.valor):0; semanas[c.semana].estCuenta=c.estado; });
+    ts.innerHTML=Object.entries(semanas).sort((a,b)=>a[0]-b[0]).map(([sem,d])=>{
+      const bal=d.ing-d.cond; const estCuenta=d.estCuenta||'—';
+      return `<tr><td><b>Sem ${sem}</b></td><td>${fmt(d.ing)}</td><td>${estadoBadge(estCuenta)}</td><td>${fmt(d.cond)}</td><td style="color:${bal>=0?'var(--verde)':'var(--rojo)'};font-weight:700">${fmt(bal)}</td></tr>`;
+    }).join('');
+  }
+}
+
+// NOVEDADES
+function renderNovedades(){
+  const novedades=DB.get('novedades')||[];
+  const tb=document.getElementById('tabla-novedades');
+  if(!tb) return;
+  tb.innerHTML=novedades.length
+    ?[...novedades].reverse().map(n=>`<tr>
+        <td>${fmtD(n.fecha)}</td>
+        <td><b>${n.ruta}</b></td>
+        <td>${n.conductor||'—'}</td>
+        <td>${estadoBadge(n.tipo==='Accidente de tránsito'?'Vencida':n.tipo==='Ruta no realizada'?'Vencida':'Pendiente')} <span style="font-size:11px">${n.tipo}</span></td>
+        <td style="font-size:12px;max-width:200px">${n.desc}</td>
+        <td>${n.impacto?`<span style="color:var(--rojo)">(${fmt(n.impacto)})</span>`:'Sin impacto'}</td>
+        <td>${estadoBadge(n.reportado.includes('Sí')?'Cobrada':'Vencida')} <span style="font-size:10px">${n.reportado}</span></td>
+        <td><button class="btn sm danger" onclick="eliminar('novedades',${n.id})">✕</button></td>
+      </tr>`).join('')
+    :'<tr><td colspan="8" style="text-align:center;color:var(--texto2);padding:24px">Sin novedades registradas ✓</td></tr>';
+}
+
+// ══════════════════════════════════════
+// INIT
+// ══════════════════════════════════════
+initData();
+renderAll();
+
+// ══════════════════════════════════════
+// AUTH
+// ══════════════════════════════════════
+const U_HASH = '6db6bc8342ed8019123d126575b56405090e619bc88b22c67e0af4ef4e6ea6bb';
+const P_HASH = 'c3e0dcb0e1a2dbee17c4a4cbc1f1d4971364cf54508478d30e989887fefcab17';
+
+async function sha256(str){
+  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
+  return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');
+}
+
+async function doLogin(){
+  const u = document.getElementById('l-user').value.trim();
+  const p = document.getElementById('l-pass').value;
+  const err = document.getElementById('login-err');
+  const [hu, hp] = await Promise.all([sha256(u), sha256(p)]);
+  if(hu === U_HASH && hp === P_HASH){
+    document.getElementById('login-screen').classList.add('oculto');
+    sessionStorage.setItem('m0548_auth','1');
+    err.classList.remove('show');
+  } else {
+    err.classList.add('show');
+    document.getElementById('l-pass').value='';
+  }
+}
+
+// Enter key para login
+document.addEventListener('keydown', e=>{
+  if(e.key==='Enter' && !document.getElementById('login-screen').classList.contains('oculto')){
+    doLogin();
+  }
+});
+
+// Verificar sesión al cargar
+if(sessionStorage.getItem('m0548_auth')==='1'){
+  document.getElementById('login-screen').classList.add('oculto');
+}
+
+</script>
+</body>
+</html>
