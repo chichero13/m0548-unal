@@ -3,740 +3,926 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Proyecto M-0548 — Universidad Nacional</title>
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<title>Proyecto M-0548 — Universidad Nacional v2.0</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
-/* ── LOGIN ── */
-#login-screen{position:fixed;inset:0;background:linear-gradient(135deg,#0d1f3c 0%,#1A3A6B 50%,#0d2a4a 100%);display:flex;align-items:center;justify-content:center;z-index:9999;font-family:'DM Sans',sans-serif}
+/* ═══ LOGIN ═══ */
+#login-screen{position:fixed;inset:0;background:linear-gradient(135deg,#0d1f3c 0%,#1A3A6B 55%,#0d2a4a 100%);display:flex;align-items:center;justify-content:center;z-index:9999}
 #login-screen.oculto{display:none}
-.login-box{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.13);border-radius:20px;padding:42px 38px;width:370px;max-width:95vw;backdrop-filter:blur(20px);box-shadow:0 24px 64px rgba(0,0,0,.5)}
-.login-logo{width:58px;height:58px;background:#C0501A;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:26px;font-weight:700;color:#fff;margin:0 auto 16px}
-.login-title{text-align:center;font-size:19px;font-weight:700;color:#fff;margin-bottom:4px}
-.login-sub{text-align:center;font-size:12px;color:#88AACC;margin-bottom:6px;line-height:1.5}
-.login-contrato{display:flex;justify-content:center;margin-bottom:26px}
-.login-badge{background:rgba(192,80,26,.25);border:1px solid rgba(192,80,26,.4);border-radius:20px;padding:4px 14px;font-size:11px;color:#E8843A;font-weight:600;letter-spacing:.4px}
-.login-field{margin-bottom:14px}
-.login-field label{display:block;font-size:12px;color:#88AACC;margin-bottom:6px;font-weight:500;letter-spacing:.3px}
-.login-field input{width:100%;padding:11px 14px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.14);border-radius:10px;font-size:14px;color:#fff;font-family:'DM Sans',sans-serif;outline:none;transition:border .2s;box-sizing:border-box}
-.login-field input:focus{border-color:#2E5FA3;background:rgba(255,255,255,.11)}
-.login-field input::placeholder{color:#4A6080}
-.login-btn{width:100%;padding:12px;background:#C0501A;border:none;border-radius:10px;color:#fff;font-size:14px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;margin-top:10px;transition:background .2s;letter-spacing:.3px}
-.login-btn:hover{background:#A84016}
-.login-err{background:rgba(163,45,45,.2);border:1px solid rgba(163,45,45,.4);border-radius:8px;padding:10px 14px;font-size:12px;color:#F09595;margin-top:12px;display:none;text-align:center}
-.login-err.show{display:block}
-.login-pie{text-align:center;margin-top:20px;font-size:11px;color:#3A5070}
+.lb{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.13);border-radius:20px;padding:42px 38px;width:370px;max-width:95vw;backdrop-filter:blur(20px);box-shadow:0 24px 64px rgba(0,0,0,.5)}
+.lb-logo{width:56px;height:56px;background:#C0501A;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:700;color:#fff;margin:0 auto 14px}
+.lb-title{text-align:center;font-size:18px;font-weight:700;color:#fff;margin-bottom:3px;font-family:'DM Sans',sans-serif}
+.lb-sub{text-align:center;font-size:12px;color:#88AACC;margin-bottom:8px;line-height:1.5;font-family:'DM Sans',sans-serif}
+.lb-badge{display:flex;justify-content:center;margin-bottom:24px}
+.lb-badge span{background:rgba(192,80,26,.25);border:1px solid rgba(192,80,26,.4);border-radius:20px;padding:4px 14px;font-size:11px;color:#E8843A;font-weight:600;font-family:'DM Sans',sans-serif}
+.lb-f{margin-bottom:13px}
+.lb-f label{display:block;font-size:11px;color:#88AACC;margin-bottom:5px;font-weight:500;letter-spacing:.4px;font-family:'DM Sans',sans-serif}
+.lb-f input{width:100%;padding:10px 13px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.14);border-radius:9px;font-size:14px;color:#fff;font-family:'DM Sans',sans-serif;outline:none;transition:border .2s;box-sizing:border-box}
+.lb-f input:focus{border-color:#2E5FA3}
+.lb-btn{width:100%;padding:11px;background:#C0501A;border:none;border-radius:9px;color:#fff;font-size:14px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;margin-top:8px;transition:background .2s}
+.lb-btn:hover{background:#A84016}
+.lb-err{background:rgba(163,45,45,.2);border:1px solid rgba(163,45,45,.4);border-radius:7px;padding:9px 13px;font-size:12px;color:#F09595;margin-top:10px;display:none;text-align:center;font-family:'DM Sans',sans-serif}
+.lb-err.show{display:block}
+.lb-pie{text-align:center;margin-top:18px;font-size:11px;color:#3A5070;font-family:'DM Sans',sans-serif}
 
-:root {
-  --azul:      #1A3A6B;
-  --azul2:     #2E5FA3;
-  --azul3:     #EBF2FC;
-  --naranja:   #C0501A;
-  --naranja2:  #FEF0E8;
-  --verde:     #1A6B3A;
-  --verde2:    #EAF5EE;
-  --rojo:      #A32D2D;
-  --rojo2:     #FCEBEB;
-  --amber:     #7A4800;
-  --amber2:    #FEF3E2;
-  --gris:      #F4F6FA;
-  --gris2:     #E8ECF4;
-  --borde:     #D4DCEA;
-  --texto:     #1A1F36;
-  --texto2:    #5A6481;
-  --blanco:    #FFFFFF;
-  --sombra:    0 2px 12px rgba(26,58,107,.10);
-  --sombra2:   0 4px 24px rgba(26,58,107,.15);
-  --radio:     12px;
-  --radio2:    8px;
+/* ═══ BASE ═══ */
+:root{
+  --az:#1A3A6B;--az2:#2E5FA3;--az3:#EBF2FC;
+  --na:#C0501A;--na2:#FEF0E8;
+  --vd:#1A6B3A;--vd2:#EAF5EE;
+  --rj:#A32D2D;--rj2:#FCEBEB;
+  --am:#7A4800;--am2:#FEF3E2;
+  --gr:#F4F6FA;--gr2:#E8ECF4;
+  --bd:#D4DCEA;--tx:#1A1F36;--tx2:#5A6481;--bl:#FFFFFF;
+  --sh:0 2px 12px rgba(26,58,107,.10);
+  --sh2:0 4px 24px rgba(26,58,107,.15);
+  --r:12px;--r2:8px;
 }
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:'DM Sans',sans-serif;background:var(--gris);color:var(--texto);min-height:100vh;font-size:14px}
-a{color:inherit;text-decoration:none}
+body{font-family:'DM Sans',sans-serif;background:var(--gr);color:var(--tx);min-height:100vh;font-size:14px}
 button{cursor:pointer;font-family:'DM Sans',sans-serif}
 
-/* ── TOPBAR ── */
-.topbar{background:var(--azul);padding:0 24px;display:flex;align-items:center;justify-content:space-between;height:60px;position:sticky;top:0;z-index:100;box-shadow:0 2px 16px rgba(0,0,0,.25)}
-.topbar-brand{display:flex;align-items:center;gap:12px}
-.topbar-logo{width:36px;height:36px;background:var(--naranja);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:700;color:#fff}
-.topbar-title{font-size:13px;font-weight:600;color:#fff;line-height:1.3}
-.topbar-sub{font-size:11px;color:#88AACC;font-weight:400}
-.topbar-badge{background:var(--naranja);color:#fff;font-size:11px;font-weight:600;padding:4px 12px;border-radius:20px;letter-spacing:.3px}
+/* ═══ TOPBAR ═══ */
+.topbar{background:var(--az);padding:0 20px;display:flex;align-items:center;justify-content:space-between;height:58px;position:sticky;top:0;z-index:100;box-shadow:0 2px 16px rgba(0,0,0,.25)}
+.tb-brand{display:flex;align-items:center;gap:10px}
+.tb-logo{width:34px;height:34px;background:var(--na);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:700;color:#fff;flex-shrink:0}
+.tb-title{font-size:12px;font-weight:600;color:#fff;line-height:1.3}
+.tb-sub{font-size:10px;color:#88AACC}
+.tb-right{display:flex;align-items:center;gap:10px}
+.tb-badge{background:var(--na);color:#fff;font-size:11px;font-weight:600;padding:3px 11px;border-radius:20px}
+.tb-logout{background:transparent;border:1px solid rgba(255,255,255,.2);color:#88AACC;font-size:11px;padding:4px 10px;border-radius:6px}
+.tb-logout:hover{border-color:#fff;color:#fff}
 
-/* ── NAV ── */
-.nav{background:var(--azul2);display:flex;padding:0 20px;gap:2px;overflow-x:auto;scrollbar-width:none}
+/* ═══ NAV ═══ */
+.nav{background:var(--az2);display:flex;padding:0 16px;gap:1px;overflow-x:auto;scrollbar-width:none}
 .nav::-webkit-scrollbar{display:none}
-.nav-btn{padding:11px 16px;border:none;background:transparent;color:#9BBCDE;font-size:12px;font-weight:500;white-space:nowrap;border-bottom:3px solid transparent;transition:all .2s;font-family:'DM Sans',sans-serif}
-.nav-btn.active{color:#fff;border-bottom-color:#fff;background:rgba(255,255,255,.08)}
-.nav-btn:hover:not(.active){color:#cce}
+.nv{padding:10px 14px;border:none;background:transparent;color:#9BBCDE;font-size:12px;font-weight:500;white-space:nowrap;border-bottom:3px solid transparent;transition:all .2s}
+.nv.active{color:#fff;border-bottom-color:#fff;background:rgba(255,255,255,.08)}
+.nv:hover:not(.active){color:#ddeeff}
 
-/* ── LAYOUT ── */
-.content{padding:20px;max-width:1100px;margin:0 auto}
-.section{display:none}.section.active{display:block}
+/* ═══ ALERTAS GLOBALES ═══ */
+#alertas-globales{padding:0 20px;max-width:1100px;margin:0 auto}
+.alerta-doc{display:flex;align-items:center;gap:8px;padding:10px 14px;border-radius:var(--r2);margin-top:10px;font-size:12px}
+.alerta-doc.vencido{background:var(--rj2);border-left:3px solid var(--rj);color:var(--rj)}
+.alerta-doc.proximo{background:var(--am2);border-left:3px solid #E8A020;color:var(--am)}
 
-/* ── CARDS ── */
-.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-bottom:20px}
-.kpi{background:var(--blanco);border:1px solid var(--borde);border-radius:var(--radio);padding:14px 16px;box-shadow:var(--sombra)}
-.kpi-label{font-size:11px;color:var(--texto2);font-weight:500;margin-bottom:6px;text-transform:uppercase;letter-spacing:.4px}
-.kpi-val{font-size:22px;font-weight:700;color:var(--texto)}
-.kpi-val.verde{color:var(--verde)}.kpi-val.rojo{color:var(--rojo)}.kpi-val.azul{color:var(--azul2)}.kpi-val.amber{color:var(--amber)}
-.kpi-sub{font-size:11px;color:var(--texto2);margin-top:4px}
+/* ═══ CONTENT ═══ */
+.content{padding:16px 20px;max-width:1100px;margin:0 auto}
+.sec{display:none}.sec.active{display:block}
 
-.card{background:var(--blanco);border:1px solid var(--borde);border-radius:var(--radio);padding:16px 18px;margin-bottom:14px;box-shadow:var(--sombra)}
-.card-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;flex-wrap:wrap;gap:8px}
-.card-title{font-size:14px;font-weight:600;color:var(--texto)}
-.card-sub{font-size:12px;color:var(--texto2)}
-.sec-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:8px}
-.sec-hdr h2{font-size:16px;font-weight:700;color:var(--texto)}
+/* ═══ KPIS ═══ */
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin-bottom:18px}
+.kpi{background:var(--bl);border:1px solid var(--bd);border-radius:var(--r);padding:13px 15px;box-shadow:var(--sh)}
+.kpi-lbl{font-size:10px;color:var(--tx2);font-weight:500;margin-bottom:5px;text-transform:uppercase;letter-spacing:.4px}
+.kpi-val{font-size:20px;font-weight:700;color:var(--tx)}
+.kpi-val.vd{color:var(--vd)}.kpi-val.rj{color:var(--rj)}.kpi-val.az{color:var(--az2)}.kpi-val.am{color:var(--am)}
+.kpi-sub{font-size:10px;color:var(--tx2);margin-top:3px}
 
-/* ── TABLE ── */
-.table-wrap{overflow-x:auto;border-radius:var(--radio);border:1px solid var(--borde)}
-table{width:100%;border-collapse:collapse;font-size:13px;background:var(--blanco)}
-th{text-align:left;padding:10px 12px;background:var(--gris);color:var(--texto2);font-weight:600;font-size:11px;text-transform:uppercase;letter-spacing:.4px;border-bottom:1px solid var(--borde);white-space:nowrap}
-td{padding:10px 12px;border-bottom:1px solid var(--gris);color:var(--texto);vertical-align:middle}
+/* ═══ CARDS ═══ */
+.card{background:var(--bl);border:1px solid var(--bd);border-radius:var(--r);padding:15px 17px;margin-bottom:13px;box-shadow:var(--sh)}
+.card-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;flex-wrap:wrap;gap:8px}
+.card-title{font-size:14px;font-weight:600;color:var(--tx)}
+.sec-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;flex-wrap:wrap;gap:8px}
+.sec-hdr h2{font-size:15px;font-weight:700;color:var(--tx)}
+
+/* ═══ TABLES ═══ */
+.tw{overflow-x:auto;border-radius:var(--r);border:1px solid var(--bd)}
+table{width:100%;border-collapse:collapse;font-size:12px;background:var(--bl)}
+th{text-align:left;padding:9px 11px;background:var(--gr);color:var(--tx2);font-weight:600;font-size:10px;text-transform:uppercase;letter-spacing:.4px;border-bottom:1px solid var(--bd);white-space:nowrap}
+td{padding:9px 11px;border-bottom:1px solid var(--gr);color:var(--tx);vertical-align:middle}
 tr:last-child td{border-bottom:none}
-tr:hover td{background:var(--gris)}
+tr:hover td{background:var(--gr)}
 
-/* ── BADGES ── */
-.badge{display:inline-flex;align-items:center;padding:3px 9px;border-radius:20px;font-size:11px;font-weight:600;white-space:nowrap}
-.b-verde{background:var(--verde2);color:var(--verde)}
-.b-rojo{background:var(--rojo2);color:var(--rojo)}
-.b-amber{background:var(--amber2);color:var(--amber)}
-.b-azul{background:var(--azul3);color:var(--azul2)}
-.b-gris{background:var(--gris2);color:var(--texto2)}
-.b-naranja{background:var(--naranja2);color:var(--naranja)}
+/* ═══ BADGES ═══ */
+.badge{display:inline-flex;align-items:center;padding:2px 8px;border-radius:20px;font-size:10px;font-weight:600;white-space:nowrap}
+.bvd{background:var(--vd2);color:var(--vd)}.brj{background:var(--rj2);color:var(--rj)}
+.bam{background:var(--am2);color:var(--am)}.baz{background:var(--az3);color:var(--az2)}
+.bgr{background:var(--gr2);color:var(--tx2)}.bna{background:var(--na2);color:var(--na)}
 
-/* ── BUTTONS ── */
-.btn{padding:7px 14px;border-radius:var(--radio2);border:1px solid var(--borde);background:var(--blanco);font-size:12px;font-weight:500;color:var(--texto);transition:all .15s;font-family:'DM Sans',sans-serif}
-.btn:hover{background:var(--gris);border-color:var(--azul2)}
-.btn.primary{background:var(--azul);color:#fff;border-color:var(--azul)}
-.btn.primary:hover{background:var(--azul2)}
-.btn.danger{background:var(--rojo2);color:var(--rojo);border-color:#F09595}
-.btn.success{background:var(--verde2);color:var(--verde);border-color:#8FCF9F}
-.btn.sm{padding:4px 10px;font-size:11px}
-.btn.naranja{background:var(--naranja);color:#fff;border-color:var(--naranja)}
-.btn-group{display:flex;gap:8px;flex-wrap:wrap}
+/* ═══ BTNS ═══ */
+.btn{padding:6px 13px;border-radius:var(--r2);border:1px solid var(--bd);background:var(--bl);font-size:12px;font-weight:500;color:var(--tx);transition:all .15s}
+.btn:hover{background:var(--gr);border-color:var(--az2)}
+.btn.pri{background:var(--az);color:#fff;border-color:var(--az)}.btn.pri:hover{background:var(--az2)}
+.btn.dan{background:var(--rj2);color:var(--rj);border-color:#F09595}
+.btn.suc{background:var(--vd2);color:var(--vd);border-color:#8FCF9F}
+.btn.nj{background:var(--na);color:#fff;border-color:var(--na)}
+.btn.sm{padding:3px 9px;font-size:10px}
+.btn-g{display:flex;gap:7px;flex-wrap:wrap}
 
-/* ── FORMS ── */
-.form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:4px}
-.form-row.three{grid-template-columns:1fr 1fr 1fr}
-.form-row.one{grid-template-columns:1fr}
-.form-group{display:flex;flex-direction:column;gap:4px;margin-bottom:10px}
-label{font-size:12px;font-weight:500;color:var(--texto2)}
-input,select,textarea{padding:8px 12px;border:1px solid var(--borde);border-radius:var(--radio2);font-size:13px;font-family:'DM Sans',sans-serif;color:var(--texto);background:var(--blanco);transition:border .15s;outline:none}
-input:focus,select:focus,textarea:focus{border-color:var(--azul2);box-shadow:0 0 0 3px rgba(46,95,163,.12)}
-textarea{resize:vertical;min-height:70px}
+/* ═══ FORMS ═══ */
+.fg{display:flex;flex-direction:column;gap:4px;margin-bottom:10px}
+.fg label{font-size:11px;font-weight:500;color:var(--tx2)}
+input[type=text],input[type=number],input[type=date],input[type=time],input[type=email],select,textarea{
+  padding:7px 11px;border:1px solid var(--bd);border-radius:var(--r2);font-size:12px;font-family:'DM Sans',sans-serif;
+  color:var(--tx);background:var(--bl);transition:border .15s;outline:none;width:100%}
+input:focus,select:focus,textarea:focus{border-color:var(--az2);box-shadow:0 0 0 3px rgba(46,95,163,.1)}
+textarea{resize:vertical;min-height:65px}
+.fr{display:grid;grid-template-columns:1fr 1fr;gap:11px}
+.fr3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:11px}
+.fr1{display:grid;grid-template-columns:1fr;gap:11px}
 
-/* ── MODAL ── */
-.modal-bg{display:none;position:fixed;inset:0;background:rgba(15,25,50,.5);z-index:500;align-items:flex-start;justify-content:center;padding:40px 16px;backdrop-filter:blur(4px)}
-.modal-bg.open{display:flex}
-.modal{background:var(--blanco);border-radius:16px;padding:24px;width:540px;max-width:100%;max-height:85vh;overflow-y:auto;box-shadow:var(--sombra2);animation:slideIn .2s ease}
-@keyframes slideIn{from{transform:translateY(-20px);opacity:0}to{transform:translateY(0);opacity:1}}
-.modal h3{font-size:16px;font-weight:700;margin-bottom:18px;color:var(--azul);padding-bottom:12px;border-bottom:1px solid var(--borde)}
-.modal-foot{display:flex;gap:8px;justify-content:flex-end;margin-top:16px;padding-top:14px;border-top:1px solid var(--borde)}
+/* ═══ MODAL ═══ */
+.mbg{display:none;position:fixed;inset:0;background:rgba(10,20,45,.55);z-index:500;align-items:flex-start;justify-content:center;padding:30px 14px;backdrop-filter:blur(4px);overflow-y:auto}
+.mbg.open{display:flex}
+.modal{background:var(--bl);border-radius:16px;padding:22px;width:580px;max-width:100%;box-shadow:var(--sh2);animation:sIn .2s ease;margin:auto}
+@keyframes sIn{from{transform:translateY(-18px);opacity:0}to{transform:translateY(0);opacity:1}}
+.modal.wide{width:720px}
+.modal h3{font-size:15px;font-weight:700;margin-bottom:16px;color:var(--az);padding-bottom:11px;border-bottom:1px solid var(--bd)}
+.mfoot{display:flex;gap:8px;justify-content:flex-end;margin-top:14px;padding-top:13px;border-top:1px solid var(--bd)}
+.mtabs{display:flex;gap:2px;margin-bottom:16px;border-bottom:1px solid var(--bd)}
+.mtab{padding:7px 14px;border:none;background:transparent;font-size:12px;font-weight:500;color:var(--tx2);border-bottom:2px solid transparent;cursor:pointer}
+.mtab.active{color:var(--az2);border-bottom-color:var(--az2)}
+.mtab-panel{display:none}.mtab-panel.active{display:block}
 
-/* ── ALERTS ── */
-.alert{padding:12px 16px;border-radius:var(--radio2);margin-bottom:14px;font-size:13px;display:flex;align-items:flex-start;gap:10px}
-.alert.warn{background:var(--amber2);border-left:3px solid #E8A020;color:var(--amber)}
-.alert.info{background:var(--azul3);border-left:3px solid var(--azul2);color:var(--azul)}
-.alert.danger{background:var(--rojo2);border-left:3px solid var(--rojo);color:var(--rojo)}
-.alert.ok{background:var(--verde2);border-left:3px solid var(--verde);color:var(--verde)}
+/* ═══ DOC UPLOAD ═══ */
+.doc-slot{border:1.5px dashed var(--bd);border-radius:var(--r2);padding:12px;text-align:center;cursor:pointer;transition:all .2s;position:relative;overflow:hidden}
+.doc-slot:hover{border-color:var(--az2);background:var(--az3)}
+.doc-slot.ok{border-color:var(--vd);border-style:solid;background:var(--vd2)}
+.doc-slot.warn{border-color:#E8A020;border-style:solid;background:var(--am2)}
+.doc-slot.exp{border-color:var(--rj);border-style:solid;background:var(--rj2)}
+.doc-slot input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer}
+.doc-slot-ico{font-size:20px;margin-bottom:4px}
+.doc-slot-lbl{font-size:11px;font-weight:500;color:var(--tx)}
+.doc-slot-sub{font-size:10px;color:var(--tx2);margin-top:2px}
+.doc-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:10px;margin-top:10px}
+.doc-img-wrap{position:relative}
+.doc-img-wrap img{width:100%;height:80px;object-fit:cover;border-radius:6px;display:block}
+.doc-img-wrap .doc-del{position:absolute;top:3px;right:3px;width:20px;height:20px;background:rgba(163,45,45,.85);border:none;border-radius:50%;color:#fff;font-size:11px;display:flex;align-items:center;justify-content:center}
 
-/* ── SEMANA NAV ── */
-.week-nav{display:flex;align-items:center;gap:10px}
-.week-nav span{font-size:13px;font-weight:600;color:var(--texto);white-space:nowrap}
+/* ═══ PAGO COMPROBANTE ═══ */
+.pay-slot{border:1.5px dashed var(--bd);border-radius:var(--r2);padding:10px;cursor:pointer;position:relative;overflow:hidden;margin-top:8px}
+.pay-slot:hover{border-color:var(--az2)}
+.pay-slot.ok{border-color:var(--vd);border-style:solid}
+.pay-slot input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
 
-/* ── CONDUCTOR AVATAR ── */
-.avatar{width:32px;height:32px;border-radius:50%;background:var(--azul3);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:var(--azul);flex-shrink:0}
+/* ═══ ALERTS ═══ */
+.alert{padding:11px 15px;border-radius:var(--r2);margin-bottom:13px;font-size:12px;display:flex;align-items:flex-start;gap:9px}
+.alert.warn{background:var(--am2);border-left:3px solid #E8A020;color:var(--am)}
+.alert.info{background:var(--az3);border-left:3px solid var(--az2);color:var(--az)}
+.alert.err{background:var(--rj2);border-left:3px solid var(--rj);color:var(--rj)}
+.alert.ok{background:var(--vd2);border-left:3px solid var(--vd);color:var(--vd)}
 
-/* ── CONDUCTOR CARD ── */
-.cond-card{background:var(--blanco);border:1px solid var(--borde);border-radius:var(--radio);overflow:hidden;margin-bottom:12px;box-shadow:var(--sombra)}
-.cond-card-hdr{background:var(--azul);padding:12px 16px;display:flex;justify-content:space-between;align-items:center}
-.cond-card-hdr .nombre{font-weight:700;font-size:14px;color:#fff}
-.cond-card-hdr .sub{font-size:11px;color:#88AACC}
-.cond-card-body{padding:14px 16px}
+/* ═══ CONDUCTOR CARD ═══ */
+.cc{background:var(--bl);border:1px solid var(--bd);border-radius:var(--r);overflow:hidden;margin-bottom:11px;box-shadow:var(--sh)}
+.cc-hdr{background:var(--az);padding:11px 15px;display:flex;justify-content:space-between;align-items:center}
+.cc-nombre{font-weight:700;font-size:13px;color:#fff}
+.cc-sub{font-size:10px;color:#88AACC;margin-top:2px}
+.cc-body{padding:13px 15px}
+.cc-docs{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:8px;margin-top:10px}
+.doc-tag{padding:6px 9px;border-radius:7px;font-size:10px;font-weight:500;text-align:center;border:1px solid}
+.doc-tag.ok{background:var(--vd2);color:var(--vd);border-color:#8FCF9F}
+.doc-tag.warn{background:var(--am2);color:var(--am);border-color:#E8A020}
+.doc-tag.exp{background:var(--rj2);color:var(--rj);border-color:#F09595}
+.doc-tag.na{background:var(--gr2);color:var(--tx2);border-color:var(--bd)}
+.doc-tag .dt-lbl{font-weight:600;display:block;margin-bottom:2px}
+.doc-tag .dt-date{font-size:9px;opacity:.8}
 
-/* ── TOAST ── */
-.toast{position:fixed;bottom:24px;right:24px;background:var(--azul);color:#fff;padding:12px 20px;border-radius:var(--radio);font-size:13px;font-weight:500;box-shadow:var(--sombra2);z-index:1000;transform:translateY(80px);opacity:0;transition:all .3s}
+/* ═══ HISTORIAL CONDUCTOR ═══ */
+.hist-item{padding:10px 13px;border:1px solid var(--bd);border-radius:var(--r2);margin-bottom:8px;background:var(--gr)}
+.hist-item-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:5px}
+
+/* ═══ WEEK NAV ═══ */
+.wn{display:flex;align-items:center;gap:9px}
+.wn span{font-size:12px;font-weight:600;color:var(--tx);white-space:nowrap}
+
+/* ═══ TOAST ═══ */
+.toast{position:fixed;bottom:22px;right:22px;background:var(--az);color:#fff;padding:11px 18px;border-radius:var(--r);font-size:12px;font-weight:500;box-shadow:var(--sh2);z-index:2000;transform:translateY(80px);opacity:0;transition:all .3s}
 .toast.show{transform:translateY(0);opacity:1}
-.toast.ok{background:var(--verde)}
-.toast.err{background:var(--rojo)}
+.toast.tok{background:var(--vd)}.toast.terr{background:var(--rj)}
 
-/* ── MONO ── */
-.mono{font-family:'DM Mono',monospace;font-size:12px}
+.mono{font-family:'DM Mono',monospace;font-size:11px}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:13px}
+.badge-estado select{border:none;background:transparent;font-size:11px;font-weight:600;cursor:pointer;padding:0;outline:none}
 
-/* ── GRID ── */
-.two-col{display:grid;grid-template-columns:1fr 1fr;gap:14px}
-@media(max-width:640px){.two-col,.form-row,.form-row.three{grid-template-columns:1fr}.kpis{grid-template-columns:1fr 1fr}}
+/* ═══ RECIBO ═══ */
+.recibo-wrap{background:#fff;border:1px solid var(--bd);border-radius:var(--r);padding:20px;font-size:12px;print-color-adjust:exact}
+@media print{body>*:not(#print-area){display:none}#print-area{display:block!important}}
+
+@media(max-width:640px){.two-col,.fr,.fr3{grid-template-columns:1fr}.kpis{grid-template-columns:1fr 1fr}}
 </style>
 </head>
 <body>
 
-<!-- ══ LOGIN SCREEN ══ -->
+<!-- LOGIN -->
 <div id="login-screen">
-  <div class="login-box">
-    <div class="login-logo">T</div>
-    <div class="login-title">Proyecto M-0548</div>
-    <div class="login-sub">Servicio de Transporte Terrestre de Pasajeros<br>Universidad Nacional de Colombia</div>
-    <div class="login-contrato"><span class="login-badge">M-0548 · Sede Medellín</span></div>
-    <div class="login-field">
-      <label>USUARIO</label>
-      <input type="text" id="l-user" placeholder="Ingresa tu usuario" autocomplete="username">
-    </div>
-    <div class="login-field">
-      <label>CONTRASEÑA</label>
-      <input type="password" id="l-pass" placeholder="Ingresa tu contraseña" autocomplete="current-password">
-    </div>
-    <button class="login-btn" onclick="doLogin()">Ingresar al sistema →</button>
-    <div class="login-err" id="login-err">Usuario o contraseña incorrectos. Intenta de nuevo.</div>
-    <div class="login-pie">Orlando Sepúlveda Macías · 2026</div>
+  <div class="lb">
+    <div class="lb-logo">T</div>
+    <div class="lb-title">Proyecto M-0548</div>
+    <div class="lb-sub">Transporte Terrestre de Pasajeros<br>Universidad Nacional de Colombia</div>
+    <div class="lb-badge"><span>M-0548 · Sede Medellín · v2.0</span></div>
+    <div class="lb-f"><label>USUARIO</label><input type="text" id="l-user" placeholder="Usuario" autocomplete="username"></div>
+    <div class="lb-f"><label>CONTRASEÑA</label><input type="password" id="l-pass" placeholder="Contraseña" autocomplete="current-password"></div>
+    <button class="lb-btn" onclick="doLogin()">Ingresar al sistema →</button>
+    <div class="lb-err" id="l-err">Usuario o contraseña incorrectos</div>
+    <div class="lb-pie">Orlando Sepúlveda Macías · 2026</div>
   </div>
 </div>
 
-
+<!-- TOPBAR -->
 <div class="topbar">
-  <div class="topbar-brand">
-    <div class="topbar-logo">T</div>
+  <div class="tb-brand">
+    <div class="tb-logo">T</div>
     <div>
-      <div class="topbar-title">Servicio de Transporte Terrestre de Pasajeros</div>
-      <div class="topbar-sub">Orlando Sepúlveda Macías — Universidad Nacional de Colombia</div>
+      <div class="tb-title">Servicio de Transporte Terrestre de Pasajeros</div>
+      <div class="tb-sub">Orlando Sepúlveda Macías — Universidad Nacional de Colombia</div>
     </div>
   </div>
-  <div class="topbar-badge">M-0548</div>
+  <div class="tb-right">
+    <div class="tb-badge">M-0548</div>
+    <button class="tb-logout" onclick="cerrarSesion()">Salir</button>
+  </div>
 </div>
 
+<!-- NAV -->
 <div class="nav">
-  <button class="nav-btn active" onclick="nav('dashboard')">📊 Panel</button>
-  <button class="nav-btn" onclick="nav('rutas')">🗺 Rutas diarias</button>
-  <button class="nav-btn" onclick="nav('conductores')">👤 Conductores</button>
-  <button class="nav-btn" onclick="nav('cuentas')">📄 Cuentas de cobro</button>
-  <button class="nav-btn" onclick="nav('pagos')">💳 Pagos</button>
-  <button class="nav-btn" onclick="nav('finanzas')">📈 Financiero</button>
-  <button class="nav-btn" onclick="nav('novedades')">⚠ Novedades</button>
+  <button class="nv active" onclick="nav('dashboard')">📊 Panel</button>
+  <button class="nv" onclick="nav('rutas')">🗺 Rutas</button>
+  <button class="nv" onclick="nav('conductores')">👤 Conductores</button>
+  <button class="nv" onclick="nav('cuentas')">📄 Cobros</button>
+  <button class="nv" onclick="nav('pagos')">💳 Pagos</button>
+  <button class="nv" onclick="nav('finanzas')">📈 Financiero</button>
+  <button class="nv" onclick="nav('novedades')">⚠ Novedades</button>
 </div>
+
+<!-- ALERTAS GLOBALES -->
+<div id="alertas-globales" style="padding:0 20px;max-width:1100px;margin:0 auto"></div>
 
 <div class="content">
 
 <!-- ══ DASHBOARD ══ -->
-<div id="dashboard" class="section active">
-  <div id="kpis-dashboard" class="kpis"></div>
+<div id="dashboard" class="sec active">
+  <div id="kpis-dash" class="kpis"></div>
   <div class="two-col">
     <div class="card">
-      <div class="card-hdr">
-        <span class="card-title">Rutas registradas hoy</span>
-        <span id="fecha-hoy" class="card-sub"></span>
-      </div>
-      <div class="table-wrap"><table>
-        <thead><tr><th>Ruta</th><th>Conductor</th><th>Destino</th><th>Valor</th><th>Estado</th></tr></thead>
-        <tbody id="tabla-hoy"></tbody>
-      </table></div>
+      <div class="card-hdr"><span class="card-title">Rutas de hoy</span><span id="fecha-hoy" style="font-size:11px;color:var(--tx2)"></span></div>
+      <div class="tw"><table><thead><tr><th>Ruta</th><th>Conductor</th><th>Destino</th><th>Valor</th><th>Estado</th></tr></thead><tbody id="t-hoy"></tbody></table></div>
     </div>
     <div class="card">
-      <div class="card-hdr"><span class="card-title">Cuentas de cobro — UNAL</span></div>
-      <div class="table-wrap"><table>
-        <thead><tr><th>Semana</th><th>Total</th><th>Estado</th></tr></thead>
-        <tbody id="tabla-cuentas-dash"></tbody>
-      </table></div>
+      <div class="card-hdr"><span class="card-title">Cuentas UNAL</span></div>
+      <div class="tw"><table><thead><tr><th>Sem</th><th>Total</th><th>Estado</th></tr></thead><tbody id="t-cuentas-dash"></tbody></table></div>
     </div>
   </div>
   <div class="card">
-    <div class="card-hdr"><span class="card-title">Últimos 10 servicios registrados</span><button class="btn sm primary" onclick="nav('rutas')">Ver todos</button></div>
-    <div class="table-wrap"><table>
-      <thead><tr><th>Fecha</th><th>Ruta</th><th>Conductor</th><th>Destino</th><th>Valor</th><th>Estado</th></tr></thead>
-      <tbody id="tabla-recientes"></tbody>
-    </table></div>
+    <div class="card-hdr"><span class="card-title">Pagos pendientes conductores</span><button class="btn sm pri" onclick="nav('pagos')">Ver pagos</button></div>
+    <div class="tw"><table><thead><tr><th>Conductor</th><th>Semana</th><th>Rutas</th><th>Saldo</th><th>Método</th><th>Estado</th><th></th></tr></thead><tbody id="t-pagos-pend"></tbody></table></div>
+  </div>
+  <div class="card">
+    <div class="card-hdr"><span class="card-title">Últimos 8 servicios</span></div>
+    <div class="tw"><table><thead><tr><th>Fecha</th><th>Ruta</th><th>Conductor</th><th>Destino</th><th>Valor</th><th>Estado</th></tr></thead><tbody id="t-recientes"></tbody></table></div>
   </div>
 </div>
 
 <!-- ══ RUTAS ══ -->
-<div id="rutas" class="section">
+<div id="rutas" class="sec">
   <div class="sec-hdr">
-    <h2>Registro de rutas diarias</h2>
-    <div class="btn-group">
-      <div class="week-nav">
-        <button class="btn sm" onclick="semanaNav(-1)">←</button>
-        <span id="semana-label">Semana actual</span>
-        <button class="btn sm" onclick="semanaNav(1)">→</button>
+    <h2>Rutas diarias</h2>
+    <div class="btn-g">
+      <div class="wn">
+        <button class="btn sm" onclick="semNav(-1)">←</button>
+        <span id="sem-lbl"></span>
+        <button class="btn sm" onclick="semNav(1)">→</button>
       </div>
-      <button class="btn primary" onclick="abrirModal('modal-ruta')">+ Registrar ruta</button>
+      <button class="btn pri" onclick="abrirModal('m-ruta')">+ Registrar ruta</button>
     </div>
   </div>
-  <div class="alert info">📋 Proyecto M-0548 · Universidad Nacional · Lunes a Viernes</div>
-  <div class="card" style="padding:0">
-    <div class="table-wrap"><table>
-      <thead><tr><th>Fecha</th><th>Ruta</th><th>Conductor</th><th>Destino</th><th>Salida</th><th>Llegada</th><th>Pasajeros</th><th>Valor UNAL</th><th>Pago cond.</th><th>Estado</th><th></th></tr></thead>
-      <tbody id="tabla-rutas-semana"></tbody>
-    </table></div>
-  </div>
-  <div class="card">
-    <div class="card-hdr"><span class="card-title">Resumen financiero de la semana</span></div>
-    <div id="resumen-semana"></div>
-  </div>
+  <div class="alert info">📋 M-0548 · Universidad Nacional · Lunes a Viernes · Punto de salida: UNAL Bloque M8</div>
+  <div class="card" style="padding:0"><div class="tw"><table style="min-width:900px">
+    <thead><tr><th>Fecha</th><th>Ruta</th><th>Conductor</th><th>Destino</th><th>Salida</th><th>Llegada</th><th>Pas.</th><th>Valor UNAL</th><th>Pago cond.</th><th>Estado empresa</th><th>Estado conductor</th><th>Novedad</th><th></th></tr></thead>
+    <tbody id="t-rutas"></tbody>
+  </table></div></div>
+  <div class="card"><div class="card-hdr"><span class="card-title">Resumen semana</span></div><div id="res-semana"></div></div>
 </div>
 
 <!-- ══ CONDUCTORES ══ -->
-<div id="conductores" class="section">
+<div id="conductores" class="sec">
   <div class="sec-hdr">
-    <h2>Conductores — Proyecto M-0548</h2>
-    <button class="btn primary" onclick="abrirModal('modal-conductor')">+ Agregar conductor</button>
+    <h2>Conductores — M-0548</h2>
+    <button class="btn pri" onclick="abrirModal('m-conductor')">+ Agregar conductor</button>
   </div>
   <div id="lista-conductores"></div>
 </div>
 
 <!-- ══ CUENTAS ══ -->
-<div id="cuentas" class="section">
+<div id="cuentas" class="sec">
   <div class="sec-hdr">
-    <h2>Cuentas de cobro — Universidad Nacional</h2>
-    <button class="btn primary" onclick="abrirModal('modal-cuenta')">+ Nueva cuenta</button>
+    <h2>Cobros — Universidad Nacional</h2>
+    <button class="btn pri" onclick="abrirModal('m-cuenta')">+ Nueva cuenta</button>
   </div>
   <div id="kpis-cuentas" class="kpis"></div>
   <div id="lista-cuentas"></div>
 </div>
 
 <!-- ══ PAGOS ══ -->
-<div id="pagos" class="section">
+<div id="pagos" class="sec">
   <div class="sec-hdr">
     <h2>Pagos a conductores</h2>
-    <button class="btn primary" onclick="abrirModal('modal-pago')">+ Registrar pago</button>
+    <div class="btn-g">
+      <button class="btn nj" onclick="generarReciboViernes()">🧾 Reporte viernes</button>
+      <button class="btn pri" onclick="abrirModal('m-pago')">+ Registrar pago</button>
+    </div>
   </div>
   <div id="kpis-pagos" class="kpis"></div>
-  <div class="card" style="padding:0">
-    <div class="table-wrap"><table>
-      <thead><tr><th>Conductor</th><th>Semana</th><th>Rutas</th><th>Total</th><th>Anticipo</th><th>Saldo</th><th>Método</th><th>Estado</th><th></th></tr></thead>
-      <tbody id="tabla-pagos"></tbody>
-    </table></div>
-  </div>
+  <div class="card" style="padding:0"><div class="tw"><table>
+    <thead><tr><th>Conductor</th><th>Semana</th><th>Rutas</th><th>Total</th><th>Anticipo</th><th>Saldo</th><th>Método</th><th>Cuenta</th><th>Comprobante</th><th>Estado</th><th></th></tr></thead>
+    <tbody id="t-pagos"></tbody>
+  </table></div></div>
 </div>
 
 <!-- ══ FINANCIERO ══ -->
-<div id="finanzas" class="section">
-  <div class="sec-hdr">
-    <h2>Control financiero — M-0548</h2>
-  </div>
-  <div id="kpis-finanzas" class="kpis"></div>
+<div id="finanzas" class="sec">
+  <div class="sec-hdr"><h2>Control financiero — M-0548</h2></div>
+  <div id="kpis-fin" class="kpis"></div>
   <div class="two-col">
-    <div class="card">
-      <div class="card-title" style="margin-bottom:12px">Detalle por ruta</div>
-      <div class="table-wrap"><table>
-        <thead><tr><th>Ruta</th><th>Servicios</th><th>Ingresos</th><th>Costo cond.</th><th>Utilidad</th><th>Margen</th></tr></thead>
-        <tbody id="tabla-fin-rutas"></tbody>
-      </table></div>
+    <div class="card"><div class="card-hdr"><span class="card-title">Por ruta</span></div>
+      <div class="tw"><table><thead><tr><th>Ruta</th><th>Servicios</th><th>Ingresos</th><th>Costo</th><th>Utilidad</th><th>Margen</th></tr></thead><tbody id="t-fin-ruta"></tbody></table></div>
     </div>
-    <div class="card">
-      <div class="card-title" style="margin-bottom:12px">Flujo por semana</div>
-      <div class="table-wrap"><table>
-        <thead><tr><th>Semana</th><th>Facturado</th><th>Cobrado</th><th>Pagado cond.</th><th>Balance</th></tr></thead>
-        <tbody id="tabla-fin-semanas"></tbody>
-      </table></div>
+    <div class="card"><div class="card-hdr"><span class="card-title">Por semana</span></div>
+      <div class="tw"><table><thead><tr><th>Sem</th><th>Facturado</th><th>Cobrado</th><th>Pagado cond.</th><th>Balance</th></tr></thead><tbody id="t-fin-sem"></tbody></table></div>
     </div>
   </div>
 </div>
 
 <!-- ══ NOVEDADES ══ -->
-<div id="novedades" class="section">
+<div id="novedades" class="sec">
   <div class="sec-hdr">
-    <h2>Registro de novedades</h2>
-    <button class="btn primary" onclick="abrirModal('modal-novedad')">+ Registrar novedad</button>
+    <h2>Novedades</h2>
+    <button class="btn pri" onclick="abrirModal('m-novedad')">+ Registrar novedad</button>
   </div>
-  <div class="alert warn">⚠ Las novedades deben reportarse a la UNAL dentro de las 2 horas siguientes al evento.</div>
-  <div class="card" style="padding:0">
-    <div class="table-wrap"><table>
-      <thead><tr><th>Fecha</th><th>Ruta</th><th>Conductor</th><th>Tipo</th><th>Descripción</th><th>Impacto</th><th>Estado</th><th></th></tr></thead>
-      <tbody id="tabla-novedades"></tbody>
-    </table></div>
-  </div>
+  <div class="alert warn">⚠ Reportar a la UNAL dentro de las 2 horas siguientes al evento</div>
+  <div class="card" style="padding:0"><div class="tw"><table>
+    <thead><tr><th>Fecha</th><th>Ruta</th><th>Conductor</th><th>Tipo</th><th>Descripción</th><th>Impacto</th><th>Reportado</th><th>Estado</th><th></th></tr></thead>
+    <tbody id="t-novedades"></tbody>
+  </table></div></div>
 </div>
 
 </div><!-- /content -->
 
-<!-- ══ MODALES ══ -->
+<!-- ══════════════════════════════════
+     MODALES
+══════════════════════════════════ -->
 
-<!-- Modal Ruta -->
-<div class="modal-bg" id="modal-ruta">
-<div class="modal">
-  <h3>Registrar ruta — Proyecto M-0548</h3>
-  <div class="form-row">
-    <div class="form-group"><label>Fecha</label><input type="date" id="r-fecha"></div>
-    <div class="form-group"><label>Ruta</label>
-      <select id="r-ruta">
-        <option value="">Seleccionar...</option>
-        <option value="R-1">R-1 — Granizal / Bello Oriente</option>
-        <option value="R-2">R-2 — Santa Elena / Pericos / Paysandú</option>
-        <option value="R-3">R-3 — Parque Arví / Guarne / Veredal</option>
-        <option value="R-4">R-4 — Sto. Domingo / La Avanzada / Carpinelo</option>
-      </select>
-    </div>
+<!-- MODAL RUTA -->
+<div class="mbg" id="m-ruta"><div class="modal">
+  <h3>Registrar ruta — M-0548</h3>
+  <div class="fr">
+    <div class="fg"><label>Fecha</label><input type="date" id="r-fecha"></div>
+    <div class="fg"><label>Ruta</label><select id="r-ruta">
+      <option value="">Seleccionar...</option>
+      <option value="R-1">R-1 — Granizal / Bello Oriente</option>
+      <option value="R-2">R-2 — Santa Elena / Pericos / Paysandú</option>
+      <option value="R-3">R-3 — Parque Arví / Guarne / Veredal</option>
+      <option value="R-4">R-4 — Sto. Domingo / La Avanzada / Carpinelo</option>
+    </select></div>
   </div>
-  <div class="form-row">
-    <div class="form-group"><label>Conductor</label><select id="r-conductor"><option value="">Seleccionar...</option></select></div>
-    <div class="form-group"><label>N° Pasajeros</label><input type="number" id="r-pasajeros" min="0" value=""></div>
+  <div class="fr">
+    <div class="fg"><label>Conductor</label><select id="r-conductor"><option value="">Seleccionar...</option></select></div>
+    <div class="fg"><label>N° Pasajeros</label><input type="number" id="r-pasajeros" min="0"></div>
   </div>
-  <div class="form-row">
-    <div class="form-group"><label>Hora salida</label><input type="time" id="r-salida"></div>
-    <div class="form-group"><label>Hora llegada</label><input type="time" id="r-llegada"></div>
+  <div class="fr">
+    <div class="fg"><label>Hora salida</label><input type="time" id="r-salida"></div>
+    <div class="fg"><label>Hora llegada</label><input type="time" id="r-llegada"></div>
   </div>
-  <div class="form-row">
-    <div class="form-group"><label>Valor cobrado a UNAL ($)</label><input type="number" id="r-valor" placeholder="730000"></div>
-    <div class="form-group"><label>Pago al conductor ($)</label><input type="number" id="r-pago-cond" placeholder="500000"></div>
+  <div class="fr">
+    <div class="fg"><label>Valor cobrado a UNAL ($)</label><input type="number" id="r-valor" placeholder="730000"></div>
+    <div class="fg"><label>Pago al conductor ($)</label><input type="number" id="r-pagoc" placeholder="500000"></div>
   </div>
-  <div class="form-row">
-    <div class="form-group"><label>Estado</label>
-      <select id="r-estado">
-        <option value="Realizado">Realizado</option>
-        <option value="En ruta">En ruta</option>
-        <option value="Programado">Programado</option>
-        <option value="Novedad">Novedad</option>
-      </select>
-    </div>
-    <div class="form-group"><label>Semana</label><input type="text" id="r-semana" placeholder="Ej: 17"></div>
+  <div class="fr">
+    <div class="fg"><label>Estado empresa (UNAL)</label><select id="r-estado-emp">
+      <option>Servicio realizado</option><option>Servicio programado</option><option>Pedido realizado</option><option>Servicio con novedad</option>
+    </select></div>
+    <div class="fg"><label>Estado conductor</label><select id="r-estado-cond">
+      <option>Pendiente de pago</option><option>Pagado</option>
+    </select></div>
   </div>
-  <div class="form-group"><label>Observaciones</label><textarea id="r-obs" placeholder="Condiciones de la vía, novedades..."></textarea></div>
-  <div class="modal-foot">
-    <button class="btn" onclick="cerrarModal('modal-ruta')">Cancelar</button>
-    <button class="btn primary" onclick="guardarRuta()">Guardar ruta</button>
+  <div class="fr">
+    <div class="fg"><label>Semana</label><input type="text" id="r-semana" placeholder="17"></div>
+    <div class="fg"><label>Novedad (si aplica)</label><input type="text" id="r-novedad" placeholder="Descripción breve..."></div>
+  </div>
+  <div class="fg"><label>Observaciones</label><textarea id="r-obs" placeholder="Condiciones de la vía, novedades..."></textarea></div>
+  <div class="mfoot">
+    <button class="btn" onclick="cerrarModal('m-ruta')">Cancelar</button>
+    <button class="btn pri" onclick="guardarRuta()">Guardar ruta</button>
   </div>
 </div></div>
 
-<!-- Modal Conductor -->
-<div class="modal-bg" id="modal-conductor">
-<div class="modal">
-  <h3>Agregar conductor — M-0548</h3>
-  <div class="form-row">
-    <div class="form-group"><label>Nombre completo</label><input type="text" id="c-nombre" placeholder="Nombre y apellidos"></div>
-    <div class="form-group"><label>Cédula</label><input type="text" id="c-cedula" placeholder="Número de cédula"></div>
+<!-- MODAL CONDUCTOR -->
+<div class="mbg" id="m-conductor"><div class="modal wide">
+  <h3 id="m-cond-titulo">Conductor — M-0548</h3>
+  <div class="mtabs">
+    <button class="mtab active" onclick="switchTab('cond',0)">Datos generales</button>
+    <button class="mtab" onclick="switchTab('cond',1)">Documentos</button>
+    <button class="mtab" onclick="switchTab('cond',2)">Información de pago</button>
+    <button class="mtab" onclick="switchTab('cond',3)">Historial</button>
   </div>
-  <div class="form-row">
-    <div class="form-group"><label>Teléfono</label><input type="text" id="c-tel" placeholder="300-000-0000"></div>
-    <div class="form-group"><label>Método de pago</label>
-      <select id="c-metodo">
-        <option>Nequi</option><option>Daviplata</option><option>Bancolombia Ahorros</option><option>Efectivo</option><option>Transferencia</option>
-      </select>
+  <!-- Tab 0: Datos -->
+  <div class="mtab-panel active" id="cond-tab-0">
+    <div class="fr">
+      <div class="fg"><label>Nombre completo</label><input type="text" id="c-nombre" placeholder="Nombre y apellidos"></div>
+      <div class="fg"><label>Cédula de ciudadanía</label><input type="text" id="c-cedula" placeholder="1.000.000.000"></div>
     </div>
-  </div>
-  <div class="form-row">
-    <div class="form-group"><label>Número cuenta / Nequi</label><input type="text" id="c-cuenta" placeholder="Número de cuenta o Nequi"></div>
-    <div class="form-group"><label>Categoría licencia</label>
-      <select id="c-licencia"><option>C2</option><option>C1</option><option>B3</option></select>
+    <div class="fr">
+      <div class="fg"><label>Teléfono / Celular</label><input type="text" id="c-tel" placeholder="300-000-0000"></div>
+      <div class="fg"><label>Categoría licencia</label><select id="c-licencia"><option>C2</option><option>C1</option><option>B3</option></select></div>
     </div>
-  </div>
-  <div class="form-row">
-    <div class="form-group"><label>Ruta principal asignada</label>
-      <select id="c-ruta">
+    <div class="fr">
+      <div class="fg"><label>Ruta principal</label><select id="c-ruta">
         <option>R-1 — Granizal</option><option>R-2 — Santa Elena</option><option>R-3 — Parque Arví</option><option>R-4 — Sto. Domingo</option><option>Varias / Flexible</option>
-      </select>
+      </select></div>
+      <div class="fg"><label>Estado</label><select id="c-estado"><option>Activo</option><option>Inactivo</option><option>Suspendido</option></select></div>
     </div>
-    <div class="form-group"><label>Pago por ruta ($)</label><input type="number" id="c-pago" placeholder="450000"></div>
+    <div class="fg"><label>Observaciones</label><textarea id="c-obs" placeholder="Notas del conductor..."></textarea></div>
   </div>
-  <div class="form-row">
-    <div class="form-group"><label>Vencimiento licencia</label><input type="date" id="c-venc-lic"></div>
-    <div class="form-group"><label>Vencimiento SOAT</label><input type="date" id="c-venc-soat"></div>
+  <!-- Tab 1: Documentos -->
+  <div class="mtab-panel" id="cond-tab-1">
+    <div class="fr">
+      <div class="fg"><label>Vencimiento licencia de conducción</label><input type="date" id="c-venc-lic"></div>
+      <div class="fg"><label>Vencimiento SOAT</label><input type="date" id="c-venc-soat"></div>
+    </div>
+    <div class="fr">
+      <div class="fg"><label>Vencimiento seguro todo riesgo</label><input type="date" id="c-venc-seguro"></div>
+      <div class="fg"><label>Vencimiento kit de carretera</label><input type="date" id="c-venc-kit"></div>
+    </div>
+    <div class="fr">
+      <div class="fg"><label>Vencimiento examen médico</label><input type="date" id="c-venc-medico"></div>
+      <div class="fg"><label>Vencimiento psicosensométrico</label><input type="date" id="c-venc-psico"></div>
+    </div>
+    <div class="fr">
+      <div class="fg"><label>Seguridad social</label><select id="c-seg-social"><option value="">Seleccionar...</option><option>Al día</option><option>Pendiente</option><option>No aplica</option></select></div>
+      <div class="fg"><label>ARL</label><select id="c-arl"><option value="">Seleccionar...</option><option>Paga — Al día</option><option>Paga — Pendiente</option><option>No paga / No aplica</option></select></div>
+    </div>
+    <p style="font-size:11px;color:var(--tx2);margin-bottom:8px;margin-top:4px">📎 Sube imágenes de los documentos (CC, licencia, SOAT, etc.)</p>
+    <div id="doc-upload-area" class="doc-grid"></div>
+    <input type="file" id="c-doc-input" accept="image/*,application/pdf" multiple style="display:none">
+    <button class="btn sm" style="margin-top:8px" onclick="document.getElementById('c-doc-input').click()">+ Subir documentos</button>
   </div>
-  <div class="modal-foot">
-    <button class="btn" onclick="cerrarModal('modal-conductor')">Cancelar</button>
-    <button class="btn primary" onclick="guardarConductor()">Guardar conductor</button>
+  <!-- Tab 2: Pago -->
+  <div class="mtab-panel" id="cond-tab-2">
+    <div class="fr">
+      <div class="fg"><label>Pago por ruta ($)</label><input type="number" id="c-pago" placeholder="450000"></div>
+      <div class="fg"><label>Método de pago principal</label><select id="c-metodo">
+        <option>Nequi</option><option>Daviplata</option><option>Bancolombia Ahorros</option><option>Bancolombia Corriente</option><option>Davivienda Ahorros</option><option>BBVA Ahorros</option><option>Banco de Bogotá</option><option>Banco Popular</option><option>Efectivo</option><option>Transferencia bancaria</option>
+      </select></div>
+    </div>
+    <div class="fr">
+      <div class="fg"><label>Número de cuenta / Nequi / Daviplata</label><input type="text" id="c-cuenta" placeholder="Número"></div>
+      <div class="fg"><label>Titular de la cuenta</label><input type="text" id="c-titular" placeholder="Nombre titular"></div>
+    </div>
+    <div class="fr">
+      <div class="fg"><label>Método alternativo</label><select id="c-metodo2">
+        <option value="">— Ninguno —</option><option>Nequi</option><option>Daviplata</option><option>Bancolombia Ahorros</option><option>Bancolombia Corriente</option><option>Davivienda Ahorros</option><option>BBVA Ahorros</option><option>Banco de Bogotá</option><option>Efectivo</option>
+      </select></div>
+      <div class="fg"><label>Número cuenta alternativa</label><input type="text" id="c-cuenta2" placeholder="Número"></div>
+    </div>
+    <div class="alert info" style="margin-top:8px">💡 Los datos de pago se usan para el reporte de viernes y los comprobantes automáticos.</div>
+  </div>
+  <!-- Tab 3: Historial (solo lectura) -->
+  <div class="mtab-panel" id="cond-tab-3">
+    <div id="cond-historial-content"><p style="color:var(--tx2);font-size:12px">Guarda el conductor para ver su historial.</p></div>
+  </div>
+  <input type="hidden" id="c-id-edit" value="">
+  <div class="mfoot">
+    <button class="btn" onclick="cerrarModal('m-conductor')">Cancelar</button>
+    <button class="btn pri" onclick="guardarConductor()">Guardar conductor</button>
   </div>
 </div></div>
 
-<!-- Modal Cuenta -->
-<div class="modal-bg" id="modal-cuenta">
-<div class="modal">
-  <h3>Nueva cuenta de cobro — UNAL M-0548</h3>
-  <div class="form-row">
-    <div class="form-group"><label>Número de cuenta</label><input type="text" id="cu-num" placeholder="Ej: 005"></div>
-    <div class="form-group"><label>Semana</label><input type="text" id="cu-sem" placeholder="Ej: 18"></div>
+<!-- MODAL CUENTA -->
+<div class="mbg" id="m-cuenta"><div class="modal">
+  <h3 id="m-cuenta-titulo">Cuenta de cobro — UNAL M-0548</h3>
+  <div class="fr">
+    <div class="fg"><label>Número de cuenta</label><input type="text" id="cu-num" placeholder="005"></div>
+    <div class="fg"><label>Semana</label><input type="text" id="cu-sem" placeholder="18"></div>
   </div>
-  <div class="form-row">
-    <div class="form-group"><label>Período (descripción)</label><input type="text" id="cu-periodo" placeholder="29 Abr – 03 May 2026"></div>
-    <div class="form-group"><label>Fecha emisión</label><input type="date" id="cu-fecha"></div>
+  <div class="fr">
+    <div class="fg"><label>Período</label><input type="text" id="cu-periodo" placeholder="29 Abr – 03 May 2026"></div>
+    <div class="fg"><label>Fecha emisión</label><input type="date" id="cu-fecha"></div>
   </div>
-  <div class="form-row">
-    <div class="form-group"><label>Valor total ($)</label><input type="number" id="cu-valor" placeholder="14200000"></div>
-    <div class="form-group"><label>Fecha vencimiento</label><input type="date" id="cu-vence"></div>
+  <div class="fr">
+    <div class="fg"><label>Valor total ($)</label><input type="number" id="cu-valor" placeholder="14200000"></div>
+    <div class="fg"><label>Fecha vencimiento</label><input type="date" id="cu-vence"></div>
   </div>
-  <div class="form-row">
-    <div class="form-group"><label>N° servicios realizados</label><input type="number" id="cu-servicios" placeholder="20"></div>
-    <div class="form-group"><label>Estado</label>
-      <select id="cu-estado"><option>Pendiente</option><option>Cobrada</option><option>Vencida</option><option>Abierta</option></select>
-    </div>
+  <div class="fr">
+    <div class="fg"><label>Servicios realizados</label><input type="number" id="cu-servicios" placeholder="20"></div>
+    <div class="fg"><label>Estado</label><select id="cu-estado">
+      <option>Pendiente de cobro</option><option>Cobrada</option><option>Vencida</option><option>Abierta</option>
+    </select></div>
   </div>
-  <div class="modal-foot">
-    <button class="btn" onclick="cerrarModal('modal-cuenta')">Cancelar</button>
-    <button class="btn primary" onclick="guardarCuenta()">Guardar cuenta</button>
-  </div>
-</div></div>
-
-<!-- Modal Pago -->
-<div class="modal-bg" id="modal-pago">
-<div class="modal">
-  <h3>Registrar pago a conductor</h3>
-  <div class="form-row">
-    <div class="form-group"><label>Conductor</label><select id="p-conductor"><option value="">Seleccionar...</option></select></div>
-    <div class="form-group"><label>Semana</label><input type="text" id="p-semana" placeholder="Ej: 17"></div>
-  </div>
-  <div class="form-row">
-    <div class="form-group"><label>Rutas realizadas</label><input type="number" id="p-rutas" min="0"></div>
-    <div class="form-group"><label>Total a pagar ($)</label><input type="number" id="p-total"></div>
-  </div>
-  <div class="form-row">
-    <div class="form-group"><label>Anticipo entregado ($)</label><input type="number" id="p-anticipo" value="0"></div>
-    <div class="form-group"><label>Saldo pagado ($)</label><input type="number" id="p-saldo"></div>
-  </div>
-  <div class="form-row">
-    <div class="form-group"><label>Método de pago</label>
-      <select id="p-metodo"><option>Nequi</option><option>Daviplata</option><option>Bancolombia</option><option>Efectivo</option></select>
-    </div>
-    <div class="form-group"><label>Fecha de pago</label><input type="date" id="p-fecha"></div>
-  </div>
-  <div class="form-group"><label>Estado</label>
-    <select id="p-estado"><option>Pagado</option><option>Pendiente</option><option>Parcial</option></select>
-  </div>
-  <div class="modal-foot">
-    <button class="btn" onclick="cerrarModal('modal-pago')">Cancelar</button>
-    <button class="btn primary" onclick="guardarPago()">Registrar pago</button>
+  <input type="hidden" id="cu-id-edit" value="">
+  <div class="mfoot">
+    <button class="btn" onclick="cerrarModal('m-cuenta')">Cancelar</button>
+    <button class="btn pri" onclick="guardarCuenta()">Guardar</button>
   </div>
 </div></div>
 
-<!-- Modal Novedad -->
-<div class="modal-bg" id="modal-novedad">
-<div class="modal">
+<!-- MODAL PAGO -->
+<div class="mbg" id="m-pago"><div class="modal">
+  <h3 id="m-pago-titulo">Registrar pago — Conductor</h3>
+  <div class="fr">
+    <div class="fg"><label>Conductor</label><select id="p-conductor"><option value="">Seleccionar...</option></select></div>
+    <div class="fg"><label>Semana</label><input type="text" id="p-semana" placeholder="17"></div>
+  </div>
+  <div class="fr">
+    <div class="fg"><label>Rutas realizadas</label><input type="number" id="p-rutas" min="0"></div>
+    <div class="fg"><label>Total a pagar ($)</label><input type="number" id="p-total"></div>
+  </div>
+  <div class="fr">
+    <div class="fg"><label>Anticipo entregado ($)</label><input type="number" id="p-anticipo" value="0"></div>
+    <div class="fg"><label>Saldo pagado ($)</label><input type="number" id="p-saldo"></div>
+  </div>
+  <div class="fr">
+    <div class="fg"><label>Método de pago</label><select id="p-metodo">
+      <option>Nequi</option><option>Daviplata</option><option>Bancolombia Ahorros</option><option>Bancolombia Corriente</option><option>Davivienda</option><option>BBVA</option><option>Banco de Bogotá</option><option>Banco Popular</option><option>Efectivo</option>
+    </select></div>
+    <div class="fg"><label>Fecha de pago</label><input type="date" id="p-fecha"></div>
+  </div>
+  <div class="fg"><label>Estado</label><select id="p-estado"><option>Pagado</option><option>Pendiente</option><option>Parcial</option></select></div>
+  <div class="fg">
+    <label>Comprobante de pago (imagen/PDF)</label>
+    <div class="pay-slot" id="pay-slot-wrap">
+      <input type="file" id="p-comprobante" accept="image/*,application/pdf" onchange="prevComprobante(this)">
+      <div id="pay-slot-txt" style="text-align:center;padding:12px;font-size:12px;color:var(--tx2)">📎 Toca aquí para adjuntar comprobante</div>
+      <img id="pay-slot-img" src="" style="max-width:100%;max-height:160px;display:none;border-radius:6px">
+    </div>
+  </div>
+  <input type="hidden" id="p-id-edit" value="">
+  <div class="mfoot">
+    <button class="btn" onclick="cerrarModal('m-pago')">Cancelar</button>
+    <button class="btn pri" onclick="guardarPago()">Registrar pago</button>
+  </div>
+</div></div>
+
+<!-- MODAL NOVEDAD -->
+<div class="mbg" id="m-novedad"><div class="modal">
   <h3>Registrar novedad</h3>
-  <div class="form-row">
-    <div class="form-group"><label>Fecha</label><input type="date" id="n-fecha"></div>
-    <div class="form-group"><label>Ruta afectada</label>
-      <select id="n-ruta"><option>R-1 Granizal</option><option>R-2 Santa Elena</option><option>R-3 Parque Arví</option><option>R-4 Sto. Domingo</option></select>
-    </div>
+  <div class="fr">
+    <div class="fg"><label>Fecha</label><input type="date" id="n-fecha"></div>
+    <div class="fg"><label>Ruta afectada</label><select id="n-ruta">
+      <option>R-1 Granizal</option><option>R-2 Santa Elena</option><option>R-3 Parque Arví</option><option>R-4 Sto. Domingo</option>
+    </select></div>
   </div>
-  <div class="form-row">
-    <div class="form-group"><label>Conductor</label><select id="n-conductor"><option value="">Seleccionar...</option></select></div>
-    <div class="form-group"><label>Tipo de novedad</label>
-      <select id="n-tipo"><option>Ruta no realizada</option><option>Retraso mayor 30 min</option><option>Cambio de conductor</option><option>Falla mecánica</option><option>Accidente de tránsito</option><option>Otro</option></select>
-    </div>
+  <div class="fr">
+    <div class="fg"><label>Conductor</label><select id="n-conductor"><option value="">Seleccionar...</option></select></div>
+    <div class="fg"><label>Tipo de novedad</label><select id="n-tipo">
+      <option>Ruta no realizada</option><option>Retraso mayor 30 min</option><option>Cambio de conductor</option><option>Falla mecánica</option><option>Accidente de tránsito</option><option>Otro</option>
+    </select></div>
   </div>
-  <div class="form-group"><label>Descripción</label><textarea id="n-desc" placeholder="Describe lo ocurrido con detalle..."></textarea></div>
-  <div class="form-row">
-    <div class="form-group"><label>Impacto económico ($)</label><input type="number" id="n-impacto" placeholder="0"></div>
-    <div class="form-group"><label>Reportado a UNAL</label>
-      <select id="n-reportado"><option>Sí — por WhatsApp</option><option>Sí — por correo</option><option>No reportado aún</option></select>
-    </div>
+  <div class="fg"><label>Descripción detallada</label><textarea id="n-desc" placeholder="Describe lo ocurrido con detalle..."></textarea></div>
+  <div class="fr">
+    <div class="fg"><label>Impacto económico ($)</label><input type="number" id="n-impacto" placeholder="0"></div>
+    <div class="fg"><label>Reportado a UNAL</label><select id="n-reportado">
+      <option>Sí — por WhatsApp</option><option>Sí — por correo</option><option>No reportado aún</option>
+    </select></div>
   </div>
-  <div class="modal-foot">
-    <button class="btn" onclick="cerrarModal('modal-novedad')">Cancelar</button>
-    <button class="btn primary" onclick="guardarNovedad()">Guardar novedad</button>
+  <div class="mfoot">
+    <button class="btn" onclick="cerrarModal('m-novedad')">Cancelar</button>
+    <button class="btn pri" onclick="guardarNovedad()">Guardar novedad</button>
   </div>
 </div></div>
 
-<!-- Toast -->
+<!-- MODAL REPORTE VIERNES -->
+<div class="mbg" id="m-reporte"><div class="modal wide">
+  <h3>🧾 Reporte de pago — Viernes</h3>
+  <div id="reporte-content"></div>
+  <div class="mfoot">
+    <button class="btn" onclick="cerrarModal('m-reporte')">Cerrar</button>
+    <button class="btn pri" onclick="window.print()">🖨 Imprimir / Guardar PDF</button>
+  </div>
+</div></div>
+
+<!-- MODAL VER DOC -->
+<div class="mbg" id="m-verdoc"><div class="modal" style="max-width:95vw;width:600px">
+  <h3 id="verdoc-titulo">Documento</h3>
+  <div id="verdoc-body" style="text-align:center"></div>
+  <div class="mfoot"><button class="btn" onclick="cerrarModal('m-verdoc')">Cerrar</button></div>
+</div></div>
+
 <div class="toast" id="toast"></div>
 
+<!-- ══════════════════════════════════
+     JAVASCRIPT
+══════════════════════════════════ -->
 <script>
-// ══════════════════════════════════════
-// STORAGE
-// ══════════════════════════════════════
-const DB = {
-  get: k => { try { return JSON.parse(localStorage.getItem('m0548_'+k)||'null') } catch(e){return null} },
-  set: (k,v) => localStorage.setItem('m0548_'+k, JSON.stringify(v)),
+// ─── AUTH ───────────────────────────────────────
+const UH='6db6bc8342ed8019123d126575b56405090e619bc88b22c67e0af4ef4e6ea6bb';
+const PH='c3e0dcb0e1a2dbee17c4a4cbc1f1d4971364cf54508478d30e989887fefcab17';
+async function sha256(s){const b=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(s));return Array.from(new Uint8Array(b)).map(x=>x.toString(16).padStart(2,'0')).join('')}
+async function doLogin(){
+  const u=document.getElementById('l-user').value.trim(),p=document.getElementById('l-pass').value;
+  const [hu,hp]=await Promise.all([sha256(u),sha256(p)]);
+  if(hu===UH&&hp===PH){document.getElementById('login-screen').classList.add('oculto');sessionStorage.setItem('auth','1');renderAll();checkAlertas()}
+  else{document.getElementById('l-err').classList.add('show');document.getElementById('l-pass').value=''}
+}
+function cerrarSesion(){sessionStorage.removeItem('auth');location.reload()}
+document.addEventListener('keydown',e=>{if(e.key==='Enter'&&!document.getElementById('login-screen').classList.contains('oculto'))doLogin()});
+if(sessionStorage.getItem('auth')==='1'){document.getElementById('login-screen').classList.add('oculto')}
+
+// ─── DB ─────────────────────────────────────────
+const DB={
+  get:k=>{try{return JSON.parse(localStorage.getItem('m0548v2_'+k)||'null')}catch{return null}},
+  set:(k,v)=>localStorage.setItem('m0548v2_'+k,JSON.stringify(v))
 };
 
-// ── DATOS INICIALES ──
-function initData() {
-  if (!DB.get('init')) {
-    DB.set('conductores', [
-      {id:1, nombre:'Orlando Sepúlveda Macías', cedula:'1.017.147.157', tel:'3147887124', metodo:'Nequi', cuenta:'3147887124', licencia:'C2', ruta:'Varias / Flexible', pago:0, vencLic:'2026-12-01', vencSoat:'2026-10-01', esPropietario:true},
-      {id:2, nombre:'Adolfo Mora Otero',        cedula:'—',             tel:'3148114178', metodo:'Nequi', cuenta:'3148114178', licencia:'C2', ruta:'R-2 — Santa Elena', pago:500000, vencLic:'2026-09-01', vencSoat:'2026-11-01', esPropietario:false},
-      {id:3, nombre:'Duban Urrego Gómez',       cedula:'—',             tel:'—',          metodo:'Bancolombia Ahorros', cuenta:'01687143261', licencia:'C2', ruta:'R-1 / R-2', pago:450000, vencLic:'2026-08-01', vencSoat:'2026-12-01', esPropietario:false},
-    ]);
-    DB.set('rutas', [
-      {id:1,fecha:'2026-04-22',ruta:'R-1',conductor:'Orlando Sepúlveda Macías',destino:'Granizal / Bello Oriente',salida:'06:00',llegada:'07:25',pasajeros:8,valor:650000,pagoCond:0,estado:'Realizado',semana:'17',obs:''},
-      {id:2,fecha:'2026-04-23',ruta:'R-1',conductor:'Duban Urrego Gómez',destino:'Granizal / Bello Oriente',salida:'06:00',llegada:'07:30',pasajeros:8,valor:650000,pagoCond:400000,estado:'Realizado',semana:'17',obs:''},
-      {id:3,fecha:'2026-04-23',ruta:'R-2',conductor:'Adolfo Mora Otero',destino:'Santa Elena / Pericos / Paysandú',salida:'06:30',llegada:'08:15',pasajeros:6,valor:730000,pagoCond:500000,estado:'Realizado',semana:'17',obs:''},
-      {id:4,fecha:'2026-04-23',ruta:'R-3',conductor:'Orlando Sepúlveda Macías',destino:'Parque Arví / Guarne / Veredal',salida:'07:00',llegada:'08:50',pasajeros:5,valor:730000,pagoCond:0,estado:'Realizado',semana:'17',obs:''},
-      {id:5,fecha:'2026-04-24',ruta:'R-2',conductor:'Duban Urrego Gómez',destino:'Santa Elena / Pericos / Paysandú',salida:'06:30',llegada:'08:20',pasajeros:6,valor:730000,pagoCond:500000,estado:'Realizado',semana:'17',obs:''},
-      {id:6,fecha:'2026-04-24',ruta:'R-4',conductor:'Orlando Sepúlveda Macías',destino:'Sto. Domingo / La Avanzada / Carpinelo',salida:'07:30',llegada:'08:45',pasajeros:7,valor:730000,pagoCond:0,estado:'Realizado',semana:'17',obs:''},
-    ]);
-    DB.set('cuentas', [
-      {id:1,num:'001',semana:'14',periodo:'01–05 Abr 2026',fecha:'2026-04-05',valor:14200000,vence:'2026-04-11',servicios:20,estado:'Cobrada'},
-      {id:2,num:'002',semana:'15',periodo:'08–12 Abr 2026',fecha:'2026-04-12',valor:14200000,vence:'2026-04-18',servicios:20,estado:'Vencida'},
-      {id:3,num:'003',semana:'16',periodo:'15–19 Abr 2026',fecha:'2026-04-19',valor:14200000,vence:'2026-04-25',servicios:20,estado:'Pendiente'},
-      {id:4,num:'004',semana:'17',periodo:'22–24 Abr 2026',fecha:'2026-04-24',valor:4220000, vence:'2026-05-02',servicios:6,estado:'Pendiente'},
-    ]);
-    DB.set('pagos', [
-      {id:1,conductor:'Adolfo Mora Otero',semana:'17',rutas:1,total:500000,anticipo:0,saldo:500000,metodo:'Nequi',fecha:'2026-04-24',estado:'Pendiente'},
-      {id:2,conductor:'Duban Urrego Gómez',semana:'17',rutas:2,total:900000,anticipo:0,saldo:900000,metodo:'Bancolombia',fecha:'2026-04-24',estado:'Pendiente'},
-    ]);
-    DB.set('novedades', []);
-    DB.set('semanaOffset', 0);
-    DB.set('init', true);
-  }
+// ─── INIT DATA ──────────────────────────────────
+function initData(){
+  if(DB.get('init')) return;
+  DB.set('conductores',[
+    {id:1,nombre:'Orlando Sepúlveda Macías',cedula:'1.017.147.157',tel:'3147887124',metodo:'Nequi',cuenta:'3147887124',titular:'Orlando Sepúlveda',metodo2:'',cuenta2:'',licencia:'C2',ruta:'Varias / Flexible',pago:0,estado:'Activo',obs:'Propietario',vencLic:'2026-12-01',vencSoat:'2026-10-01',vencSeguro:'',vencKit:'2026-08-01',vencMedico:'2026-09-01',vencPsico:'2026-09-01',segSocial:'Al día',arl:'Paga — Al día',docs:[],esProp:true},
+    {id:2,nombre:'Adolfo Mora Otero',cedula:'—',tel:'3148114178',metodo:'Nequi',cuenta:'3148114178',titular:'Adolfo Mora',metodo2:'',cuenta2:'',licencia:'C2',ruta:'R-2 — Santa Elena',pago:500000,estado:'Activo',obs:'',vencLic:'2026-09-01',vencSoat:'2026-11-01',vencSeguro:'',vencKit:'',vencMedico:'',vencPsico:'',segSocial:'Al día',arl:'Paga — Al día',docs:[],esProp:false},
+    {id:3,nombre:'Duban Urrego Gómez',cedula:'—',tel:'—',metodo:'Bancolombia Ahorros',cuenta:'01687143261',titular:'Duban Urrego',metodo2:'',cuenta2:'',licencia:'C2',ruta:'R-1 / R-2',pago:450000,estado:'Activo',obs:'',vencLic:'2026-08-01',vencSoat:'2026-12-01',vencSeguro:'',vencKit:'',vencMedico:'',vencPsico:'',segSocial:'Al día',arl:'No paga / No aplica',docs:[],esProp:false},
+  ]);
+  DB.set('rutas',[
+    {id:1,fecha:'2026-04-22',ruta:'R-1',conductor:'Orlando Sepúlveda Macías',destino:'Granizal / Bello Oriente',salida:'06:00',llegada:'07:25',pasajeros:8,valor:650000,pagoCond:0,estadoEmp:'Servicio realizado',estadoCond:'Pendiente de pago',semana:'17',novedad:'',obs:''},
+    {id:2,fecha:'2026-04-23',ruta:'R-1',conductor:'Duban Urrego Gómez',destino:'Granizal / Bello Oriente',salida:'06:00',llegada:'07:30',pasajeros:8,valor:650000,pagoCond:400000,estadoEmp:'Servicio realizado',estadoCond:'Pendiente de pago',semana:'17',novedad:'',obs:''},
+    {id:3,fecha:'2026-04-23',ruta:'R-2',conductor:'Adolfo Mora Otero',destino:'Santa Elena / Pericos / Paysandú',salida:'06:30',llegada:'08:15',pasajeros:6,valor:730000,pagoCond:500000,estadoEmp:'Servicio realizado',estadoCond:'Pendiente de pago',semana:'17',novedad:'',obs:''},
+    {id:4,fecha:'2026-04-23',ruta:'R-3',conductor:'Orlando Sepúlveda Macías',destino:'Parque Arví / Guarne / Veredal',salida:'07:00',llegada:'08:50',pasajeros:5,valor:730000,pagoCond:0,estadoEmp:'Servicio realizado',estadoCond:'Pendiente de pago',semana:'17',novedad:'',obs:''},
+    {id:5,fecha:'2026-04-24',ruta:'R-2',conductor:'Duban Urrego Gómez',destino:'Santa Elena / Pericos / Paysandú',salida:'06:30',llegada:'08:20',pasajeros:6,valor:730000,pagoCond:500000,estadoEmp:'Servicio realizado',estadoCond:'Pendiente de pago',semana:'17',novedad:'',obs:''},
+    {id:6,fecha:'2026-04-24',ruta:'R-4',conductor:'Orlando Sepúlveda Macías',destino:'Sto. Domingo / La Avanzada / Carpinelo',salida:'07:30',llegada:'08:45',pasajeros:7,valor:730000,pagoCond:0,estadoEmp:'Servicio realizado',estadoCond:'Pendiente de pago',semana:'17',novedad:'',obs:''},
+  ]);
+  DB.set('cuentas',[
+    {id:1,num:'001',semana:'14',periodo:'01–05 Abr 2026',fecha:'2026-04-05',valor:14200000,vence:'2026-04-11',servicios:20,estado:'Cobrada'},
+    {id:2,num:'002',semana:'15',periodo:'08–12 Abr 2026',fecha:'2026-04-12',valor:14200000,vence:'2026-04-18',servicios:20,estado:'Vencida'},
+    {id:3,num:'003',semana:'16',periodo:'15–19 Abr 2026',fecha:'2026-04-19',valor:14200000,vence:'2026-04-25',servicios:20,estado:'Pendiente de cobro'},
+    {id:4,num:'004',semana:'17',periodo:'22–24 Abr 2026',fecha:'2026-04-24',valor:4220000,vence:'2026-05-02',servicios:6,estado:'Pendiente de cobro'},
+  ]);
+  DB.set('pagos',[
+    {id:1,conductor:'Adolfo Mora Otero',semana:'17',rutas:1,total:500000,anticipo:0,saldo:500000,metodo:'Nequi',fecha:'2026-04-24',estado:'Pendiente',comprobante:''},
+    {id:2,conductor:'Duban Urrego Gómez',semana:'17',rutas:2,total:900000,anticipo:0,saldo:900000,metodo:'Bancolombia Ahorros',fecha:'2026-04-24',estado:'Pendiente',comprobante:''},
+  ]);
+  DB.set('novedades',[]);
+  DB.set('init',true);
 }
 
-// ══════════════════════════════════════
-// UTILS
-// ══════════════════════════════════════
-const fmt  = n => '$'+(Number(n)||0).toLocaleString('es-CO');
-const fmtD = s => { if(!s)return '—'; const [y,m,d]=s.split('-'); return d+'/'+m+'/'+y; };
-const today= () => new Date().toISOString().slice(0,10);
-const uid  = () => Date.now();
+// ─── UTILS ──────────────────────────────────────
+const fmt=n=>'$'+(Number(n)||0).toLocaleString('es-CO');
+const fmtD=s=>{if(!s)return '—';const[y,m,d]=s.split('-');return `${d}/${m}/${y}`};
+const today=()=>new Date().toISOString().slice(0,10);
+const uid=()=>Date.now()+Math.random();
+const DIAS_ALERTA=60;
+const RUTAS_INFO={'R-1':{destino:'Granizal / Bello Oriente',valor:650000},'R-2':{destino:'Santa Elena / Pericos / Paysandú',valor:730000},'R-3':{destino:'Parque Arví / Guarne / Veredal',valor:730000},'R-4':{destino:'Sto. Domingo / La Avanzada / Carpinelo',valor:730000}};
 
-const RUTAS_INFO = {
-  'R-1':{destino:'Granizal / Bello Oriente',valor:650000},
-  'R-2':{destino:'Santa Elena / Pericos / Paysandú',valor:730000},
-  'R-3':{destino:'Parque Arví / Guarne / Veredal',valor:730000},
-  'R-4':{destino:'Sto. Domingo / La Avanzada / Carpinelo',valor:730000},
-};
+function docStatus(fechaStr){
+  if(!fechaStr) return 'na';
+  const d=new Date(fechaStr+'T12:00:00'),hoy=new Date();
+  const diff=(d-hoy)/(86400000);
+  if(diff<0) return 'exp';
+  if(diff<=DIAS_ALERTA) return 'warn';
+  return 'ok';
+}
+function docLabel(status){return{ok:'✓ Vigente',warn:'⚠ Por vencer',exp:'✕ Vencido',na:'— N/A'}[status]}
 
 function estadoBadge(e){
-  const m={'Realizado':'b-verde','Cobrada':'b-verde','Pagado':'b-verde','En ruta':'b-amber','Pendiente':'b-amber','Programado':'b-azul','Novedad':'b-rojo','Vencida':'b-rojo','Abierta':'b-gris','No reportado aún':'b-rojo','Parcial':'b-naranja'};
-  return `<span class="badge ${m[e]||'b-gris'}">${e}</span>`;
+  const m={
+    'Servicio realizado':'bvd','Cobrada':'bvd','Pagado':'bvd','En ruta':'bam','Pendiente de cobro':'bam',
+    'Pendiente de pago':'bam','Programado':'baz','Servicio programado':'baz','Pedido realizado':'baz',
+    'Novedad':'brj','Vencida':'brj','Servicio con novedad':'brj','Abierta':'bgr','No reportado aún':'brj',
+    'Parcial':'bna','Activo':'bvd','Inactivo':'bgr','Suspendido':'brj'
+  };
+  return `<span class="badge ${m[e]||'bgr'}">${e}</span>`;
 }
 
-function toast(msg, tipo='ok'){
+function toast(msg,tipo='tok'){
   const t=document.getElementById('toast');
-  t.textContent=msg; t.className='toast show '+tipo;
-  setTimeout(()=>t.className='toast', 2800);
+  t.textContent=msg;t.className='toast show '+tipo;
+  setTimeout(()=>t.className='toast',2800);
 }
 
-// ══════════════════════════════════════
-// NAVEGACIÓN
-// ══════════════════════════════════════
+// ─── NAV ────────────────────────────────────────
 function nav(id){
-  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
-  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('.sec').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.nv').forEach(b=>b.classList.remove('active'));
   document.getElementById(id).classList.add('active');
-  const idxMap={dashboard:0,rutas:1,conductores:2,cuentas:3,pagos:4,finanzas:5,novedades:6};
-  document.querySelectorAll('.nav-btn')[idxMap[id]].classList.add('active');
+  const m={dashboard:0,rutas:1,conductores:2,cuentas:3,pagos:4,finanzas:5,novedades:6};
+  document.querySelectorAll('.nv')[m[id]].classList.add('active');
   renderAll();
 }
 
-// ══════════════════════════════════════
-// SEMANA
-// ══════════════════════════════════════
-let semanaOffset = 0;
-function semanaActual(){
-  const base = new Date(2026,3,22); // lun 22 abr
-  const s = new Date(base); s.setDate(base.getDate()+semanaOffset*7);
-  const e = new Date(s); e.setDate(s.getDate()+4);
-  return {inicio:s, fin:e, num:17+semanaOffset};
+// ─── SEMANA ─────────────────────────────────────
+let semOffset=0;
+function semActual(){
+  const base=new Date(2026,3,22);
+  const s=new Date(base);s.setDate(base.getDate()+semOffset*7);
+  const e=new Date(s);e.setDate(s.getDate()+4);
+  return{inicio:s,fin:e,num:17+semOffset};
 }
-function semanaNav(d){ semanaOffset+=d; renderAll(); }
-function semanaLabel(){
-  const {inicio,fin,num}=semanaActual();
+function semNav(d){semOffset+=d;renderAll()}
+function semLabel(){
+  const{inicio,fin,num}=semActual();
   const f=dt=>dt.toLocaleDateString('es-CO',{day:'numeric',month:'short'});
   return `Semana ${num} · ${f(inicio)} – ${f(fin)} 2026`;
 }
-function fechaEnSemana(fecha){
-  const {inicio,fin}=semanaActual();
+function fechaEnSem(fecha){
+  const{inicio,fin}=semActual();
   const d=new Date(fecha+'T12:00:00');
-  return d>=inicio && d<=fin;
+  return d>=inicio&&d<=fin;
 }
 
-// ══════════════════════════════════════
-// MODALES
-// ══════════════════════════════════════
+// ─── MODALES ────────────────────────────────────
 function abrirModal(id){
-  // Poblar selects de conductores
-  const conductores = DB.get('conductores')||[];
+  const conductores=DB.get('conductores')||[];
   ['r-conductor','p-conductor','n-conductor'].forEach(sid=>{
-    const sel=document.getElementById(sid);
-    if(!sel)return;
+    const sel=document.getElementById(sid);if(!sel)return;
     sel.innerHTML='<option value="">Seleccionar...</option>';
-    conductores.forEach(c=>{ const o=document.createElement('option'); o.value=c.nombre; o.textContent=c.nombre; sel.appendChild(o); });
+    conductores.forEach(c=>{const o=document.createElement('option');o.value=c.nombre;o.textContent=c.nombre;sel.appendChild(o)});
   });
-  // Valores por defecto
-  if(id==='modal-ruta'){
-    document.getElementById('r-fecha').value=today();
-    document.getElementById('r-semana').value=String(semanaActual().num);
+  if(id==='m-ruta'){document.getElementById('r-fecha').value=today();document.getElementById('r-semana').value=String(semActual().num)}
+  if(id==='m-pago'){document.getElementById('p-fecha').value=today()}
+  if(id==='m-novedad'){document.getElementById('n-fecha').value=today()}
+  if(id==='m-cuenta'){document.getElementById('cu-fecha').value=today();document.getElementById('cu-id-edit').value='';document.getElementById('m-cuenta-titulo').textContent='Nueva cuenta de cobro — UNAL M-0548'}
+  if(id==='m-conductor'){
+    limpiarFormConductor();
+    document.getElementById('m-cond-titulo').textContent='Agregar conductor — M-0548';
+    document.getElementById('c-id-edit').value='';
+    renderDocUploadArea([]);
   }
-  if(id==='modal-pago') document.getElementById('p-fecha').value=today();
-  if(id==='modal-novedad') document.getElementById('n-fecha').value=today();
-  if(id==='modal-cuenta') document.getElementById('cu-fecha').value=today();
   document.getElementById(id).classList.add('open');
 }
-function cerrarModal(id){ document.getElementById(id).classList.remove('open'); }
-document.querySelectorAll('.modal-bg').forEach(m=>{
-  m.addEventListener('click',e=>{ if(e.target===m) m.classList.remove('open'); });
-});
+function cerrarModal(id){document.getElementById(id).classList.remove('open')}
+document.querySelectorAll('.mbg').forEach(m=>{m.addEventListener('click',e=>{if(e.target===m)m.classList.remove('open')})});
 
-// Auto-fill valor y pago al elegir ruta/conductor
+function limpiarFormConductor(){
+  ['c-nombre','c-cedula','c-tel','c-cuenta','c-titular','c-cuenta2','c-obs','c-venc-lic','c-venc-soat','c-venc-seguro','c-venc-kit','c-venc-medico','c-venc-psico'].forEach(id=>{const el=document.getElementById(id);if(el)el.value=''});
+  ['c-licencia','c-ruta','c-estado','c-metodo','c-metodo2','c-seg-social','c-arl'].forEach(id=>{const el=document.getElementById(id);if(el)el.selectedIndex=0});
+  document.getElementById('c-pago').value='';
+}
+
+function switchTab(grupo,idx){
+  const tabs=document.querySelectorAll(`.mtab`);
+  const panels=document.querySelectorAll(`.mtab-panel`);
+  let ti=0;
+  tabs.forEach((t,i)=>{
+    if(t.closest('.modal')){
+      t.classList.toggle('active',i===idx+(ti=0));
+    }
+  });
+  // simpler approach
+  const modal=document.getElementById('m-conductor');
+  modal.querySelectorAll('.mtab').forEach((t,i)=>t.classList.toggle('active',i===idx));
+  modal.querySelectorAll('.mtab-panel').forEach((p,i)=>p.classList.toggle('active',i===idx));
+}
+
+// Autocompletar ruta
 document.getElementById('r-ruta').addEventListener('change',function(){
-  const ri=RUTAS_INFO[this.value];
-  if(ri) document.getElementById('r-valor').value=ri.valor;
+  const ri=RUTAS_INFO[this.value];if(ri)document.getElementById('r-valor').value=ri.valor;
 });
 document.getElementById('r-conductor').addEventListener('change',function(){
-  const conductores=DB.get('conductores')||[];
-  const c=conductores.find(x=>x.nombre===this.value);
-  if(c) document.getElementById('r-pago-cond').value=c.esPropietario?0:c.pago;
+  const c=(DB.get('conductores')||[]).find(x=>x.nombre===this.value);
+  if(c)document.getElementById('r-pagoc').value=c.esProp?0:c.pago;
 });
 
-// ══════════════════════════════════════
-// GUARDAR DATOS
-// ══════════════════════════════════════
+// ─── GUARDAR ────────────────────────────────────
 function guardarRuta(){
-  const fecha=document.getElementById('r-fecha').value;
-  const ruta=document.getElementById('r-ruta').value;
-  if(!fecha||!ruta){ toast('Completa fecha y ruta','err'); return; }
+  const fecha=document.getElementById('r-fecha').value,ruta=document.getElementById('r-ruta').value;
+  if(!fecha||!ruta){toast('Completa fecha y ruta','terr');return}
   const ri=RUTAS_INFO[ruta];
   const nuevo={
-    id:uid(), fecha, ruta,
-    conductor:document.getElementById('r-conductor').value,
-    destino:ri?ri.destino:'',
-    salida:document.getElementById('r-salida').value,
-    llegada:document.getElementById('r-llegada').value,
-    pasajeros:document.getElementById('r-pasajeros').value||0,
+    id:uid(),fecha,ruta,conductor:document.getElementById('r-conductor').value,
+    destino:ri?ri.destino:'',salida:document.getElementById('r-salida').value,
+    llegada:document.getElementById('r-llegada').value,pasajeros:document.getElementById('r-pasajeros').value||0,
     valor:Number(document.getElementById('r-valor').value)||0,
-    pagoCond:Number(document.getElementById('r-pago-cond').value)||0,
-    estado:document.getElementById('r-estado').value,
+    pagoCond:Number(document.getElementById('r-pagoc').value)||0,
+    estadoEmp:document.getElementById('r-estado-emp').value,
+    estadoCond:document.getElementById('r-estado-cond').value,
     semana:document.getElementById('r-semana').value,
+    novedad:document.getElementById('r-novedad').value,
     obs:document.getElementById('r-obs').value,
   };
-  const rutas=DB.get('rutas')||[];
-  rutas.push(nuevo); DB.set('rutas',rutas);
-  cerrarModal('modal-ruta'); renderAll(); toast('Ruta registrada ✓');
+  const rutas=DB.get('rutas')||[];rutas.push(nuevo);DB.set('rutas',rutas);
+  cerrarModal('m-ruta');renderAll();toast('Ruta registrada ✓');
 }
 
 function guardarConductor(){
   const nombre=document.getElementById('c-nombre').value.trim();
-  if(!nombre){ toast('Ingresa el nombre','err'); return; }
-  const nuevo={
-    id:uid(), nombre,
-    cedula:document.getElementById('c-cedula').value,
-    tel:document.getElementById('c-tel').value,
-    metodo:document.getElementById('c-metodo').value,
-    cuenta:document.getElementById('c-cuenta').value,
-    licencia:document.getElementById('c-licencia').value,
-    ruta:document.getElementById('c-ruta').value,
-    pago:Number(document.getElementById('c-pago').value)||0,
-    vencLic:document.getElementById('c-venc-lic').value,
-    vencSoat:document.getElementById('c-venc-soat').value,
-    esPropietario:false,
+  if(!nombre){toast('Ingresa el nombre','terr');return}
+  const idEdit=document.getElementById('c-id-edit').value;
+  const docs=conductorDocsTemp||[];
+  const datos={
+    nombre,cedula:document.getElementById('c-cedula').value,tel:document.getElementById('c-tel').value,
+    metodo:document.getElementById('c-metodo').value,cuenta:document.getElementById('c-cuenta').value,
+    titular:document.getElementById('c-titular').value,metodo2:document.getElementById('c-metodo2').value,
+    cuenta2:document.getElementById('c-cuenta2').value,licencia:document.getElementById('c-licencia').value,
+    ruta:document.getElementById('c-ruta').value,pago:Number(document.getElementById('c-pago').value)||0,
+    estado:document.getElementById('c-estado').value,obs:document.getElementById('c-obs').value,
+    vencLic:document.getElementById('c-venc-lic').value,vencSoat:document.getElementById('c-venc-soat').value,
+    vencSeguro:document.getElementById('c-venc-seguro').value,vencKit:document.getElementById('c-venc-kit').value,
+    vencMedico:document.getElementById('c-venc-medico').value,vencPsico:document.getElementById('c-venc-psico').value,
+    segSocial:document.getElementById('c-seg-social').value,arl:document.getElementById('c-arl').value,
+    docs,esProp:false,
   };
   const conductores=DB.get('conductores')||[];
-  conductores.push(nuevo); DB.set('conductores',conductores);
-  cerrarModal('modal-conductor'); renderAll(); toast('Conductor agregado ✓');
+  if(idEdit){
+    const idx=conductores.findIndex(x=>String(x.id)===String(idEdit));
+    if(idx>-1){datos.id=conductores[idx].id;datos.esProp=conductores[idx].esProp;conductores[idx]=datos}
+  } else {
+    datos.id=uid();conductores.push(datos);
+  }
+  DB.set('conductores',conductores);cerrarModal('m-conductor');renderAll();checkAlertas();toast('Conductor guardado ✓');
 }
+
+function editarConductor(id){
+  const conductores=DB.get('conductores')||[];
+  const c=conductores.find(x=>x.id===id);if(!c)return;
+  abrirModal('m-conductor');
+  document.getElementById('m-cond-titulo').textContent='Editar conductor: '+c.nombre;
+  document.getElementById('c-id-edit').value=String(c.id);
+  ['nombre','cedula','tel','cuenta','titular','cuenta2','obs','venc-lic','venc-soat','venc-seguro','venc-kit','venc-medico','venc-psico'].forEach(k=>{
+    const el=document.getElementById('c-'+k);if(el)el.value=c[k.replace(/-([a-z])/g,(_,l)=>l.toUpperCase())]||'';
+  });
+  ['licencia','ruta','estado','metodo','metodo2','seg-social','arl'].forEach(k=>{
+    const el=document.getElementById('c-'+k);if(!el)return;
+    const val=c[k.replace(/-([a-z])/g,(_,l)=>l.toUpperCase())];
+    [...el.options].forEach(o=>o.selected=o.value===val||o.text===val);
+  });
+  document.getElementById('c-pago').value=c.pago||0;
+  conductorDocsTemp=c.docs||[];
+  renderDocUploadArea(conductorDocsTemp);
+  // Historial
+  renderHistorialConductor(c.nombre);
+}
+
+// ─── DOCS CONDUCTOR ─────────────────────────────
+let conductorDocsTemp=[];
+function renderDocUploadArea(docs){
+  const area=document.getElementById('doc-upload-area');if(!area)return;
+  if(!docs||docs.length===0){area.innerHTML='<p style="font-size:11px;color:var(--tx2);grid-column:1/-1">No hay documentos adjuntos aún.</p>';return}
+  area.innerHTML=docs.map((d,i)=>`
+    <div class="doc-img-wrap" onclick="verDoc('${d.name||'Documento'}','${d.data||''}')">
+      ${d.data&&d.data.startsWith('data:image')?`<img src="${d.data}" alt="${d.name}">`:
+        `<div style="height:80px;background:var(--az3);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:22px">📄</div>`}
+      <div style="font-size:10px;margin-top:3px;color:var(--tx2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${d.name||'Doc'}</div>
+      <button class="doc-del" onclick="event.stopPropagation();eliminarDoc(${i})">✕</button>
+    </div>`).join('');
+}
+function eliminarDoc(i){conductorDocsTemp.splice(i,1);renderDocUploadArea(conductorDocsTemp)}
+document.getElementById('c-doc-input').addEventListener('change',function(){
+  const files=[...this.files];
+  files.forEach(file=>{
+    const reader=new FileReader();
+    reader.onload=e=>{
+      conductorDocsTemp.push({name:file.name,data:e.target.result,type:file.type});
+      renderDocUploadArea(conductorDocsTemp);
+    };reader.readAsDataURL(file);
+  });this.value='';
+});
+function verDoc(nombre,data){
+  document.getElementById('verdoc-titulo').textContent=nombre;
+  const body=document.getElementById('verdoc-body');
+  if(data&&data.startsWith('data:image')){body.innerHTML=`<img src="${data}" style="max-width:100%;border-radius:8px">`}
+  else if(data){body.innerHTML=`<p style="padding:20px;color:var(--tx2)">📄 Documento adjunto: ${nombre}</p>`}
+  else{body.innerHTML='<p style="color:var(--tx2)">Sin vista previa</p>'}
+  document.getElementById('m-verdoc').classList.add('open');
+}
+
+// Comprobante de pago
+function prevComprobante(input){
+  if(!input.files[0])return;
+  const reader=new FileReader();
+  reader.onload=e=>{
+    const img=document.getElementById('pay-slot-img');
+    const txt=document.getElementById('pay-slot-txt');
+    if(e.target.result.startsWith('data:image')){img.src=e.target.result;img.style.display='block';txt.style.display='none'}
+    else{txt.textContent='📎 '+input.files[0].name;img.style.display='none'}
+    document.getElementById('pay-slot-wrap').classList.add('ok');
+  };reader.readAsDataURL(input.files[0]);
+}
+let comprobanteBase64='';
+document.getElementById('p-comprobante').addEventListener('change',function(){
+  if(!this.files[0])return;
+  const reader=new FileReader();
+  reader.onload=e=>comprobanteBase64=e.target.result;
+  reader.readAsDataURL(this.files[0]);
+});
 
 function guardarCuenta(){
   const num=document.getElementById('cu-num').value;
-  if(!num){ toast('Ingresa número de cuenta','err'); return; }
-  const nuevo={
-    id:uid(), num,
-    semana:document.getElementById('cu-sem').value,
-    periodo:document.getElementById('cu-periodo').value,
-    fecha:document.getElementById('cu-fecha').value,
-    valor:Number(document.getElementById('cu-valor').value)||0,
-    vence:document.getElementById('cu-vence').value,
-    servicios:Number(document.getElementById('cu-servicios').value)||0,
-    estado:document.getElementById('cu-estado').value,
-  };
+  if(!num){toast('Ingresa número','terr');return}
+  const idEdit=document.getElementById('cu-id-edit').value;
+  const datos={num,semana:document.getElementById('cu-sem').value,periodo:document.getElementById('cu-periodo').value,
+    fecha:document.getElementById('cu-fecha').value,valor:Number(document.getElementById('cu-valor').value)||0,
+    vence:document.getElementById('cu-vence').value,servicios:Number(document.getElementById('cu-servicios').value)||0,
+    estado:document.getElementById('cu-estado').value};
   const cuentas=DB.get('cuentas')||[];
-  cuentas.push(nuevo); DB.set('cuentas',cuentas);
-  cerrarModal('modal-cuenta'); renderAll(); toast('Cuenta registrada ✓');
+  if(idEdit){const idx=cuentas.findIndex(x=>String(x.id)===String(idEdit));if(idx>-1){datos.id=cuentas[idx].id;cuentas[idx]=datos}}
+  else{datos.id=uid();cuentas.push(datos)}
+  DB.set('cuentas',cuentas);cerrarModal('m-cuenta');renderAll();toast('Cuenta guardada ✓');
+}
+
+function editarCuenta(id){
+  const c=(DB.get('cuentas')||[]).find(x=>x.id===id);if(!c)return;
+  document.getElementById('m-cuenta-titulo').textContent='Editar cuenta No.'+c.num;
+  document.getElementById('cu-num').value=c.num;document.getElementById('cu-sem').value=c.semana;
+  document.getElementById('cu-periodo').value=c.periodo;document.getElementById('cu-fecha').value=c.fecha;
+  document.getElementById('cu-valor').value=c.valor;document.getElementById('cu-vence').value=c.vence;
+  document.getElementById('cu-servicios').value=c.servicios;
+  const sel=document.getElementById('cu-estado');[...sel.options].forEach(o=>o.selected=o.text===c.estado);
+  document.getElementById('cu-id-edit').value=String(c.id);
+  document.getElementById('m-cuenta').classList.add('open');
 }
 
 function guardarPago(){
   const conductor=document.getElementById('p-conductor').value;
-  if(!conductor){ toast('Selecciona conductor','err'); return; }
-  const nuevo={
-    id:uid(), conductor,
-    semana:document.getElementById('p-semana').value,
+  if(!conductor){toast('Selecciona conductor','terr');return}
+  const idEdit=document.getElementById('p-id-edit').value;
+  const datos={conductor,semana:document.getElementById('p-semana').value,
     rutas:Number(document.getElementById('p-rutas').value)||0,
     total:Number(document.getElementById('p-total').value)||0,
     anticipo:Number(document.getElementById('p-anticipo').value)||0,
@@ -744,338 +930,392 @@ function guardarPago(){
     metodo:document.getElementById('p-metodo').value,
     fecha:document.getElementById('p-fecha').value,
     estado:document.getElementById('p-estado').value,
-  };
+    comprobante:comprobanteBase64||''};
   const pagos=DB.get('pagos')||[];
-  pagos.push(nuevo); DB.set('pagos',pagos);
-  cerrarModal('modal-pago'); renderAll(); toast('Pago registrado ✓');
+  if(idEdit){const idx=pagos.findIndex(x=>String(x.id)===String(idEdit));if(idx>-1){datos.id=pagos[idx].id;pagos[idx]=datos}}
+  else{datos.id=uid();pagos.push(datos)}
+  DB.set('pagos',pagos);cerrarModal('m-pago');comprobanteBase64='';renderAll();toast('Pago registrado ✓');
 }
 
 function guardarNovedad(){
-  const nuevo={
-    id:uid(),
-    fecha:document.getElementById('n-fecha').value,
-    ruta:document.getElementById('n-ruta').value,
-    conductor:document.getElementById('n-conductor').value,
-    tipo:document.getElementById('n-tipo').value,
-    desc:document.getElementById('n-desc').value,
-    impacto:Number(document.getElementById('n-impacto').value)||0,
-    reportado:document.getElementById('n-reportado').value,
-    estado:'Abierta',
-  };
-  const novedades=DB.get('novedades')||[];
-  novedades.push(nuevo); DB.set('novedades',novedades);
-  cerrarModal('modal-novedad'); renderAll(); toast('Novedad registrada ✓');
+  const nuevo={id:uid(),fecha:document.getElementById('n-fecha').value,ruta:document.getElementById('n-ruta').value,
+    conductor:document.getElementById('n-conductor').value,tipo:document.getElementById('n-tipo').value,
+    desc:document.getElementById('n-desc').value,impacto:Number(document.getElementById('n-impacto').value)||0,
+    reportado:document.getElementById('n-reportado').value,estado:'Abierta'};
+  const novedades=DB.get('novedades')||[];novedades.push(nuevo);DB.set('novedades',novedades);
+  cerrarModal('m-novedad');renderAll();toast('Novedad registrada ✓');
 }
 
-function eliminar(tipo, id){
-  if(!confirm('¿Eliminar este registro?')) return;
-  const data=DB.get(tipo)||[];
-  DB.set(tipo, data.filter(x=>x.id!==id));
-  renderAll(); toast('Eliminado','err');
+function eliminar(tipo,id){
+  if(!confirm('¿Eliminar este registro?'))return;
+  DB.set(tipo,(DB.get(tipo)||[]).filter(x=>x.id!==id));
+  renderAll();toast('Eliminado','terr');
 }
 
-function cambiarEstadoCuenta(id, estado){
-  const cuentas=DB.get('cuentas')||[];
-  const c=cuentas.find(x=>x.id===id);
-  if(c){ c.estado=estado; DB.set('cuentas',cuentas); renderAll(); toast('Estado actualizado ✓'); }
+// Cambiar estados inline
+function cambiarEstadoRutaEmp(id,val){
+  const rutas=DB.get('rutas')||[];const r=rutas.find(x=>x.id===id);if(r){r.estadoEmp=val;DB.set('rutas',rutas);renderAll();toast('Estado actualizado ✓')}
+}
+function cambiarEstadoRutaCond(id,val){
+  const rutas=DB.get('rutas')||[];const r=rutas.find(x=>x.id===id);if(r){r.estadoCond=val;DB.set('rutas',rutas);renderAll();toast('Estado actualizado ✓')}
+}
+function cambiarEstadoCuenta(id,estado){
+  const cuentas=DB.get('cuentas')||[];const c=cuentas.find(x=>x.id===id);
+  if(c){c.estado=estado;DB.set('cuentas',cuentas);renderAll();toast('Estado actualizado ✓')}
+}
+function cambiarEstadoPago(id,estado){
+  const pagos=DB.get('pagos')||[];const p=pagos.find(x=>x.id===id);
+  if(p){p.estado=estado;DB.set('pagos',pagos);renderAll();toast('Estado actualizado ✓')}
 }
 
-// ══════════════════════════════════════
-// RENDER
-// ══════════════════════════════════════
-function renderAll(){
-  renderDashboard();
-  renderRutas();
-  renderConductores();
-  renderCuentas();
-  renderPagos();
-  renderFinanzas();
-  renderNovedades();
-  const sl=document.getElementById('semana-label');
-  if(sl) sl.textContent=semanaLabel();
-}
-
-function kpiBox(label,val,clase='',sub=''){
-  return `<div class="kpi"><div class="kpi-label">${label}</div><div class="kpi-val ${clase}">${val}</div>${sub?`<div class="kpi-sub">${sub}</div>`:''}</div>`;
-}
-
-// DASHBOARD
-function renderDashboard(){
-  const rutas=DB.get('rutas')||[];
-  const cuentas=DB.get('cuentas')||[];
-  const pagos=DB.get('pagos')||[];
-  const tod=today();
-
-  const rutasHoy=rutas.filter(r=>r.fecha===tod);
-  const totalCobro=rutas.reduce((s,r)=>s+Number(r.valor),0);
-  const totalPagos=pagos.reduce((s,p)=>s+Number(p.saldo),0);
-  const pendCuentas=cuentas.filter(c=>c.estado==='Pendiente'||c.estado==='Vencida').reduce((s,c)=>s+Number(c.valor),0);
-
-  document.getElementById('kpis-dashboard').innerHTML=
-    kpiBox('Servicios hoy',rutasHoy.length,'azul',tod)+
-    kpiBox('Total facturado',fmt(totalCobro),'verde','Todas las semanas')+
-    kpiBox('Por cobrar a UNAL',fmt(pendCuentas),'amber','Pendiente + vencido')+
-    kpiBox('Por pagar conductores',fmt(pagos.filter(p=>p.estado!=='Pagado').reduce((s,p)=>s+Number(p.saldo),0)),'rojo','Pendiente')+
-    kpiBox('Conductores',`${(DB.get('conductores')||[]).length}`,'azul','Activos');
-
-  const th=document.getElementById('fecha-hoy');
-  if(th) th.textContent=new Date().toLocaleDateString('es-CO',{weekday:'long',day:'numeric',month:'long'});
-
-  // Rutas hoy
-  const tt=document.getElementById('tabla-hoy');
-  if(tt) tt.innerHTML=rutasHoy.length
-    ? rutasHoy.map(r=>`<tr><td><b>${r.ruta}</b></td><td>${r.conductor}</td><td>${r.destino}</td><td>${fmt(r.valor)}</td><td>${estadoBadge(r.estado)}</td></tr>`).join('')
-    : '<tr><td colspan="5" style="text-align:center;color:var(--texto2);padding:20px">Sin servicios registrados hoy</td></tr>';
-
-  // Cuentas dash
-  const tc=document.getElementById('tabla-cuentas-dash');
-  if(tc) tc.innerHTML=[...cuentas].reverse().slice(0,4).map(c=>`<tr><td>Sem ${c.semana}</td><td>${fmt(c.valor)}</td><td>${estadoBadge(c.estado)}</td></tr>`).join('');
-
-  // Recientes
-  const tr2=document.getElementById('tabla-recientes');
-  if(tr2) tr2.innerHTML=[...rutas].reverse().slice(0,10).map(r=>`<tr><td>${fmtD(r.fecha)}</td><td><b>${r.ruta}</b></td><td>${r.conductor}</td><td style="font-size:12px">${r.destino}</td><td>${fmt(r.valor)}</td><td>${estadoBadge(r.estado)}</td></tr>`).join('');
-}
-
-// RUTAS
-function renderRutas(){
-  const rutas=DB.get('rutas')||[];
-  const rutasSem=rutas.filter(r=>fechaEnSemana(r.fecha));
-  const tbody=document.getElementById('tabla-rutas-semana');
-  if(!tbody) return;
-  tbody.innerHTML=rutasSem.length
-    ? rutasSem.map(r=>`<tr>
-        <td>${fmtD(r.fecha)}</td>
-        <td><b>${r.ruta}</b></td>
-        <td>${r.conductor}</td>
-        <td style="font-size:12px">${r.destino}</td>
-        <td class="mono">${r.salida||'—'}</td>
-        <td class="mono">${r.llegada||'—'}</td>
-        <td>${r.pasajeros||'—'}</td>
-        <td>${fmt(r.valor)}</td>
-        <td>${r.pagoCond?fmt(r.pagoCond):'<span style="color:var(--azul2);font-size:11px">Propietario</span>'}</td>
-        <td>${estadoBadge(r.estado)}</td>
-        <td><button class="btn sm danger" onclick="eliminar('rutas',${r.id})">✕</button></td>
-      </tr>`).join('')
-    : '<tr><td colspan="11" style="text-align:center;color:var(--texto2);padding:24px">Sin rutas en esta semana</td></tr>';
-
-  // Resumen semana
-  const totalVal=rutasSem.reduce((s,r)=>s+Number(r.valor),0);
-  const totalPago=rutasSem.reduce((s,r)=>s+Number(r.pagoCond),0);
-  const util=totalVal-totalPago;
-  const rs=document.getElementById('resumen-semana');
-  if(rs) rs.innerHTML=`<div class="kpis" style="margin:0">
-    ${kpiBox('Servicios',rutasSem.length,'azul','')}
-    ${kpiBox('Facturado UNAL',fmt(totalVal),'azul','')}
-    ${kpiBox('Pago conductores',fmt(totalPago),'rojo','')}
-    ${kpiBox('Utilidad bruta',fmt(util),'verde','')}
-    ${kpiBox('Margen',totalVal?((util/totalVal)*100).toFixed(1)+'%':'—','verde','')}
-  </div>`;
-}
-
-// CONDUCTORES
-function renderConductores(){
+// ─── ALERTAS GLOBALES ───────────────────────────
+function checkAlertas(){
   const conductores=DB.get('conductores')||[];
+  const pagos=DB.get('pagos')||[];
+  const cuentas=DB.get('cuentas')||[];
+  const wrap=document.getElementById('alertas-globales');
+  let html='';
+  // Docs vencidos/próximos
+  conductores.forEach(c=>{
+    const DOCS=[
+      {lbl:'Licencia',fecha:c.vencLic},{lbl:'SOAT',fecha:c.vencSoat},
+      {lbl:'Seguro todo riesgo',fecha:c.vencSeguro},{lbl:'Kit carretera',fecha:c.vencKit},
+      {lbl:'Examen médico',fecha:c.vencMedico},{lbl:'Psicosensométrico',fecha:c.vencPsico},
+    ];
+    DOCS.forEach(({lbl,fecha})=>{
+      const st=docStatus(fecha);
+      if(st==='exp')html+=`<div class="alerta-doc vencido">🔴 <b>${c.nombre}</b> — ${lbl} VENCIDO (${fmtD(fecha)})</div>`;
+      else if(st==='warn')html+=`<div class="alerta-doc proximo">🟡 <b>${c.nombre}</b> — ${lbl} por vencer (${fmtD(fecha)})</div>`;
+    });
+  });
+  // Pagos pendientes
+  const pendPagos=pagos.filter(p=>p.estado!=='Pagado');
+  if(pendPagos.length>0)html+=`<div class="alerta-doc proximo">💳 Tienes <b>${pendPagos.length}</b> pago(s) pendiente(s) a conductores por un total de <b>${fmt(pendPagos.reduce((s,p)=>s+Number(p.saldo),0))}</b></div>`;
+  // Cuentas vencidas
+  const vencidas=cuentas.filter(c=>c.estado==='Vencida');
+  if(vencidas.length>0)html+=`<div class="alerta-doc vencido">📄 <b>${vencidas.length}</b> cuenta(s) de cobro VENCIDA(s) — total: <b>${fmt(vencidas.reduce((s,c)=>s+Number(c.valor),0))}</b></div>`;
+  wrap.innerHTML=html;
+}
+
+// ─── HISTORIAL CONDUCTOR ────────────────────────
+function renderHistorialConductor(nombre){
+  const rutas=(DB.get('rutas')||[]).filter(r=>r.conductor===nombre);
+  const pagos=(DB.get('pagos')||[]).filter(p=>p.conductor===nombre);
+  const wrap=document.getElementById('cond-historial-content');if(!wrap)return;
+  if(rutas.length===0){wrap.innerHTML='<p style="color:var(--tx2);font-size:12px">Sin servicios registrados aún.</p>';return}
+  wrap.innerHTML=`
+    <p style="font-size:12px;font-weight:600;color:var(--tx);margin-bottom:10px">Total servicios: ${rutas.length} | Total generado: ${fmt(rutas.reduce((s,r)=>s+Number(r.valor),0))}</p>
+    <div class="tw"><table>
+      <thead><tr><th>Fecha</th><th>Ruta</th><th>Destino</th><th>Valor UNAL</th><th>Pago conductor</th><th>Est. conductor</th><th>Novedad</th></tr></thead>
+      <tbody>${rutas.map(r=>`<tr>
+        <td>${fmtD(r.fecha)}</td><td><b>${r.ruta}</b></td><td style="font-size:11px">${r.destino}</td>
+        <td>${fmt(r.valor)}</td>
+        <td>${r.pagoCond?fmt(r.pagoCond):'<span style="color:var(--az2);font-size:10px">Propietario</span>'}</td>
+        <td>${estadoBadge(r.estadoCond)}</td>
+        <td style="font-size:11px;color:var(--tx2)">${r.novedad||'—'}</td>
+      </tr>`).join('')}</tbody>
+    </table></div>
+    ${pagos.length>0?`<p style="font-size:12px;font-weight:600;color:var(--tx);margin:12px 0 8px">Pagos registrados:</p>
+    <div class="tw"><table><thead><tr><th>Semana</th><th>Total</th><th>Saldo</th><th>Método</th><th>Estado</th></tr></thead>
+    <tbody>${pagos.map(p=>`<tr><td>Sem ${p.semana}</td><td>${fmt(p.total)}</td><td>${fmt(p.saldo)}</td><td>${p.metodo}</td><td>${estadoBadge(p.estado)}</td></tr>`).join('')}</tbody></table></div>`:''}
+  `;
+}
+
+// ─── REPORTE VIERNES ────────────────────────────
+function generarReciboViernes(){
+  const conductores=(DB.get('conductores')||[]).filter(c=>!c.esProp);
   const rutas=DB.get('rutas')||[];
-  const lc=document.getElementById('lista-conductores');
-  if(!lc) return;
+  const pagos=DB.get('pagos')||[];
+  const {num,inicio,fin}=semActual();
+  const f=dt=>dt.toLocaleDateString('es-CO',{day:'numeric',month:'long',year:'numeric'});
+  let html=`<div class="recibo-wrap">
+    <div style="text-align:center;margin-bottom:20px">
+      <div style="font-size:20px;font-weight:700;color:var(--az)">REPORTE DE PAGO A CONDUCTORES</div>
+      <div style="font-size:13px;color:var(--tx2);margin-top:4px">Semana ${num} · ${f(inicio)} al ${f(fin)}</div>
+      <div style="font-size:12px;color:var(--tx2)">Proyecto M-0548 · Universidad Nacional de Colombia</div>
+    </div>`;
+  conductores.forEach(c=>{
+    const rutasSem=rutas.filter(r=>r.conductor===c.nombre&&fechaEnSem(r.fecha));
+    const pagoConductor=rutasSem.reduce((s,r)=>s+Number(r.pagoCond),0);
+    const pagoReg=pagos.filter(p=>p.conductor===c.nombre&&String(p.semana)===String(num));
+    const inicialesC=c.nombre.split(' ').map(x=>x[0]).join('').slice(0,2).toUpperCase();
+    html+=`<div style="border:1px solid var(--bd);border-radius:10px;padding:16px;margin-bottom:14px;page-break-inside:avoid">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:8px;margin-bottom:12px">
+        <div style="display:flex;align-items:center;gap:10px">
+          <div style="width:40px;height:40px;border-radius:50%;background:var(--az3);display:flex;align-items:center;justify-content:center;font-weight:700;color:var(--az);font-size:13px">${inicialesC}</div>
+          <div>
+            <div style="font-size:14px;font-weight:700;color:var(--az)">${c.nombre}</div>
+            <div style="font-size:11px;color:var(--tx2)">${c.ruta} · C.C. ${c.cedula}</div>
+          </div>
+        </div>
+        <div style="text-align:right">
+          <div style="font-size:18px;font-weight:700;color:var(--vd)">${fmt(pagoConductor)}</div>
+          <div style="font-size:10px;color:var(--tx2)">Total a pagar</div>
+        </div>
+      </div>
+      <table style="width:100%;border-collapse:collapse;font-size:12px;margin-bottom:10px">
+        <thead><tr>
+          <th style="background:var(--gr);padding:7px 9px;font-size:10px;text-transform:uppercase;letter-spacing:.4px;border-bottom:1px solid var(--bd)">Fecha</th>
+          <th style="background:var(--gr);padding:7px 9px;font-size:10px;text-transform:uppercase;letter-spacing:.4px;border-bottom:1px solid var(--bd)">Ruta</th>
+          <th style="background:var(--gr);padding:7px 9px;font-size:10px;text-transform:uppercase;letter-spacing:.4px;border-bottom:1px solid var(--bd)">Destino</th>
+          <th style="background:var(--gr);padding:7px 9px;font-size:10px;text-transform:uppercase;letter-spacing:.4px;border-bottom:1px solid var(--bd);text-align:right">Pago</th>
+        </tr></thead>
+        <tbody>${rutasSem.map(r=>`<tr>
+          <td style="padding:6px 9px;border-bottom:1px solid var(--gr)">${fmtD(r.fecha)}</td>
+          <td style="padding:6px 9px;border-bottom:1px solid var(--gr);font-weight:600">${r.ruta}</td>
+          <td style="padding:6px 9px;border-bottom:1px solid var(--gr);font-size:11px">${r.destino}</td>
+          <td style="padding:6px 9px;border-bottom:1px solid var(--gr);text-align:right;font-weight:600;color:var(--vd)">${fmt(r.pagoCond)}</td>
+        </tr>`).join('')}</tbody>
+      </table>
+      <div style="background:var(--az3);border-radius:7px;padding:10px 12px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px">
+        <div>
+          <div style="font-size:10px;color:var(--tx2)">Información de pago</div>
+          <div style="font-size:12px;font-weight:600">${c.metodo}: ${c.cuenta}</div>
+          ${c.metodo2?`<div style="font-size:11px;color:var(--tx2)">${c.metodo2}: ${c.cuenta2}</div>`:''}
+        </div>
+        <div style="text-align:right">
+          <div style="font-size:10px;color:var(--tx2)">Total rutas</div>
+          <div style="font-size:13px;font-weight:700">${rutasSem.length}</div>
+        </div>
+        <div style="text-align:right">
+          <div style="font-size:10px;color:var(--tx2)">TOTAL A PAGAR</div>
+          <div style="font-size:16px;font-weight:700;color:var(--vd)">${fmt(pagoConductor)}</div>
+          <div style="margin-top:6px">${estadoBadge(pagoReg.length>0?pagoReg[pagoReg.length-1].estado:'Pendiente de pago')}</div>
+        </div>
+      </div>
+    </div>`;
+  });
+  html+=`<div style="text-align:center;margin-top:16px;padding-top:12px;border-top:1px solid var(--bd);font-size:11px;color:var(--tx2)">
+    Generado el ${new Date().toLocaleDateString('es-CO',{weekday:'long',year:'numeric',month:'long',day:'numeric'})} · Proyecto M-0548 · Orlando Sepúlveda Macías
+  </div></div>`;
+  document.getElementById('reporte-content').innerHTML=html;
+  document.getElementById('m-reporte').classList.add('open');
+}
+
+// ─── RENDER ─────────────────────────────────────
+const kpi=(lbl,val,cls='',sub='')=>`<div class="kpi"><div class="kpi-lbl">${lbl}</div><div class="kpi-val ${cls}">${val}</div>${sub?`<div class="kpi-sub">${sub}</div>`:''}</div>`;
+
+function renderAll(){
+  renderDashboard();renderRutas();renderConductores();
+  renderCuentas();renderPagos();renderFinanzas();renderNovedades();
+  const sl=document.getElementById('sem-lbl');if(sl)sl.textContent=semLabel();
+  if(sessionStorage.getItem('auth')==='1')checkAlertas();
+}
+
+function renderDashboard(){
+  const rutas=DB.get('rutas')||[],cuentas=DB.get('cuentas')||[],pagos=DB.get('pagos')||[];
+  const tod=today(),rutasHoy=rutas.filter(r=>r.fecha===tod);
+  const totalCobro=rutas.reduce((s,r)=>s+Number(r.valor),0);
+  const pendCuentas=cuentas.filter(c=>c.estado==='Pendiente de cobro'||c.estado==='Vencida').reduce((s,c)=>s+Number(c.valor),0);
+  const pendPagos=pagos.filter(p=>p.estado!=='Pagado').reduce((s,p)=>s+Number(p.saldo),0);
+  document.getElementById('kpis-dash').innerHTML=
+    kpi('Servicios hoy',rutasHoy.length,'az')+kpi('Total facturado',fmt(totalCobro),'vd','Todas las semanas')+
+    kpi('Por cobrar UNAL',fmt(pendCuentas),'am','Pendiente + vencido')+kpi('Por pagar conductores',fmt(pendPagos),'rj','Pendiente')+
+    kpi('Conductores activos',(DB.get('conductores')||[]).filter(c=>c.estado==='Activo').length,'az','');
+  const th=document.getElementById('fecha-hoy');if(th)th.textContent=new Date().toLocaleDateString('es-CO',{weekday:'long',day:'numeric',month:'long'});
+  const tt=document.getElementById('t-hoy');if(tt)tt.innerHTML=rutasHoy.length?rutasHoy.map(r=>`<tr><td><b>${r.ruta}</b></td><td>${r.conductor.split(' ')[0]}</td><td style="font-size:11px">${r.destino}</td><td>${fmt(r.valor)}</td><td>${estadoBadge(r.estadoEmp)}</td></tr>`).join(''):'<tr><td colspan="5" style="text-align:center;color:var(--tx2);padding:16px">Sin servicios hoy</td></tr>';
+  const tc=document.getElementById('t-cuentas-dash');if(tc)tc.innerHTML=[...cuentas].reverse().slice(0,4).map(c=>`<tr><td>Sem ${c.semana}</td><td>${fmt(c.valor)}</td><td>${estadoBadge(c.estado)}</td></tr>`).join('');
+  const tr2=document.getElementById('t-recientes');if(tr2)tr2.innerHTML=[...rutas].reverse().slice(0,8).map(r=>`<tr><td>${fmtD(r.fecha)}</td><td><b>${r.ruta}</b></td><td style="font-size:11px">${r.conductor.split(' ')[0]}</td><td style="font-size:11px">${r.destino}</td><td>${fmt(r.valor)}</td><td>${estadoBadge(r.estadoEmp)}</td></tr>`).join('');
+  // Pagos pendientes
+  const pp=document.getElementById('t-pagos-pend');if(pp){
+    const pend=(DB.get('pagos')||[]).filter(p=>p.estado!=='Pagado');
+    pp.innerHTML=pend.length?pend.map(p=>`<tr><td>${p.conductor.split(' ')[0]}</td><td>Sem ${p.semana}</td><td>${p.rutas}</td><td style="font-weight:600;color:var(--rj)">${fmt(p.saldo)}</td><td>${p.metodo}</td><td>${estadoBadge(p.estado)}</td><td><button class="btn sm suc" onclick="cambiarEstadoPago(${p.id},'Pagado')">✓</button></td></tr>`).join(''):'<tr><td colspan="7" style="text-align:center;color:var(--vd);padding:14px">✓ Sin pagos pendientes</td></tr>';
+  }
+}
+
+function renderRutas(){
+  const rutas=DB.get('rutas')||[],rutasSem=rutas.filter(r=>fechaEnSem(r.fecha));
+  const tbody=document.getElementById('t-rutas');if(!tbody)return;
+  tbody.innerHTML=rutasSem.length?rutasSem.map(r=>`<tr>
+    <td>${fmtD(r.fecha)}</td><td><b>${r.ruta}</b></td>
+    <td style="font-size:11px">${r.conductor}</td>
+    <td style="font-size:11px">${r.destino}</td>
+    <td class="mono">${r.salida||'—'}</td><td class="mono">${r.llegada||'—'}</td>
+    <td>${r.pasajeros||'—'}</td><td>${fmt(r.valor)}</td>
+    <td>${r.pagoCond?fmt(r.pagoCond):'<span style="color:var(--az2);font-size:10px">Propietario</span>'}</td>
+    <td><select onchange="cambiarEstadoRutaEmp(${r.id},this.value)" style="font-size:11px;padding:3px 6px;border-radius:5px">
+      ${['Servicio realizado','Servicio programado','Pedido realizado','Servicio con novedad'].map(e=>`<option${r.estadoEmp===e?' selected':''}>${e}</option>`).join('')}
+    </select></td>
+    <td><select onchange="cambiarEstadoRutaCond(${r.id},this.value)" style="font-size:11px;padding:3px 6px;border-radius:5px">
+      ${['Pendiente de pago','Pagado'].map(e=>`<option${r.estadoCond===e?' selected':''}>${e}</option>`).join('')}
+    </select></td>
+    <td style="font-size:11px;color:${r.novedad?'var(--rj)':'var(--tx2)'};max-width:120px">${r.novedad||'—'}</td>
+    <td><button class="btn sm dan" onclick="eliminar('rutas',${r.id})">✕</button></td>
+  </tr>`).join(''):'<tr><td colspan="13" style="text-align:center;color:var(--tx2);padding:22px">Sin rutas en esta semana</td></tr>';
+  const tv=rutasSem.reduce((s,r)=>s+Number(r.valor),0),tp=rutasSem.reduce((s,r)=>s+Number(r.pagoCond),0);
+  const rs=document.getElementById('res-semana');if(rs)rs.innerHTML=`<div class="kpis" style="margin:0">${kpi('Servicios',rutasSem.length,'az')}${kpi('Facturado',fmt(tv),'az')}${kpi('Pago conductores',fmt(tp),'rj')}${kpi('Utilidad',fmt(tv-tp),'vd')}${kpi('Margen',tv?((tv-tp)/tv*100).toFixed(1)+'%':'—','vd')}</div>`;
+}
+
+function renderConductores(){
+  const conductores=DB.get('conductores')||[],rutas=DB.get('rutas')||[];
+  const lc=document.getElementById('lista-conductores');if(!lc)return;
   lc.innerHTML=conductores.map(c=>{
     const misRutas=rutas.filter(r=>r.conductor===c.nombre);
-    const totalRutas=misRutas.length;
-    const totalGan=misRutas.reduce((s,r)=>s+(c.esPropietario?Number(r.valor)-rutas.filter(x=>x.fecha===r.fecha&&x.conductor!==c.nombre).reduce((a,b)=>a+Number(b.pagoCond),0):Number(r.pagoCond)),0);
-    const hoy=new Date();
-    const vencLic=c.vencLic?new Date(c.vencLic):null;
-    const alertaLic=vencLic&&(vencLic-hoy)<90*86400000;
-    return `<div class="cond-card">
-      <div class="cond-card-hdr">
+    const DOC_DEFS=[
+      {lbl:'C.C.',fecha:null,static:c.cedula?'ok':'na'},
+      {lbl:'Licencia',fecha:c.vencLic},{lbl:'SOAT',fecha:c.vencSoat},
+      {lbl:'Seguro',fecha:c.vencSeguro},{lbl:'Kit carr.',fecha:c.vencKit},
+      {lbl:'Med.',fecha:c.vencMedico},{lbl:'Psico.',fecha:c.vencPsico},
+      {lbl:'Seg. Social',fecha:null,static:c.segSocial==='Al día'?'ok':c.segSocial==='Pendiente'?'warn':'na'},
+      {lbl:'ARL',fecha:null,static:c.arl&&c.arl.includes('Al día')?'ok':c.arl&&c.arl.includes('Pendiente')?'warn':'na'},
+    ];
+    const hoy=new Date();const vencLicD=c.vencLic?new Date(c.vencLic):null;
+    const alertaLic=vencLicD&&(vencLicD-hoy)<90*86400000;
+    return `<div class="cc">
+      <div class="cc-hdr">
         <div>
-          <div class="nombre">${c.nombre} ${c.esPropietario?'<span style="background:rgba(255,255,255,.2);font-size:10px;padding:2px 8px;border-radius:10px;margin-left:6px">PROPIETARIO</span>':''}</div>
-          <div class="sub">${c.ruta} · Lic. ${c.licencia} ${alertaLic?'⚠ Lic. por vencer':''}</div>
+          <div class="cc-nombre">${c.nombre}${c.esProp?' <span style="background:rgba(255,255,255,.18);font-size:9px;padding:2px 7px;border-radius:10px;margin-left:6px">PROPIETARIO</span>':''}</div>
+          <div class="cc-sub">${c.ruta} · Lic. ${c.licencia} · ${c.estado}${alertaLic?' ⚠ Lic. por vencer':''}</div>
         </div>
-        <button class="btn sm danger" onclick="eliminar('conductores',${c.id})">✕</button>
+        <div style="display:flex;gap:6px">
+          <button class="btn sm suc" onclick="editarConductor(${c.id})">✏ Editar</button>
+          <button class="btn sm dan" onclick="eliminar('conductores',${c.id})">✕</button>
+        </div>
       </div>
-      <div class="cond-card-body">
-        <div class="form-row">
-          <div><label>Cédula</label><div style="font-size:13px;margin-top:2px">${c.cedula||'—'}</div></div>
-          <div><label>Teléfono</label><div style="font-size:13px;margin-top:2px">${c.tel||'—'}</div></div>
-          <div><label>Método pago</label><div style="font-size:13px;margin-top:2px">${c.metodo}</div></div>
-          <div><label>Cuenta / Nequi</label><div class="mono" style="margin-top:2px">${c.cuenta||'—'}</div></div>
+      <div class="cc-body">
+        <div class="fr" style="margin-bottom:8px">
+          <div><label style="font-size:10px;color:var(--tx2)">Cédula</label><div style="font-size:12px;margin-top:1px">${c.cedula||'—'}</div></div>
+          <div><label style="font-size:10px;color:var(--tx2)">Teléfono</label><div style="font-size:12px;margin-top:1px">${c.tel||'—'}</div></div>
+          <div><label style="font-size:10px;color:var(--tx2)">Pago / ruta</label><div style="font-size:14px;font-weight:700;color:var(--az);margin-top:1px">${c.esProp?'Propietario':fmt(c.pago)}</div></div>
+          <div><label style="font-size:10px;color:var(--tx2)">Servicios</label><div style="font-size:14px;font-weight:700;margin-top:1px">${misRutas.length}</div></div>
         </div>
-        <div class="form-row" style="margin-top:8px">
-          <div><label>Pago por ruta</label><div style="font-size:15px;font-weight:700;color:var(--azul);margin-top:2px">${c.esPropietario?'Propietario':fmt(c.pago)}</div></div>
-          <div><label>Servicios totales</label><div style="font-size:15px;font-weight:700;margin-top:2px">${totalRutas}</div></div>
-          <div><label>Vto. licencia</label><div style="font-size:13px;margin-top:2px;color:${alertaLic?'var(--rojo)':'var(--verde)'}">${fmtD(c.vencLic)}</div></div>
-          <div><label>Vto. SOAT</label><div style="font-size:13px;margin-top:2px">${fmtD(c.vencSoat)}</div></div>
+        <div style="background:var(--az3);border-radius:7px;padding:8px 10px;margin-bottom:8px;font-size:12px">
+          <span style="font-weight:600;color:var(--az2)">${c.metodo}: </span><span class="mono">${c.cuenta}</span>
+          ${c.metodo2?` &nbsp;|&nbsp; <span style="font-weight:600;color:var(--az2)">${c.metodo2}: </span><span class="mono">${c.cuenta2}</span>`:''}
         </div>
+        <div style="font-size:10px;font-weight:600;color:var(--tx2);margin-bottom:6px;text-transform:uppercase;letter-spacing:.4px">Estado de documentos</div>
+        <div class="cc-docs">
+          ${DOC_DEFS.map(({lbl,fecha,static:st})=>{
+            const s=fecha?docStatus(fecha):(st||'na');
+            return `<div class="doc-tag ${s}" ${fecha?`onclick="verDocConductor(${c.id},'${lbl}')" style="cursor:pointer"`:''}>
+              <span class="dt-lbl">${lbl}</span>
+              <span class="dt-date">${fecha?fmtD(fecha):s==='ok'?'✓ OK':s==='warn'?'⚠':s==='na'?'N/A':'✕'}</span>
+            </div>`;
+          }).join('')}
+        </div>
+        ${c.docs&&c.docs.length>0?`<div style="margin-top:10px;font-size:10px;font-weight:600;color:var(--tx2);text-transform:uppercase;letter-spacing:.4px;margin-bottom:6px">Documentos adjuntos</div>
+        <div class="doc-grid">${c.docs.map(d=>`<div class="doc-img-wrap" onclick="verDoc('${d.name}','${d.data||''}')">
+          ${d.data&&d.data.startsWith('data:image')?`<img src="${d.data}" alt="${d.name}" style="width:100%;height:60px;object-fit:cover;border-radius:6px">`:
+          `<div style="height:60px;background:var(--az3);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:18px">📄</div>`}
+          <div style="font-size:9px;color:var(--tx2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;margin-top:2px">${d.name||'Doc'}</div>
+        </div>`).join('')}</div>`:''}
       </div>
     </div>`;
   }).join('');
 }
 
-// CUENTAS
+function verDocConductor(id,tipo){
+  const c=(DB.get('conductores')||[]).find(x=>x.id===id);if(!c)return;
+  const doc=c.docs&&c.docs.find(d=>d.name&&d.name.toLowerCase().includes(tipo.toLowerCase()));
+  verDoc(tipo+' — '+c.nombre,doc?doc.data:'');
+}
+
 function renderCuentas(){
   const cuentas=DB.get('cuentas')||[];
   const total=cuentas.reduce((s,c)=>s+Number(c.valor),0);
   const cobrado=cuentas.filter(c=>c.estado==='Cobrada').reduce((s,c)=>s+Number(c.valor),0);
-  const pendiente=cuentas.filter(c=>c.estado==='Pendiente').reduce((s,c)=>s+Number(c.valor),0);
+  const pendiente=cuentas.filter(c=>c.estado==='Pendiente de cobro').reduce((s,c)=>s+Number(c.valor),0);
   const vencido=cuentas.filter(c=>c.estado==='Vencida').reduce((s,c)=>s+Number(c.valor),0);
-
   const kp=document.getElementById('kpis-cuentas');
-  if(kp) kp.innerHTML=kpiBox('Total facturado',fmt(total),'azul','')+kpiBox('Cobrado',fmt(cobrado),'verde','')+kpiBox('Pendiente',fmt(pendiente),'amber','')+kpiBox('Vencido',fmt(vencido),'rojo','');
-
-  const lc=document.getElementById('lista-cuentas');
-  if(!lc) return;
+  if(kp)kp.innerHTML=kpi('Total facturado',fmt(total),'az')+kpi('Cobrado',fmt(cobrado),'vd')+kpi('Pendiente',fmt(pendiente),'am')+kpi('Vencido',fmt(vencido),'rj');
+  const lc=document.getElementById('lista-cuentas');if(!lc)return;
   lc.innerHTML=[...cuentas].reverse().map(c=>`
-    <div class="card" style="border-left:4px solid ${c.estado==='Cobrada'?'var(--verde)':c.estado==='Vencida'?'var(--rojo)':'var(--amber)'}">
+    <div class="card" style="border-left:4px solid ${c.estado==='Cobrada'?'var(--vd)':c.estado==='Vencida'?'var(--rj)':'var(--am)'}">
       <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:10px">
         <div>
-          <div style="font-size:13px;font-weight:700;color:var(--azul)">Cuenta de Cobro No.${c.num} — Semana ${c.semana}</div>
-          <div style="font-size:12px;color:var(--texto2);margin-top:4px">Universidad Nacional de Colombia · Proyecto M-0548 · ${c.periodo}</div>
+          <div style="font-size:13px;font-weight:700;color:var(--az)">Cuenta No.${c.num} — Semana ${c.semana}</div>
+          <div style="font-size:11px;color:var(--tx2);margin-top:3px">U.N. de Colombia · M-0548 · ${c.periodo}</div>
         </div>
         <div style="text-align:right">
-          <div style="font-size:22px;font-weight:700;color:var(--texto)">${fmt(c.valor)}</div>
-          <div style="margin-top:4px">${estadoBadge(c.estado)}</div>
+          <input type="number" value="${c.valor}" onchange="editarValorCuenta(${c.id},this.value)" style="width:130px;font-size:16px;font-weight:700;text-align:right;border:1px dashed var(--bd);border-radius:6px;padding:3px 6px;background:transparent;color:var(--tx)">
+          <div style="margin-top:5px">
+            <select onchange="cambiarEstadoCuenta(${c.id},this.value)" style="font-size:11px;border-radius:5px;padding:3px 7px">
+              ${['Pendiente de cobro','Cobrada','Vencida','Abierta'].map(e=>`<option${c.estado===e?' selected':''}>${e}</option>`).join('')}
+            </select>
+          </div>
         </div>
       </div>
-      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-top:14px;padding-top:12px;border-top:1px solid var(--borde)">
-        <div><div style="font-size:11px;color:var(--texto2)">Servicios</div><div style="font-weight:600">${c.servicios}</div></div>
-        <div><div style="font-size:11px;color:var(--texto2)">Fecha emisión</div><div style="font-weight:600">${fmtD(c.fecha)}</div></div>
-        <div><div style="font-size:11px;color:var(--texto2)">Vencimiento</div><div style="font-weight:600;color:${c.estado==='Vencida'?'var(--rojo)':'inherit'}">${fmtD(c.vence)}</div></div>
-        <div style="display:flex;gap:6px;align-items:flex-end;flex-wrap:wrap">
-          ${c.estado!=='Cobrada'?`<button class="btn sm success" onclick="cambiarEstadoCuenta(${c.id},'Cobrada')">✓ Marcar cobrada</button>`:''}
-          ${c.estado==='Pendiente'?`<button class="btn sm danger" onclick="cambiarEstadoCuenta(${c.id},'Vencida')">Marcar vencida</button>`:''}
-          <button class="btn sm danger" onclick="eliminar('cuentas',${c.id})">✕</button>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px;margin-top:12px;padding-top:10px;border-top:1px solid var(--bd)">
+        <div><div style="font-size:10px;color:var(--tx2)">Servicios</div><div style="font-weight:600">${c.servicios}</div></div>
+        <div><div style="font-size:10px;color:var(--tx2)">Emisión</div><div style="font-weight:600">${fmtD(c.fecha)}</div></div>
+        <div><div style="font-size:10px;color:var(--tx2)">Vencimiento</div><div style="font-weight:600;color:${c.estado==='Vencida'?'var(--rj)':'inherit'}">${fmtD(c.vence)}</div></div>
+        <div style="display:flex;gap:5px;align-items:flex-end;flex-wrap:wrap">
+          <button class="btn sm suc" onclick="editarCuenta(${c.id})">✏ Editar</button>
+          <button class="btn sm dan" onclick="eliminar('cuentas',${c.id})">✕</button>
         </div>
       </div>
     </div>`).join('');
 }
 
-// PAGOS
+function editarValorCuenta(id,val){
+  const cuentas=DB.get('cuentas')||[];const c=cuentas.find(x=>x.id===id);
+  if(c){c.valor=Number(val)||0;DB.set('cuentas',cuentas);checkAlertas();toast('Valor actualizado ✓')}
+}
+
 function renderPagos(){
   const pagos=DB.get('pagos')||[];
   const totalP=pagos.reduce((s,p)=>s+Number(p.total),0);
   const pagado=pagos.filter(p=>p.estado==='Pagado').reduce((s,p)=>s+Number(p.saldo),0);
-  const pendiente=pagos.filter(p=>p.estado!=='Pagado').reduce((s,p)=>s+Number(p.saldo),0);
+  const pend=pagos.filter(p=>p.estado!=='Pagado').reduce((s,p)=>s+Number(p.saldo),0);
   const kp=document.getElementById('kpis-pagos');
-  if(kp) kp.innerHTML=kpiBox('Total registrado',fmt(totalP),'azul','')+kpiBox('Pagado',fmt(pagado),'verde','')+kpiBox('Por pagar',fmt(pendiente),'rojo','');
-  const tb=document.getElementById('tabla-pagos');
-  if(!tb) return;
-  tb.innerHTML=pagos.length
-    ?[...pagos].reverse().map(p=>`<tr>
-        <td>${p.conductor}</td>
-        <td>Sem ${p.semana}</td>
-        <td>${p.rutas}</td>
-        <td>${fmt(p.total)}</td>
-        <td>${fmt(p.anticipo)}</td>
-        <td><b>${fmt(p.saldo)}</b></td>
-        <td><span class="badge b-azul">${p.metodo}</span></td>
-        <td>${estadoBadge(p.estado)}</td>
-        <td><button class="btn sm danger" onclick="eliminar('pagos',${p.id})">✕</button></td>
-      </tr>`).join('')
-    :'<tr><td colspan="9" style="text-align:center;color:var(--texto2);padding:24px">Sin pagos registrados</td></tr>';
+  if(kp)kp.innerHTML=kpi('Total registrado',fmt(totalP),'az')+kpi('Pagado',fmt(pagado),'vd')+kpi('Por pagar',fmt(pend),'rj');
+  const tb=document.getElementById('t-pagos');if(!tb)return;
+  const conductores=DB.get('conductores')||[];
+  tb.innerHTML=pagos.length?[...pagos].reverse().map(p=>{
+    const c=conductores.find(x=>x.nombre===p.conductor);
+    const cuentaInfo=c?`${c.metodo}: ${c.cuenta}`:p.metodo;
+    return `<tr>
+      <td>${p.conductor.split(' ')[0]+' '+p.conductor.split(' ')[p.conductor.split(' ').length-1]}</td>
+      <td>Sem ${p.semana}</td><td>${p.rutas}</td><td>${fmt(p.total)}</td>
+      <td>${fmt(p.anticipo)}</td><td style="font-weight:700">${fmt(p.saldo)}</td>
+      <td><span class="badge baz">${p.metodo}</span></td>
+      <td style="font-size:10px;color:var(--tx2)">${cuentaInfo}</td>
+      <td>${p.comprobante?`<button class="btn sm" onclick="verDoc('Comprobante','${p.comprobante}')">Ver 🖼</button>`:'<span style="color:var(--tx2);font-size:10px">—</span>'}</td>
+      <td><select onchange="cambiarEstadoPago(${p.id},this.value)" style="font-size:11px;border-radius:5px;padding:3px 6px">
+        ${['Pagado','Pendiente','Parcial'].map(e=>`<option${p.estado===e?' selected':''}>${e}</option>`).join('')}
+      </select></td>
+      <td><button class="btn sm dan" onclick="eliminar('pagos',${p.id})">✕</button></td>
+    </tr>`;
+  }).join(''):'<tr><td colspan="11" style="text-align:center;color:var(--tx2);padding:22px">Sin pagos registrados</td></tr>';
 }
 
-// FINANZAS
 function renderFinanzas(){
-  const rutas=DB.get('rutas')||[];
-  const cuentas=DB.get('cuentas')||[];
-  const pagos=DB.get('pagos')||[];
-
-  const totalIngr=rutas.reduce((s,r)=>s+Number(r.valor),0);
-  const totalCond=rutas.reduce((s,r)=>s+Number(r.pagoCond),0);
-  const util=totalIngr-totalCond;
-  const kf=document.getElementById('kpis-finanzas');
-  if(kf) kf.innerHTML=kpiBox('Ingresos totales',fmt(totalIngr),'azul','')+kpiBox('Pago conductores',fmt(totalCond),'rojo','')+kpiBox('Utilidad bruta',fmt(util),'verde','')+kpiBox('Margen',totalIngr?((util/totalIngr)*100).toFixed(1)+'%':'—','verde','');
-
-  // Por ruta
-  const tf=document.getElementById('tabla-fin-rutas');
+  const rutas=DB.get('rutas')||[],cuentas=DB.get('cuentas')||[],pagos=DB.get('pagos')||[];
+  const ti=rutas.reduce((s,r)=>s+Number(r.valor),0),tc=rutas.reduce((s,r)=>s+Number(r.pagoCond),0);
+  const kf=document.getElementById('kpis-fin');
+  if(kf)kf.innerHTML=kpi('Ingresos totales',fmt(ti),'az')+kpi('Pago conductores',fmt(tc),'rj')+kpi('Utilidad bruta',fmt(ti-tc),'vd')+kpi('Margen',ti?((ti-tc)/ti*100).toFixed(1)+'%':'—','vd');
+  const tf=document.getElementById('t-fin-ruta');
   if(tf){
-    const porRuta={};
-    rutas.forEach(r=>{
-      if(!porRuta[r.ruta]) porRuta[r.ruta]={svcs:0,ing:0,cond:0};
-      porRuta[r.ruta].svcs++; porRuta[r.ruta].ing+=Number(r.valor); porRuta[r.ruta].cond+=Number(r.pagoCond);
-    });
-    tf.innerHTML=Object.entries(porRuta).map(([ruta,d])=>{
-      const u=d.ing-d.cond; const m=d.ing?(u/d.ing*100).toFixed(1)+'%':'—';
-      return `<tr><td><b>${ruta}</b></td><td>${d.svcs}</td><td>${fmt(d.ing)}</td><td>${fmt(d.cond)}</td><td style="color:var(--verde);font-weight:700">${fmt(u)}</td><td>${estadoBadge(Number(m)>30?'Cobrada':Number(m)>25?'Pendiente':'Vencida')}</td></tr>`;
-    }).join('');
+    const pr={};
+    rutas.forEach(r=>{if(!pr[r.ruta])pr[r.ruta]={s:0,i:0,c:0};pr[r.ruta].s++;pr[r.ruta].i+=Number(r.valor);pr[r.ruta].c+=Number(r.pagoCond)});
+    tf.innerHTML=Object.entries(pr).map(([ruta,d])=>{const u=d.i-d.c;const m=d.i?(u/d.i*100).toFixed(1)+'%':'—';return`<tr><td><b>${ruta}</b></td><td>${d.s}</td><td>${fmt(d.i)}</td><td>${fmt(d.c)}</td><td style="color:var(--vd);font-weight:700">${fmt(u)}</td><td>${estadoBadge(parseFloat(m)>30?'Servicio realizado':parseFloat(m)>25?'Pendiente de cobro':'Vencida')}</td></tr>`}).join('');
   }
-
-  // Por semana
-  const ts=document.getElementById('tabla-fin-semanas');
+  const ts=document.getElementById('t-fin-sem');
   if(ts){
-    const semanas={};
-    rutas.forEach(r=>{ const s=r.semana||'—'; if(!semanas[s])semanas[s]={ing:0,cond:0}; semanas[s].ing+=Number(r.valor); semanas[s].cond+=Number(r.pagoCond); });
-    cuentas.forEach(c=>{ if(!semanas[c.semana])semanas[c.semana]={ing:0,cond:0}; semanas[c.semana].cobrado=c.estado==='Cobrada'?Number(c.valor):0; semanas[c.semana].estCuenta=c.estado; });
-    ts.innerHTML=Object.entries(semanas).sort((a,b)=>a[0]-b[0]).map(([sem,d])=>{
-      const bal=d.ing-d.cond; const estCuenta=d.estCuenta||'—';
-      return `<tr><td><b>Sem ${sem}</b></td><td>${fmt(d.ing)}</td><td>${estadoBadge(estCuenta)}</td><td>${fmt(d.cond)}</td><td style="color:${bal>=0?'var(--verde)':'var(--rojo)'};font-weight:700">${fmt(bal)}</td></tr>`;
-    }).join('');
+    const sems={};
+    rutas.forEach(r=>{const s=r.semana||'—';if(!sems[s])sems[s]={i:0,c:0};sems[s].i+=Number(r.valor);sems[s].c+=Number(r.pagoCond)});
+    cuentas.forEach(c=>{if(!sems[c.semana])sems[c.semana]={i:0,c:0};sems[c.semana].est=c.estado});
+    ts.innerHTML=Object.entries(sems).sort((a,b)=>a[0]-b[0]).map(([sem,d])=>{const bal=d.i-d.c;return`<tr><td><b>Sem ${sem}</b></td><td>${fmt(d.i)}</td><td>${estadoBadge(d.est||'—')}</td><td>${fmt(d.c)}</td><td style="color:${bal>=0?'var(--vd)':'var(--rj)'};font-weight:700">${fmt(bal)}</td></tr>`}).join('');
   }
 }
 
-// NOVEDADES
 function renderNovedades(){
   const novedades=DB.get('novedades')||[];
-  const tb=document.getElementById('tabla-novedades');
-  if(!tb) return;
-  tb.innerHTML=novedades.length
-    ?[...novedades].reverse().map(n=>`<tr>
-        <td>${fmtD(n.fecha)}</td>
-        <td><b>${n.ruta}</b></td>
-        <td>${n.conductor||'—'}</td>
-        <td>${estadoBadge(n.tipo==='Accidente de tránsito'?'Vencida':n.tipo==='Ruta no realizada'?'Vencida':'Pendiente')} <span style="font-size:11px">${n.tipo}</span></td>
-        <td style="font-size:12px;max-width:200px">${n.desc}</td>
-        <td>${n.impacto?`<span style="color:var(--rojo)">(${fmt(n.impacto)})</span>`:'Sin impacto'}</td>
-        <td>${estadoBadge(n.reportado.includes('Sí')?'Cobrada':'Vencida')} <span style="font-size:10px">${n.reportado}</span></td>
-        <td><button class="btn sm danger" onclick="eliminar('novedades',${n.id})">✕</button></td>
-      </tr>`).join('')
-    :'<tr><td colspan="8" style="text-align:center;color:var(--texto2);padding:24px">Sin novedades registradas ✓</td></tr>';
+  const tb=document.getElementById('t-novedades');if(!tb)return;
+  tb.innerHTML=novedades.length?[...novedades].reverse().map(n=>`<tr>
+    <td>${fmtD(n.fecha)}</td><td><b>${n.ruta}</b></td><td style="font-size:11px">${n.conductor||'—'}</td>
+    <td>${estadoBadge(n.tipo==='Accidente de tránsito'?'Vencida':n.tipo==='Ruta no realizada'?'Vencida':'Pendiente de cobro')} <span style="font-size:10px">${n.tipo}</span></td>
+    <td style="font-size:11px;max-width:180px">${n.desc}</td>
+    <td>${n.impacto?`<span style="color:var(--rj)">(${fmt(n.impacto)})</span>`:'Sin impacto'}</td>
+    <td style="font-size:11px">${estadoBadge(n.reportado.includes('Sí')?'Cobrada':'Vencida')} ${n.reportado}</td>
+    <td>${estadoBadge(n.estado)}</td>
+    <td><button class="btn sm dan" onclick="eliminar('novedades',${n.id})">✕</button></td>
+  </tr>`).join(''):'<tr><td colspan="9" style="text-align:center;color:var(--vd);padding:22px">Sin novedades ✓</td></tr>';
 }
 
-// ══════════════════════════════════════
-// INIT
-// ══════════════════════════════════════
+// ─── INIT ────────────────────────────────────────
 initData();
-renderAll();
-
-// ══════════════════════════════════════
-// AUTH
-// ══════════════════════════════════════
-const U_HASH = '6db6bc8342ed8019123d126575b56405090e619bc88b22c67e0af4ef4e6ea6bb';
-const P_HASH = 'c3e0dcb0e1a2dbee17c4a4cbc1f1d4971364cf54508478d30e989887fefcab17';
-
-async function sha256(str){
-  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
-  return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');
-}
-
-async function doLogin(){
-  const u = document.getElementById('l-user').value.trim();
-  const p = document.getElementById('l-pass').value;
-  const err = document.getElementById('login-err');
-  const [hu, hp] = await Promise.all([sha256(u), sha256(p)]);
-  if(hu === U_HASH && hp === P_HASH){
-    document.getElementById('login-screen').classList.add('oculto');
-    sessionStorage.setItem('m0548_auth','1');
-    err.classList.remove('show');
-  } else {
-    err.classList.add('show');
-    document.getElementById('l-pass').value='';
-  }
-}
-
-// Enter key para login
-document.addEventListener('keydown', e=>{
-  if(e.key==='Enter' && !document.getElementById('login-screen').classList.contains('oculto')){
-    doLogin();
-  }
-});
-
-// Verificar sesión al cargar
-if(sessionStorage.getItem('m0548_auth')==='1'){
-  document.getElementById('login-screen').classList.add('oculto');
-}
-
+if(sessionStorage.getItem('auth')==='1'){renderAll();checkAlertas()}
 </script>
 </body>
 </html>
