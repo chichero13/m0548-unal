@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Borrar datos — M0548</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Arial,sans-serif;background:#0d1f3c;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}
+.box{background:#fff;border-radius:16px;padding:36px 32px;width:420px;max-width:100%;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,.4)}
+.ico{font-size:56px;margin-bottom:16px}
+h1{font-size:20px;font-weight:700;color:#A32D2D;margin-bottom:8px}
+p{font-size:13px;color:#5A6481;margin-bottom:24px;line-height:1.6}
+.btn{width:100%;padding:14px;border:none;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;margin-bottom:10px;transition:all .2s}
+.btn-borrar{background:#A32D2D;color:#fff}
+.btn-borrar:hover{background:#7A1F1F}
+.btn-cancel{background:#F4F6FA;color:#5A6481;border:1px solid #D4DCEA}
+.btn-cancel:hover{background:#E8ECF4}
+.resultado{margin-top:16px;padding:14px;border-radius:8px;font-size:13px;font-weight:600;display:none}
+.resultado.ok{background:#EAF5EE;color:#1A6B3A;border:1px solid #8FCF9F}
+.resultado.err{background:#FCEBEB;color:#A32D2D;border:1px solid #F09595}
+.conteo{font-size:12px;color:#888;margin-top:12px}
+</style>
+</head>
+<body>
+<div class="box">
+  <div class="ico">🗑</div>
+  <h1>Borrar todos los datos</h1>
+  <p>Esto elimina <strong>todos los registros</strong> del sistema M-0548 guardados en este navegador: conductores, vehículos, rutas, cuentas, pagos y novedades.</p>
+  <div id="conteo" class="conteo"></div>
+
+  <button class="btn btn-borrar" onclick="borrar()">🗑 BORRAR TODO AHORA</button>
+  <button class="btn btn-cancel" onclick="window.close()">Cancelar</button>
+
+  <div class="resultado" id="resultado"></div>
+</div>
+
+<script>
+// Mostrar cuántos registros hay actualmente
+function contarRegistros(){
+  const keys = Object.keys(localStorage).filter(k=>k.toLowerCase().includes('m0548'));
+  const div = document.getElementById('conteo');
+  if(keys.length === 0){
+    div.innerHTML = '✓ No hay datos guardados en este navegador.';
+    div.style.color = '#1A6B3A';
+  } else {
+    div.innerHTML = '⚠ Se encontraron <strong>' + keys.length + '</strong> registros almacenados.';
+    div.style.color = '#7A4800';
+  }
+  return keys;
+}
+
+function borrar(){
+  const keys = Object.keys(localStorage).filter(k=>k.toLowerCase().includes('m0548'));
+  
+  if(keys.length === 0){
+    mostrarResultado('No había datos que borrar — el sistema ya estaba limpio.', false);
+    return;
+  }
+
+  if(!confirm('¿Confirmas que quieres borrar TODOS los ' + keys.length + ' registros del sistema M-0548?\n\nEsta acción no se puede deshacer.')){
+    return;
+  }
+
+  // Borrar absolutamente todo lo relacionado con m0548
+  let borradas = 0;
+  // 1. Por prefijos conocidos
+  ['m0548_','m0548v2_','m0548v9_','m0548v11_','m0548v12_','m0548v10_','m0548v8_'].forEach(prefix=>{
+    Object.keys(localStorage).filter(k=>k.startsWith(prefix)).forEach(k=>{
+      localStorage.removeItem(k);
+      borradas++;
+    });
+  });
+  // 2. Cualquier clave que contenga m0548 (por si acaso)
+  Object.keys(localStorage).filter(k=>k.toLowerCase().includes('m0548')).forEach(k=>{
+    localStorage.removeItem(k);
+    borradas++;
+  });
+
+  mostrarResultado('✓ ' + borradas + ' registros eliminados correctamente. Ahora puedes abrir el sistema y cargará con datos limpios.', true);
+  contarRegistros();
+}
+
+function mostrarResultado(msg, ok){
+  const div = document.getElementById('resultado');
+  div.textContent = msg;
+  div.className = 'resultado ' + (ok ? 'ok' : 'err');
+  div.style.display = 'block';
+}
+
+// Contar al cargar
+window.onload = contarRegistros;
+</script>
+</body>
+</html>
