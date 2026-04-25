@@ -240,6 +240,7 @@ textarea{resize:vertical;min-height:65px}
   </div>
   <div class="tb-right">
     <div class="tb-badge">M-0548</div>
+    <button class="tb-logout" onclick="nav('backup')" style="color:#F09595" title="Ir a Backup / Borrar datos">🗑</button>
     <button class="tb-logout" onclick="cerrarSesion()">Salir</button>
   </div>
 </div>
@@ -445,6 +446,16 @@ textarea{resize:vertical;min-height:65px}
   <div class="card">
     <div class="card-hdr"><span class="card-title">📋 Resumen del almacenamiento actual</span></div>
     <div id="storage-summary"></div>
+  </div>
+  <div class="card" style="border:1.5px solid var(--rj)">
+    <div class="card-hdr">
+      <span class="card-title" style="color:var(--rj)">🗑 Borrar todos los datos del sistema</span>
+    </div>
+    <p style="font-size:12px;color:var(--tx2);margin-bottom:14px">Elimina <b>todos</b> los registros almacenados en este navegador: rutas, conductores, vehículos, cuentas, pagos y novedades. <b style="color:var(--rj)">Esta acción no se puede deshacer. Exporta un backup antes si quieres conservar los datos.</b></p>
+    <div class="btn-g">
+      <button class="btn" onclick="exportarJSON()" style="border-color:var(--am);color:var(--am)">💾 Exportar backup primero</button>
+      <button class="btn danger" onclick="borrarTodo()" style="font-weight:700;font-size:13px;padding:8px 18px">🗑 BORRAR TODO Y REINICIAR</button>
+    </div>
   </div>
 </div>
 
@@ -796,14 +807,14 @@ if(sessionStorage.getItem('auth')==='1'){document.getElementById('login-screen')
 
 // ─── DB ─────────────────────────────────────────
 const DB={
-  get:k=>{try{return JSON.parse(localStorage.getItem('m0548v11_'+k)||'null')}catch{return null}},
-  set:(k,v)=>localStorage.setItem('m0548v11_'+k,JSON.stringify(v))
+  get:k=>{try{return JSON.parse(localStorage.getItem('m0548v12_'+k)||'null')}catch{return null}},
+  set:(k,v)=>localStorage.setItem('m0548v12_'+k,JSON.stringify(v))
 };
 
 // ─── INIT DATA ──────────────────────────────────
 function initData(){
   // Limpiar versiones anteriores del localStorage
-  ['m0548_','m0548v2_','m0548v9_'].forEach(prefix=>{
+  ['m0548_','m0548v2_','m0548v9_','m0548v11_'].forEach(prefix=>{
     Object.keys(localStorage).filter(k=>k.startsWith(prefix)).forEach(k=>localStorage.removeItem(k));
   });
   if(DB.get('init')) return;
@@ -2220,6 +2231,27 @@ function confirmarSemana(){
   setTimeout(()=>nav('rutas'),800);
 }
 
+
+function borrarTodo(){
+  if(!confirm('⚠ ¿Borrar TODOS los datos del sistema?\n\nEsto eliminará conductores, vehículos, rutas, cuentas, pagos y novedades.\n\nEsta acción NO se puede deshacer.')) return;
+  if(!confirm('¿Estás completamente seguro? Se borrarán TODOS los registros.')) return;
+  // Borrar todas las claves de todas las versiones
+  const prefijos = ['m0548_','m0548v2_','m0548v9_','m0548v12_','m0548v12_'];
+  let borradas = 0;
+  prefijos.forEach(prefix=>{
+    Object.keys(localStorage).filter(k=>k.startsWith(prefix)).forEach(k=>{
+      localStorage.removeItem(k);
+      borradas++;
+    });
+  });
+  // También barrer cualquier clave m0548 que quede
+  Object.keys(localStorage).filter(k=>k.toLowerCase().includes('m0548')).forEach(k=>{
+    localStorage.removeItem(k);
+    borradas++;
+  });
+  toast('🗑 '+borradas+' registros eliminados. Recargando...','terr');
+  setTimeout(()=>location.reload(), 1500);
+}
 
 function renderStorageSummary(){
   const wrap=document.getElementById('storage-summary');if(!wrap)return;
