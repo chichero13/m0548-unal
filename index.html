@@ -211,6 +211,150 @@ textarea{resize:vertical;min-height:65px}
 .liq-total-val{font-size:20px;font-weight:700}
 @media(max-width:640px){.two-col,.fr,.fr3{grid-template-columns:1fr}.kpis{grid-template-columns:1fr 1fr}}
 </style>
+<!-- Firebase SDK -->
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getFirestore, doc, setDoc, getDoc, getDocs, collection, onSnapshot, deleteDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyAzlj3R5ixMfeeX2Ba4Ac4Lg09tGbikros",
+  authDomain: "m0548-unal.firebaseapp.com",
+  projectId: "m0548-unal",
+  storageBucket: "m0548-unal.firebasestorage.app",
+  messagingSenderId: "545053727878",
+  appId: "1:545053727878:web:2aa1658c9f6bbab1f70507"
+};
+
+const app = initializeApp(firebaseConfig);
+const db  = getFirestore(app);
+
+const COLECCIONES = ['conductores','rutas','cuentas','pagos','novedades','vehiculos'];
+
+// ── Indicador de sincronización ──
+function setSyncStatus(estado){
+  const el = document.getElementById('sync-status');
+  if(!el) return;
+  if(estado==='ok')   { el.textContent='☁ Sincronizado'; el.style.color='#6EE89A'; }
+  if(estado==='sync') { el.textContent='⟳ Guardando...'; el.style.color='#FFD580'; }
+  if(estado==='err')  { el.textContent='✕ Sin conexión'; el.style.color='#F09595'; }
+  if(estado==='load') { el.textContent='⟳ Cargando...';  el.style.color='#AACCEE'; }
+}
+
+// ── Guardar colección completa en Firestore ──
+async function fsSet(coleccion, datos){
+  setSyncStatus('sync');
+  try {
+    const ref = doc(db, 'sistema', coleccion);
+    await setDoc(ref, { datos: JSON.stringify(datos) });
+    setSyncStatus('ok');
+  } catch(e) {
+    console.error('Firebase write error:', e);
+    setSyncStatus('err');
+    // Fallback a localStorage
+    localStorage.setItem('m0548fb_'+coleccion, JSON.stringify(datos));
+  }
+}
+
+// ── Leer colección desde Firestore ──
+async function fsGet(coleccion){
+  try {
+    const ref  = doc(db, 'sistema', coleccion);
+    const snap = await getDoc(ref);
+    if(snap.exists()) return JSON.parse(snap.data().datos);
+    return null;
+  } catch(e) {
+    console.error('Firebase read error:', e);
+    // Fallback a localStorage
+    const local = localStorage.getItem('m0548fb_'+coleccion);
+    return local ? JSON.parse(local) : null;
+  }
+}
+
+// ── Escuchar cambios en tiempo real ──
+function fsListen(){
+  const ref = collection(db, 'sistema');
+  onSnapshot(ref, (snapshot) => {
+    snapshot.docChanges().forEach(change => {
+      if(change.type === 'modified' || change.type === 'added'){
+        const col = change.doc.id;
+        const datos = JSON.parse(change.doc.data().datos);
+        // Actualizar cache local
+        localStorage.setItem('m0548fb_'+col, JSON.stringify(datos));
+      }
+    });
+    // Re-renderizar si la app ya está lista
+    if(window._appReady) renderAll();
+    setSyncStatus('ok');
+  }, (error) => {
+    console.error('Snapshot error:', error);
+    setSyncStatus('err');
+  });
+}
+
+// ── Borrar todo en Firestore ──
+async function fsBorrarTodo(){
+  setSyncStatus('sync');
+  try {
+    for(const col of COLECCIONES){
+      await deleteDoc(doc(db, 'sistema', col));
+      localStorage.removeItem('m0548fb_'+col);
+    }
+    // Limpiar también versiones antiguas
+    Object.keys(localStorage).filter(k=>k.includes('m0548')).forEach(k=>localStorage.removeItem(k));
+    setSyncStatus('ok');
+    return true;
+  } catch(e){
+    console.error('Firebase delete error:', e);
+    setSyncStatus('err');
+    return false;
+  }
+}
+
+// ── Cargar datos iniciales desde Firebase ──
+async function cargarDesdeFirebase(){
+  setSyncStatus('load');
+  const datos = {};
+  for(const col of COLECCIONES){
+    const d = await fsGet(col);
+    if(d) datos[col] = d;
+  }
+  return datos;
+}
+
+// ── Exponer funciones al scope global ──
+window.FS = { set: fsSet, get: fsGet, borrarTodo: fsBorrarTodo, listen: fsListen };
+window._fsListo = true;
+
+// Inicializar app cuando Firebase esté listo
+document.addEventListener('DOMContentLoaded', async () => {
+  setSyncStatus('load');
+  
+  // Cargar datos desde Firebase
+  const datosFS = await cargarDesdeFirebase();
+  const COLECCIONES_LOCAL = ['conductores','rutas','cuentas','pagos','novedades','vehiculos'];
+  
+  if(Object.keys(datosFS).length > 0){
+    // Hay datos en Firebase — cargar en memoria local
+    COLECCIONES_LOCAL.forEach(col=>{
+      if(datosFS[col]) localStorage.setItem('m0548fb_'+col, JSON.stringify(datosFS[col]));
+    });
+    // Marcar como inicializado
+    localStorage.setItem('m0548fb_init','1');
+  }
+  
+  // Iniciar escucha en tiempo real
+  fsListen();
+  
+  // Inicializar app
+  initData();
+  if(sessionStorage.getItem('auth')==='1'){
+    renderAll();
+    checkAlertas();
+  }
+  window._appReady = true;
+  setSyncStatus('ok');
+});
+</script>
 </head>
 <body>
 
@@ -240,7 +384,8 @@ textarea{resize:vertical;min-height:65px}
   </div>
   <div class="tb-right">
     <div class="tb-badge">M-0548</div>
-    <button class="tb-logout" onclick="nav('backup')" style="color:#F09595" title="Ir a Backup / Borrar datos">🗑</button>
+    <span id="sync-status" style="font-size:11px;color:#AACCEE;font-weight:500">⟳ Conectando...</span>
+    <button class="tb-logout" onclick="nav('backup')" style="color:#F09595" title="Borrar datos">🗑</button>
     <button class="tb-logout" onclick="cerrarSesion()">Salir</button>
   </div>
 </div>
@@ -807,17 +952,32 @@ if(sessionStorage.getItem('auth')==='1'){document.getElementById('login-screen')
 
 // ─── DB ─────────────────────────────────────────
 const DB={
-  get:k=>{try{return JSON.parse(localStorage.getItem('m0548v12_'+k)||'null')}catch{return null}},
-  set:(k,v)=>localStorage.setItem('m0548v12_'+k,JSON.stringify(v))
+  get:k=>{
+    // Primero buscar en cache Firebase, luego en versiones antiguas
+    try{
+      const fb=localStorage.getItem('m0548fb_'+k);
+      if(fb) return JSON.parse(fb);
+      // Fallback versiones anteriores
+      const old=localStorage.getItem('m0548v12_'+k)||localStorage.getItem('m0548v11_'+k)||localStorage.getItem('m0548v9_'+k);
+      return old?JSON.parse(old):null;
+    }catch{return null}
+  },
+  set:(k,v)=>{
+    // Guardar en cache local inmediatamente
+    localStorage.setItem('m0548fb_'+k, JSON.stringify(v));
+    // Guardar en Firebase de forma asíncrona
+    if(window.FS) window.FS.set(k, v);
+  }
 };
 
 // ─── INIT DATA ──────────────────────────────────
 function initData(){
-  // Limpiar versiones anteriores del localStorage
-  ['m0548_','m0548v2_','m0548v9_','m0548v11_'].forEach(prefix=>{
+  // Limpiar versiones antiguas
+  ['m0548_','m0548v2_','m0548v9_','m0548v11_','m0548v12_'].forEach(prefix=>{
     Object.keys(localStorage).filter(k=>k.startsWith(prefix)).forEach(k=>localStorage.removeItem(k));
   });
-  if(DB.get('init')) return;
+  // Si Firebase ya cargó datos, no sobrescribir con datos demo
+  if(DB.get('init') || localStorage.getItem('m0548fb_init')==='1') return;
   DB.set('conductores',[
     {id:1,nombre:'Orlando Sepúlveda Macías',cedula:'1.017.147.157',tel:'3147887124',metodo:'Nequi',cuenta:'3147887124',titular:'Orlando Sepúlveda',metodo2:'',cuenta2:'',licencia:'C2',ruta:'Varias / Flexible',pago:0,estado:'Activo',obs:'Propietario',vencLic:'2026-12-01',vencSoat:'2026-10-01',vencSeguro:'',vencKit:'2026-08-01',vencMedico:'2026-09-01',vencPsico:'2026-09-01',segSocial:'Al día',arl:'Paga — Al día',docs:[],esProp:true},
     {id:2,nombre:'Adolfo Mora Otero',cedula:'—',tel:'3148114178',metodo:'Nequi',cuenta:'3148114178',titular:'Adolfo Mora',metodo2:'',cuenta2:'',licencia:'C2',ruta:'Santa Elena — Pericos — Pantanillo — El Plan — Paysandú',pago:450000,estado:'Activo',obs:'',vencLic:'2026-09-01',vencSoat:'2026-11-01',vencSeguro:'',vencKit:'',vencMedico:'',vencPsico:'',segSocial:'Al día',arl:'Paga — Al día',docs:[],esProp:false},
@@ -1885,7 +2045,7 @@ function renderLiquidacion(){
 // ─── BACKUP ─────────────────────────────────────
 function exportarJSON(){
   const KEYS=['conductores','vehiculos','rutas','cuentas','pagos','novedades'];
-  const data={version:'2.0',fecha:new Date().toISOString(),proyecto:'M-0548'};
+  const data={version:'3.0-firebase',fecha:new Date().toISOString(),proyecto:'M-0548'};
   KEYS.forEach(k=>{data[k]=DB.get(k)||[]});
   const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
   const url=URL.createObjectURL(blob);
@@ -2292,8 +2452,12 @@ checkAlertas=function(){
 };
 
 // ─── INIT ────────────────────────────────────────
-initData();
-if(sessionStorage.getItem('auth')==='1'){renderAll();checkAlertas()}
+// Firebase inicializa la app en el event listener DOMContentLoaded
+// Si Firebase no está disponible, inicializar normalmente
+if(!window._fsListo){
+  initData();
+  if(sessionStorage.getItem('auth')==='1'){renderAll();checkAlertas();}
+}
 </script>
 </body>
 </html>
