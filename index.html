@@ -209,6 +209,25 @@ textarea{resize:vertical;min-height:65px}
 .liq-total{background:var(--az);color:#fff;border-radius:var(--r2);padding:12px 16px;display:flex;justify-content:space-between;align-items:center;margin-top:10px}
 .liq-total-lbl{font-size:12px;color:#aaccee}
 .liq-total-val{font-size:20px;font-weight:700}
+/* ── SEGUIMIENTO CONDUCTOR ── */
+.sc-card{background:var(--bl);border:1px solid var(--bd);border-radius:var(--r);overflow:hidden;margin-bottom:14px;box-shadow:var(--sh)}
+.sc-hdr{display:flex;justify-content:space-between;align-items:center;padding:14px 16px;background:var(--az)}
+.sc-nombre{font-size:14px;font-weight:700;color:#fff}
+.sc-sub{font-size:10px;color:#88AACC;margin-top:2px}
+.sc-body{padding:14px 16px}
+.sc-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:10px;margin-bottom:14px}
+.sc-stat{background:var(--gr);border-radius:var(--r2);padding:10px 12px;text-align:center}
+.sc-stat-val{font-size:20px;font-weight:700;color:var(--tx)}
+.sc-stat-lbl{font-size:10px;color:var(--tx2);margin-top:3px}
+.sc-cuenta{border-radius:var(--r2);padding:12px 14px;margin-bottom:10px}
+.sc-cuenta.verde{background:var(--vd2);border-left:4px solid var(--vd)}
+.sc-cuenta.rojo{background:var(--rj2);border-left:4px solid var(--rj)}
+.sc-cuenta.amber{background:var(--am2);border-left:4px solid #E8A020}
+.sc-prog{height:8px;background:var(--gr2);border-radius:4px;margin-top:8px;overflow:hidden}
+.sc-prog-fill{height:8px;border-radius:4px;background:var(--vd);transition:width .5s}
+.viaje-row{display:flex;justify-content:space-between;align-items:center;padding:7px 10px;border-bottom:0.5px solid var(--gr);font-size:12px}
+.viaje-row:last-child{border-bottom:none}
+.viaje-row:hover{background:var(--gr)}
 @media(max-width:640px){.two-col,.fr,.fr3{grid-template-columns:1fr}.kpis{grid-template-columns:1fr 1fr}}
 </style>
 <!-- Firebase SDK -->
@@ -460,7 +479,12 @@ document.addEventListener('DOMContentLoaded', async () => {
     <h2>Conductores — M-0548</h2>
     <button class="btn pri" onclick="abrirModal('m-conductor')">+ Agregar conductor</button>
   </div>
-  <div id="lista-conductores"></div>
+  <div style="display:flex;gap:4px;margin-bottom:14px;border-bottom:1px solid var(--bd)">
+    <button class="mtab active" id="tab-cond-docs" onclick="switchCondTab('docs')">📋 Documentos y datos</button>
+    <button class="mtab" id="tab-cond-seg" onclick="switchCondTab('seg')">📊 Seguimiento y estado de cuenta</button>
+  </div>
+  <div id="panel-cond-docs"><div id="lista-conductores"></div></div>
+  <div id="panel-cond-seg" style="display:none"><div id="lista-seguimiento"></div></div>
 </div>
 
 <!-- ══ CUENTAS ══ -->
@@ -1509,7 +1533,7 @@ function generarReciboViernes(){
 const kpi=(lbl,val,cls='',sub='')=>`<div class="kpi"><div class="kpi-lbl">${lbl}</div><div class="kpi-val ${cls}">${val}</div>${sub?`<div class="kpi-sub">${sub}</div>`:''}</div>`;
 
 function renderAll(){
-  renderDashboard();renderRutas();renderConductores();
+  renderDashboard();renderRutas();renderConductores();renderSeguimiento();
   renderCuentas();renderPagos();renderFinanzas();renderNovedades();
   renderVehiculos();renderLiquidacion();renderStorageSummary();renderProgramador();
   const sl=document.getElementById('sem-lbl');if(sl)sl.textContent=semLabel();
@@ -1637,6 +1661,188 @@ function renderRutas(){
     ${kpi('Utilidad',fmt(tv-tp),'vd')}
     ${kpi('Margen',tv?((tv-tp)/tv*100).toFixed(1)+'%':'—','vd')}
   </div>`;
+}
+
+
+// ─── SEGUIMIENTO CONDUCTORES ────────────────────
+function switchCondTab(tab){
+  document.getElementById('panel-cond-docs').style.display = tab==='docs'?'block':'none';
+  document.getElementById('panel-cond-seg').style.display  = tab==='seg'?'block':'none';
+  document.getElementById('tab-cond-docs').classList.toggle('active', tab==='docs');
+  document.getElementById('tab-cond-seg').classList.toggle('active',  tab==='seg');
+  if(tab==='seg') renderSeguimiento();
+}
+
+function renderSeguimiento(){
+  const conductores = DB.get('conductores')||[];
+  const rutas       = DB.get('rutas')||[];
+  const pagos       = DB.get('pagos')||[];
+  const wrap = document.getElementById('lista-seguimiento');
+  if(!wrap) return;
+
+  if(conductores.length===0){
+    wrap.innerHTML='<div class="alert info">No hay conductores registrados.</div>';
+    return;
+  }
+
+  wrap.innerHTML = conductores.map(c=>{
+    // ── Estadísticas de viajes ──
+    const misViajes  = rutas.filter(r=>r.conductor===c.nombre);
+    const realizados = misViajes.filter(r=>r.estadoEmp==='Servicio realizado').length;
+    const programados= misViajes.filter(r=>r.estadoEmp==='Servicio programado').length;
+    const novedades  = misViajes.filter(r=>r.estadoEmp==='Servicio con novedad').length;
+    const totalViajes= misViajes.length;
+
+    // ── Ingresos generados (valor cobrado a UNAL en sus rutas) ──
+    const totalIngreso = misViajes.reduce((s,r)=>s+Number(r.valor||0), 0);
+
+    // ── Estado de cuenta ──
+    // Lo que se le debe pagar (rutas pendientes de pago)
+    const rutasPendPago = misViajes.filter(r=>r.estadoCond==='Pendiente de pago');
+    const totalDeuda    = c.esProp ? 0 : rutasPendPago.reduce((s,r)=>s+Number(r.pagoCond||0), 0);
+
+    // Pagos ya registrados pendientes
+    const pagosPend = pagos.filter(p=>p.conductor===c.nombre&&p.estado!=='Pagado');
+    const pagosPagados = pagos.filter(p=>p.conductor===c.nombre&&p.estado==='Pagado');
+    const totalPagado   = pagosPagados.reduce((s,p)=>s+Number(p.saldo||0), 0);
+    const totalPorPagar = pagosPend.reduce((s,p)=>s+Number(p.saldo||0), 0);
+
+    // ── Semanas activas ──
+    const semanas = [...new Set(misViajes.map(r=>r.semana).filter(Boolean))];
+    const iniciales = c.nombre.split(' ').map(x=>x[0]).join('').slice(0,2).toUpperCase();
+
+    // ── Color estado cuenta ──
+    const estadoCuentaClass = totalPorPagar>0 ? 'rojo' : totalDeuda>0 ? 'amber' : 'verde';
+    const estadoCuentaTxt   = totalPorPagar>0 ? '⚠ Saldo pendiente de pagar'
+                            : totalDeuda>0    ? '⚠ Rutas sin liquidar'
+                            : '✓ Cuenta al día';
+
+    // ── Últimos 5 viajes ──
+    const ultimos = [...misViajes].sort((a,b)=>b.fecha.localeCompare(a.fecha)).slice(0,5);
+
+    // ── Porcentaje cumplimiento ──
+    const pct = totalViajes>0 ? Math.round((realizados/totalViajes)*100) : 0;
+
+    return `<div class="sc-card">
+      <div class="sc-hdr">
+        <div style="display:flex;align-items:center;gap:10px">
+          <div style="width:40px;height:40px;border-radius:50%;background:rgba(255,255,255,.15);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:#fff;flex-shrink:0">${iniciales}</div>
+          <div>
+            <div class="sc-nombre">${c.nombre}${c.esProp?' <span style="background:rgba(255,255,255,.2);font-size:9px;padding:2px 7px;border-radius:10px;margin-left:6px">PROPIETARIO</span>':''}</div>
+            <div class="sc-sub">${c.ruta} · ${c.estado}</div>
+          </div>
+        </div>
+        <div style="text-align:right">
+          <div style="font-size:11px;color:#AACCEE">Pago por ruta</div>
+          <div style="font-size:16px;font-weight:700;color:#fff">${c.esProp?'Propietario':fmt(c.pago)}</div>
+        </div>
+      </div>
+
+      <div class="sc-body">
+
+        <!-- KPIs viajes -->
+        <div class="sc-stats">
+          <div class="sc-stat">
+            <div class="sc-stat-val az">${totalViajes}</div>
+            <div class="sc-stat-lbl">Total viajes</div>
+          </div>
+          <div class="sc-stat">
+            <div class="sc-stat-val vd">${realizados}</div>
+            <div class="sc-stat-lbl">Realizados</div>
+          </div>
+          <div class="sc-stat">
+            <div class="sc-stat-val az">${programados}</div>
+            <div class="sc-stat-lbl">Programados</div>
+          </div>
+          <div class="sc-stat">
+            <div class="sc-stat-val ${novedades>0?'rj':'vd'}">${novedades}</div>
+            <div class="sc-stat-lbl">Con novedad</div>
+          </div>
+          <div class="sc-stat">
+            <div class="sc-stat-val az">${semanas.length}</div>
+            <div class="sc-stat-lbl">Semanas activo</div>
+          </div>
+          <div class="sc-stat">
+            <div class="sc-stat-val vd">${fmt(totalIngreso)}</div>
+            <div class="sc-stat-lbl">Generado UNAL</div>
+          </div>
+        </div>
+
+        <!-- Barra cumplimiento -->
+        <div style="margin-bottom:12px">
+          <div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:4px">
+            <span style="color:var(--tx2)">Cumplimiento de servicios</span>
+            <span style="font-weight:700;color:${pct>=90?'var(--vd)':pct>=70?'var(--am)':'var(--rj)'}">${pct}%</span>
+          </div>
+          <div class="sc-prog"><div class="sc-prog-fill" style="width:${pct}%;background:${pct>=90?'var(--vd)':pct>=70?'#E8A020':'var(--rj)'}"></div></div>
+        </div>
+
+        <!-- Estado de cuenta -->
+        <div class="sc-cuenta ${estadoCuentaClass}" style="margin-bottom:12px">
+          <div style="font-size:13px;font-weight:700;margin-bottom:8px">${estadoCuentaTxt}</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;font-size:12px">
+            <div>
+              <div style="opacity:.7;font-size:10px;margin-bottom:2px">Total pagado</div>
+              <div style="font-weight:700">${fmt(totalPagado)}</div>
+            </div>
+            <div>
+              <div style="opacity:.7;font-size:10px;margin-bottom:2px">Registrado x pagar</div>
+              <div style="font-weight:700">${fmt(totalPorPagar)}</div>
+            </div>
+            <div>
+              <div style="opacity:.7;font-size:10px;margin-bottom:2px">Rutas sin liquidar</div>
+              <div style="font-weight:700">${fmt(totalDeuda)}</div>
+            </div>
+          </div>
+          ${totalPorPagar>0?`<div style="margin-top:8px;padding-top:8px;border-top:1px solid rgba(0,0,0,.1)">
+            <div style="font-size:10px;opacity:.7;margin-bottom:4px">Pagos pendientes:</div>
+            ${pagosPend.map(p=>`<div style="font-size:11px;display:flex;justify-content:space-between">
+              <span>Sem ${p.semana} — ${p.metodo}</span><span style="font-weight:700">${fmt(p.saldo)}</span>
+            </div>`).join('')}
+            <button class="btn sm pri" onclick="nav('pagos')" style="margin-top:8px">Registrar pago →</button>
+          </div>`:''}
+        </div>
+
+        <!-- Info de pago -->
+        <div style="background:var(--az3);border-radius:var(--r2);padding:8px 12px;margin-bottom:12px;font-size:12px">
+          <span style="font-weight:600;color:var(--az2)">${c.metodo}: </span>
+          <span class="mono">${c.cuenta}</span>
+          ${c.metodo2?` &nbsp;|&nbsp; <span style="font-weight:600;color:var(--az2)">${c.metodo2}: </span><span class="mono">${c.cuenta2}</span>`:''}
+        </div>
+
+        <!-- Últimos viajes -->
+        ${ultimos.length>0?`
+        <div style="font-size:11px;font-weight:600;color:var(--tx2);text-transform:uppercase;letter-spacing:.4px;margin-bottom:6px">Últimos ${ultimos.length} viajes</div>
+        <div style="border:1px solid var(--bd);border-radius:var(--r2);overflow:hidden">
+          ${ultimos.map(r=>`<div class="viaje-row">
+            <div style="display:flex;align-items:center;gap:8px">
+              <span style="font-size:10px;color:var(--tx2);min-width:70px">${fmtD(r.fecha)}</span>
+              <span style="font-size:11px;color:var(--tx)">${r.ruta}</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:8px">
+              <span style="font-size:11px;font-weight:600;color:var(--az)">${fmt(r.valor)}</span>
+              <span style="font-size:11px;color:${r.pagoCond?'var(--vd)':'var(--az2)'}">${r.pagoCond?fmt(r.pagoCond):'Prop.'}</span>
+              ${estadoBadge(r.estadoCond)}
+            </div>
+          </div>`).join('')}
+        </div>
+        <div style="text-align:right;margin-top:6px">
+          <button class="btn sm" onclick="verHistorialCompleto(${c.id})">Ver historial completo →</button>
+        </div>
+        `:'<div style="font-size:12px;color:var(--tx2);text-align:center;padding:12px">Sin viajes registrados aún</div>'}
+
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function verHistorialCompleto(id){
+  const c = (DB.get('conductores')||[]).find(x=>x.id===id);
+  if(!c) return;
+  // Abrir modal de conductor en pestaña historial
+  editarConductor(id);
+  // Cambiar a tab historial
+  setTimeout(()=>switchTab('cond',3), 100);
 }
 
 function renderConductores(){
