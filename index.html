@@ -432,6 +432,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 <!-- ══ DASHBOARD ══ -->
 <div id="dashboard" class="sec active">
   <div id="kpis-dash" class="kpis"></div>
+  <div id="meta-empresa" style="margin-bottom:16px"></div>
   <div class="two-col">
     <div class="card">
       <div class="card-hdr"><span class="card-title">Rutas de hoy</span><span id="fecha-hoy" style="font-size:11px;color:var(--tx2)"></span></div>
@@ -1003,7 +1004,7 @@ function initData(){
   // Si Firebase ya cargó datos, no sobrescribir con datos demo
   if(DB.get('init') || localStorage.getItem('m0548fb_init')==='1') return;
   DB.set('conductores',[
-    {id:1,nombre:'Orlando Sepúlveda Macías',cedula:'1.017.147.157',tel:'3147887124',metodo:'Nequi',cuenta:'3147887124',titular:'Orlando Sepúlveda',metodo2:'',cuenta2:'',licencia:'C2',ruta:'Varias / Flexible',pago:0,estado:'Activo',obs:'Propietario',vencLic:'2026-12-01',vencSoat:'2026-10-01',vencSeguro:'',vencKit:'2026-08-01',vencMedico:'2026-09-01',vencPsico:'2026-09-01',segSocial:'Al día',arl:'Paga — Al día',docs:[],esProp:true},
+    {id:1,nombre:'Orlando Sepúlveda Macías',cedula:'1.017.147.157',tel:'3147887124',metodo:'Nequi',cuenta:'3147887124',titular:'Orlando Sepúlveda',metodo2:'',cuenta2:'',licencia:'C2',ruta:'Varias / Flexible',pago:450000,estado:'Activo',obs:'Conductor propietario',vencLic:'2026-12-01',vencSoat:'2026-10-01',vencSeguro:'',vencKit:'2026-08-01',vencMedico:'2026-09-01',vencPsico:'2026-09-01',segSocial:'Al día',arl:'Paga — Al día',docs:[],esProp:false},
     {id:2,nombre:'Adolfo Mora Otero',cedula:'—',tel:'3148114178',metodo:'Nequi',cuenta:'3148114178',titular:'Adolfo Mora',metodo2:'',cuenta2:'',licencia:'C2',ruta:'Santa Elena — Pericos — Pantanillo — El Plan — Paysandú',pago:450000,estado:'Activo',obs:'',vencLic:'2026-09-01',vencSoat:'2026-11-01',vencSeguro:'',vencKit:'',vencMedico:'',vencPsico:'',segSocial:'Al día',arl:'Paga — Al día',docs:[],esProp:false},
     {id:3,nombre:'Duban Urrego Gómez',cedula:'—',tel:'—',metodo:'Bancolombia Ahorros',cuenta:'01687143261',titular:'Duban Urrego',metodo2:'',cuenta2:'',licencia:'C2',ruta:'Bello Oriente — Granizal / Santo Domingo',pago:500000,estado:'Activo',obs:'',vencLic:'2026-08-01',vencSoat:'2026-12-01',vencSeguro:'',vencKit:'',vencMedico:'',vencPsico:'',segSocial:'Al día',arl:'No paga / No aplica',docs:[],esProp:false},
   ]);
@@ -1153,7 +1154,7 @@ document.getElementById('r-ruta').addEventListener('input',function(){
 });
 document.getElementById('r-conductor').addEventListener('change',function(){
   const c=(DB.get('conductores')||[]).find(x=>x.nombre===this.value);
-  if(c)document.getElementById('r-pagoc').value=c.esProp?0:c.pago;
+  if(c)document.getElementById('r-pagoc').value=c.pago||0;
 });
 
 // ─── GUARDAR ────────────────────────────────────
@@ -1354,8 +1355,7 @@ function editarCampRuta(id,campo,val){
   // Si cambia conductor → autocompletar pago
   if(campo==='conductor'){
     const c=(DB.get('conductores')||[]).find(x=>x.nombre===val);
-    if(c&&!c.esProp) r.pagoCond=c.pago;
-    else if(c&&c.esProp) r.pagoCond=0;
+    if(c) r.pagoCond=c.pago||0;
   }
   // Si cambia ruta (texto libre) → destino = misma descripción + sugerir valor
   if(campo==='ruta'){
@@ -1460,7 +1460,7 @@ function renderHistorialConductor(nombre){
 
 // ─── REPORTE VIERNES ────────────────────────────
 function generarReciboViernes(){
-  const conductores=(DB.get('conductores')||[]).filter(c=>!c.esProp);
+  const conductores=(DB.get('conductores')||[]).filter(c=>c.estado==='Activo');
   const rutas=DB.get('rutas')||[];
   const pagos=DB.get('pagos')||[];
   const {num,inicio,fin}=semActual();
@@ -1542,6 +1542,41 @@ function renderAll(){
 
 function renderDashboard(){
   const rutas=DB.get('rutas')||[],cuentas=DB.get('cuentas')||[],pagos=DB.get('pagos')||[];
+  // ── Meta empresa ──
+  const META_TOTAL = 35000000;
+  const META_FECHA = '2026-11-08';
+  const todasRutas2 = rutas;
+  const utilidadAcum = todasRutas2.reduce((s,r)=>s+Number(r.valor||0)-Number(r.pagoCond||0),0);
+  const pctMeta = Math.min(100,((utilidadAcum/META_TOTAL)*100)).toFixed(1);
+  const diasRestantes = Math.max(0,Math.round((new Date(META_FECHA)-new Date())/(86400000)));
+  const metaEl = document.getElementById('meta-empresa');
+  if(metaEl){
+    const faltaMeta = Math.max(0, META_TOTAL - utilidadAcum);
+    const ritmoSem  = diasRestantes>0 ? (faltaMeta / (diasRestantes/7)) : 0;
+    metaEl.innerHTML=`
+    <div style="background:var(--bl);border:1px solid var(--bd);border-radius:var(--r);padding:14px 18px;box-shadow:var(--sh)">
+      <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:12px">
+        <div>
+          <div style="font-size:13px;font-weight:700;color:var(--az)">🎯 Meta de capitalización empresarial</div>
+          <div style="font-size:11px;color:var(--tx2);margin-top:2px">Contrato M-0548 · Vence el 8 de noviembre de 2026 · ${diasRestantes} días restantes</div>
+        </div>
+        <div style="text-align:right">
+          <div style="font-size:22px;font-weight:700;color:${utilidadAcum>=META_TOTAL?'var(--vd)':'var(--az)'}">${fmt(utilidadAcum)}</div>
+          <div style="font-size:11px;color:var(--tx2)">de ${fmt(META_TOTAL)} meta</div>
+        </div>
+      </div>
+      <div style="height:14px;background:var(--gr2);border-radius:7px;overflow:hidden;margin-bottom:8px">
+        <div style="height:14px;border-radius:7px;background:${parseFloat(pctMeta)>=100?'var(--vd)':parseFloat(pctMeta)>=60?'var(--az2)':'var(--naranja)'};width:${pctMeta}%;transition:width .6s;display:flex;align-items:center;justify-content:flex-end;padding-right:6px">
+          <span style="font-size:10px;font-weight:700;color:#fff">${pctMeta}%</span>
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;font-size:12px">
+        <div><div style="color:var(--tx2);font-size:10px">Falta para la meta</div><div style="font-weight:700;color:var(--rj)">${fmt(faltaMeta)}</div></div>
+        <div><div style="color:var(--tx2);font-size:10px">Ritmo necesario / semana</div><div style="font-weight:700;color:var(--am)">${fmt(Math.round(ritmoSem))}</div></div>
+        <div><div style="color:var(--tx2);font-size:10px">Días restantes</div><div style="font-weight:700;color:${diasRestantes<30?'var(--rj)':'var(--vd)'}">${diasRestantes} días</div></div>
+      </div>
+    </div>`;
+  }
   const tod=today(),rutasHoy=rutas.filter(r=>r.fecha===tod);
   const totalCobro=rutas.reduce((s,r)=>s+Number(r.valor),0);
   const pendCuentas=cuentas.filter(c=>c.estado==='Pendiente de cobro'||c.estado==='Vencida').reduce((s,c)=>s+Number(c.valor),0);
@@ -1697,25 +1732,27 @@ function renderSeguimiento(){
     const totalIngreso = misViajes.reduce((s,r)=>s+Number(r.valor||0), 0);
 
     // ── Estado de cuenta ──
-    // Lo que se le debe pagar (rutas pendientes de pago)
-    const rutasPendPago = misViajes.filter(r=>r.estadoCond==='Pendiente de pago');
-    const totalDeuda    = c.esProp ? 0 : rutasPendPago.reduce((s,r)=>s+Number(r.pagoCond||0), 0);
-
-    // Pagos ya registrados pendientes
-    const pagosPend = pagos.filter(p=>p.conductor===c.nombre&&p.estado!=='Pagado');
-    const pagosPagados = pagos.filter(p=>p.conductor===c.nombre&&p.estado==='Pagado');
-    const totalPagado   = pagosPagados.reduce((s,p)=>s+Number(p.saldo||0), 0);
-    const totalPorPagar = pagosPend.reduce((s,p)=>s+Number(p.saldo||0), 0);
+    // ── Cuenta conductor (todos igual) ──
+    var totalGanado   = misViajes.reduce((s,r)=>s+Number(r.pagoCond||0), 0);
+    var pagosPagados  = pagos.filter(p=>p.conductor===c.nombre&&p.estado==='Pagado');
+    var pagosParciales= pagos.filter(p=>p.conductor===c.nombre&&p.estado==='Parcial');
+    var pagosPend     = pagos.filter(p=>p.conductor===c.nombre&&(p.estado==='Pendiente'||p.estado==='Parcial'));
+    var totalPagado   = pagosPagados.reduce((s,p)=>s+Number(p.saldo||0),0)
+                      + pagosParciales.reduce((s,p)=>s+Number(p.anticipo||0),0);
+    var totalPorPagar = pagosPend.reduce((s,p)=>s+Number(p.saldo||0),0);
+    var rutasPendPago = misViajes.filter(r=>r.estadoCond==='Pendiente de pago');
+    var totalDeuda    = rutasPendPago.reduce((s,r)=>s+Number(r.pagoCond||0),0);
+    var saldoReal     = Math.max(0, totalGanado - totalPagado);
 
     // ── Semanas activas ──
     const semanas = [...new Set(misViajes.map(r=>r.semana).filter(Boolean))];
     const iniciales = c.nombre.split(' ').map(x=>x[0]).join('').slice(0,2).toUpperCase();
 
     // ── Color estado cuenta ──
-    const estadoCuentaClass = totalPorPagar>0 ? 'rojo' : totalDeuda>0 ? 'amber' : 'verde';
-    const estadoCuentaTxt   = totalPorPagar>0 ? '⚠ Saldo pendiente de pagar'
-                            : totalDeuda>0    ? '⚠ Rutas sin liquidar'
-                            : '✓ Cuenta al día';
+    const estadoCuentaClass = saldoReal>0 ? 'rojo' : totalDeuda>0 ? 'amber' : 'verde';
+    const estadoCuentaTxt   = saldoReal>0 ? '⚠ Saldo pendiente: '+fmt(saldoReal)
+                            : totalDeuda>0 ? '⚠ Rutas sin liquidar'
+                            : '✓ Cuenta al día — todo pagado';
 
     // ── Últimos 5 viajes ──
     const ultimos = [...misViajes].sort((a,b)=>b.fecha.localeCompare(a.fecha)).slice(0,5);
@@ -1728,13 +1765,13 @@ function renderSeguimiento(){
         <div style="display:flex;align-items:center;gap:10px">
           <div style="width:40px;height:40px;border-radius:50%;background:rgba(255,255,255,.15);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:#fff;flex-shrink:0">${iniciales}</div>
           <div>
-            <div class="sc-nombre">${c.nombre}${c.esProp?' <span style="background:rgba(255,255,255,.2);font-size:9px;padding:2px 7px;border-radius:10px;margin-left:6px">PROPIETARIO</span>':''}</div>
+            <div class="sc-nombre">${c.nombre}</div>
             <div class="sc-sub">${c.ruta} · ${c.estado}</div>
           </div>
         </div>
         <div style="text-align:right">
           <div style="font-size:11px;color:#AACCEE">Pago por ruta</div>
-          <div style="font-size:16px;font-weight:700;color:#fff">${c.esProp?'Propietario':fmt(c.pago)}</div>
+          <div style="font-size:16px;font-weight:700;color:#fff">${fmt(c.pago)}</div>
         </div>
       </div>
 
@@ -1780,28 +1817,45 @@ function renderSeguimiento(){
         <!-- Estado de cuenta -->
         <div class="sc-cuenta ${estadoCuentaClass}" style="margin-bottom:12px">
           <div style="font-size:13px;font-weight:700;margin-bottom:8px">${estadoCuentaTxt}</div>
-          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;font-size:12px">
-            <div>
-              <div style="opacity:.7;font-size:10px;margin-bottom:2px">Total pagado</div>
-              <div style="font-weight:700">${fmt(totalPagado)}</div>
+                    ` : `
+          <!-- Fila 1: totales principales -->
+          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;font-size:12px;margin-bottom:10px">
+            <div style="text-align:center">
+              <div style="opacity:.7;font-size:10px;margin-bottom:4px;text-transform:uppercase;letter-spacing:.3px">Total ganado</div>
+              <div style="font-weight:700;font-size:16px;color:var(--az)">${fmt(totalGanado)}</div>
+              <div style="font-size:10px;opacity:.6">${misViajes.length} viajes</div>
             </div>
-            <div>
-              <div style="opacity:.7;font-size:10px;margin-bottom:2px">Registrado x pagar</div>
-              <div style="font-weight:700">${fmt(totalPorPagar)}</div>
+            <div style="text-align:center">
+              <div style="opacity:.7;font-size:10px;margin-bottom:4px;text-transform:uppercase;letter-spacing:.3px">Ya pagado</div>
+              <div style="font-weight:700;font-size:16px;color:var(--vd)">${fmt(totalPagado)}</div>
+              <div style="font-size:10px;opacity:.6">${pagosPagados.length} pago(s)</div>
             </div>
-            <div>
-              <div style="opacity:.7;font-size:10px;margin-bottom:2px">Rutas sin liquidar</div>
-              <div style="font-weight:700">${fmt(totalDeuda)}</div>
+            <div style="text-align:center;background:${saldoReal>0?'rgba(163,45,45,.12)':'rgba(29,107,58,.12)'};border-radius:8px;padding:6px">
+              <div style="opacity:.7;font-size:10px;margin-bottom:4px;text-transform:uppercase;letter-spacing:.3px">Saldo pendiente</div>
+              <div style="font-weight:700;font-size:18px;color:${saldoReal>0?'var(--rj)':'var(--vd)'}">${fmt(saldoReal)}</div>
             </div>
           </div>
-          ${totalPorPagar>0?`<div style="margin-top:8px;padding-top:8px;border-top:1px solid rgba(0,0,0,.1)">
-            <div style="font-size:10px;opacity:.7;margin-bottom:4px">Pagos pendientes:</div>
-            ${pagosPend.map(p=>`<div style="font-size:11px;display:flex;justify-content:space-between">
-              <span>Sem ${p.semana} — ${p.metodo}</span><span style="font-weight:700">${fmt(p.saldo)}</span>
+          <!-- Fila 2: detalle rutas -->
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;font-size:11px;padding-top:8px;border-top:1px solid rgba(0,0,0,.08)">
+            <div style="display:flex;justify-content:space-between">
+              <span style="opacity:.7">Rutas realizadas:</span>
+              <span style="font-weight:600">${realizados} rutas · ${fmt(misViajes.filter(r=>r.estadoCond==='Pagado').reduce((s,r)=>s+Number(r.pagoCond||0),0))} pagados</span>
+            </div>
+            <div style="display:flex;justify-content:space-between">
+              <span style="opacity:.7">Rutas pendientes pago:</span>
+              <span style="font-weight:600;color:${totalDeuda>0?'var(--rj)':'inherit'}">${rutasPendPago.length} rutas · ${fmt(totalDeuda)}</span>
+            </div>
+          </div>
+          <!-- Pagos registrados pendientes -->
+          ${pagosPend.length>0?`<div style="margin-top:10px;padding:8px 10px;background:rgba(0,0,0,.06);border-radius:6px">
+            <div style="font-size:10px;font-weight:600;opacity:.7;margin-bottom:6px;text-transform:uppercase">Pagos registrados por entregar:</div>
+            ${pagosPend.map(p=>`<div style="font-size:11px;display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
+              <span>Sem ${p.semana} — ${p.metodo}: <span class="mono" style="font-size:10px">${(()=>{const cond=(DB.get('conductores')||[]).find(x=>x.nombre===p.conductor);return cond?cond.cuenta:'';})()}</span></span>
+              <span style="font-weight:700;color:var(--rj)">${fmt(p.saldo)}</span>
             </div>`).join('')}
-            <button class="btn sm pri" onclick="nav('pagos')" style="margin-top:8px">Registrar pago →</button>
+            <button class="btn sm pri" onclick="nav('pagos')" style="margin-top:6px;width:100%">➕ Registrar pago</button>
           </div>`:''}
-        </div>
+          </div>
 
         <!-- Info de pago -->
         <div style="background:var(--az3);border-radius:var(--r2);padding:8px 12px;margin-bottom:12px;font-size:12px">
@@ -1863,7 +1917,7 @@ function renderConductores(){
     return `<div class="cc">
       <div class="cc-hdr">
         <div>
-          <div class="cc-nombre">${c.nombre}${c.esProp?' <span style="background:rgba(255,255,255,.18);font-size:9px;padding:2px 7px;border-radius:10px;margin-left:6px">PROPIETARIO</span>':''}</div>
+          <div class="cc-nombre">${c.nombre}</div>
           <div class="cc-sub">${c.ruta} · Lic. ${c.licencia} · ${c.estado}${alertaLic?' ⚠ Lic. por vencer':''}</div>
         </div>
         <div style="display:flex;gap:6px">
@@ -1875,7 +1929,7 @@ function renderConductores(){
         <div class="fr" style="margin-bottom:8px">
           <div><label style="font-size:10px;color:var(--tx2)">Cédula</label><div style="font-size:12px;margin-top:1px">${c.cedula||'—'}</div></div>
           <div><label style="font-size:10px;color:var(--tx2)">Teléfono</label><div style="font-size:12px;margin-top:1px">${c.tel||'—'}</div></div>
-          <div><label style="font-size:10px;color:var(--tx2)">Pago / ruta</label><div style="font-size:14px;font-weight:700;color:var(--az);margin-top:1px">${c.esProp?'Propietario':fmt(c.pago)}</div></div>
+          <div><label style="font-size:10px;color:var(--tx2)">Pago / ruta</label><div style="font-size:14px;font-weight:700;color:var(--az);margin-top:1px">${fmt(c.pago)}</div></div>
           <div><label style="font-size:10px;color:var(--tx2)">Servicios</label><div style="font-size:14px;font-weight:700;margin-top:1px">${misRutas.length}</div></div>
         </div>
         <div style="background:var(--az3);border-radius:7px;padding:8px 10px;margin-bottom:8px;font-size:12px">
@@ -2340,7 +2394,7 @@ function agregarServicio(dia){
     vehiculo:  vehs[0]?vehs[0].placa:'',
     hora: '06:00',
     valor: 650000,
-    pago: conds[0]?(conds[0].esProp?0:conds[0].pago):0
+    pago: conds[0]?conds[0].pago||0:0
   });
   setProgDia(num, dia, arr);
   renderProgramador();
@@ -2365,7 +2419,7 @@ function editarServicio(dia, idx, campo, val){
   }
   if(campo==='conductor'){
     const c=(DB.get('conductores')||[]).find(x=>x.nombre===val);
-    if(c) arr[idx].pago = c.esProp?0:c.pago;
+    if(c) arr[idx].pago = c.pago||0;
   }
   setProgDia(num, dia, arr);
   // Re-render solo los KPIs y resumen para no perder foco
@@ -2555,7 +2609,7 @@ function programarSemanaRapida(){
   for(let di=0;di<6;di++){ // lunes a sábado
     p[di]=Object.entries(PROG_RUTAS_INFO).map(([ruta,ri])=>{
       const cond=asig[ruta];
-      return {ruta, conductor:cond?cond.nombre:'', vehiculo:veh?veh.placa:'', hora:ri.hora, valor:ri.valor, pago:cond?(cond.esProp?0:cond.pago):0};
+      return {ruta, conductor:cond?cond.nombre:'', vehiculo:veh?veh.placa:'', hora:ri.hora, valor:ri.valor, pago:cond?cond.pago||0:0};
     });
   }
   DB.set('prog_'+num, p);
