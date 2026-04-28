@@ -486,7 +486,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   </div>
   <div class="alert info">📋 M-0548 · Universidad Nacional · Lunes a Sábado · Punto de salida: UNAL Bloque M8</div>
   <div class="card" style="padding:0"><div class="tw"><table style="min-width:900px">
-    <thead><tr><th>Fecha</th><th>Recorrido</th><th>Conductor</th><th>Hora salida</th><th>Hora llegada</th><th>Hrs extra</th><th>Valor UNAL</th><th>Pago cond.</th><th>Estado UNAL</th><th>Estado conductor</th><th>Novedad</th><th></th></tr></thead>
+    <thead><tr><th>Fecha</th><th>Recorrido</th><th>Conductor</th><th>Hora salida</th><th>Hora llegada</th><th>Hrs extra</th><th>Valor UNAL</th><th>Pago cond.</th><th>Cobro UNAL</th><th>Estado conductor</th><th>Novedad</th><th></th></tr></thead>
     <tbody id="t-rutas"></tbody>
   </table></div></div>
   <div class="card"><div class="card-hdr"><span class="card-title">Resumen semana</span></div><div id="res-semana"></div></div>
@@ -683,8 +683,11 @@ document.addEventListener('DOMContentLoaded', async () => {
     <div class="fg"><label>Pago al conductor ($)</label><input type="number" id="r-pagoc" placeholder="500000"></div>
   </div>
   <div class="fr">
-    <div class="fg"><label>Estado empresa (UNAL)</label><select id="r-estado-emp">
-      <option>Servicio realizado</option><option>Servicio programado</option><option>Pedido realizado</option><option>Servicio con novedad</option>
+    <div class="fg"><label>Estado cobro UNAL</label><select id="r-estado-emp">
+      <option value="Pendiente">Pendiente — sin cobrar</option>
+      <option value="Cobrado">Cobrado — en cuenta de cobro</option>
+      <option value="Pagado">Pagado — UNAL transfirió</option>
+      <option value="Programado">Programado</option>
     </select></div>
     <div class="fg"><label>Estado conductor</label><select id="r-estado-cond">
       <option>Pendiente de pago</option><option>Pagado</option>
@@ -1028,12 +1031,12 @@ function initData(){
     {id:3,nombre:'Duban Urrego Gómez',cedula:'—',tel:'—',metodo:'Bancolombia Ahorros',cuenta:'01687143261',titular:'Duban Urrego',metodo2:'',cuenta2:'',licencia:'C2',ruta:'Bello Oriente — Granizal / Santo Domingo',pago:500000,estado:'Activo',obs:'',vencLic:'2026-08-01',vencSoat:'2026-12-01',vencSeguro:'',vencKit:'',vencMedico:'',vencPsico:'',segSocial:'Al día',arl:'No paga / No aplica',docs:[],esProp:false},
   ]);
   DB.set('rutas',[
-    {id:1,fecha:'2026-04-22',ruta:'Bello Oriente — Granizal',conductor:'Orlando Sepúlveda Macías',destino:'Bello Oriente — Granizal',salida:'10:00 a.m.',llegada:'5:30 p.m.',pasajeros:0,valor:650000,pagoCond:450000,estadoEmp:'Servicio realizado',estadoCond:'Pendiente de pago',semana:'17',novedad:'',obs:''},
-    {id:2,fecha:'2026-04-23',ruta:'Parque Arví — Granizal — Antigua Vía Guarne — Vías Veredales de Bello',conductor:'Orlando Sepúlveda Macías',destino:'Parque Arví — Granizal — Antigua Vía Guarne — Vías Veredales de Bello',salida:'7:00 a.m.',llegada:'5:30 p.m.',pasajeros:0,valor:950000,pagoCond:600000,estadoEmp:'Servicio realizado',estadoCond:'Pendiente de pago',semana:'17',novedad:'',obs:''},
-    {id:3,fecha:'2026-04-23',ruta:'Bello Oriente — Granizal',conductor:'Duban Urrego Gómez',destino:'Bello Oriente — Granizal',salida:'9:00 a.m.',llegada:'5:00 p.m.',pasajeros:0,valor:650000,pagoCond:400000,estadoEmp:'Servicio realizado',estadoCond:'Pagado',semana:'17',novedad:'',obs:''},
-    {id:4,fecha:'2026-04-23',ruta:'Santa Elena — Pericos — Pantanillo — El Plan — Paysandú',conductor:'Adolfo Mora Otero',destino:'Santa Elena — Pericos — Pantanillo — El Plan — Paysandú',salida:'6:00 a.m.',llegada:'4:30 p.m.',pasajeros:0,valor:730000,pagoCond:450000,estadoEmp:'Servicio realizado',estadoCond:'Pendiente de pago',semana:'17',novedad:'',obs:''},
-    {id:5,fecha:'2026-04-24',ruta:'Novedad: Pago por parqueo',conductor:'Orlando Sepúlveda Macías',destino:'—',salida:'6:00 a.m.',llegada:'6:35 a.m.',pasajeros:0,valor:250000,pagoCond:150000,estadoEmp:'Servicio con novedad',estadoCond:'Pendiente de pago',semana:'17',novedad:'Cancelaron la ruta. Pago por parqueo.',obs:'Cancelaron la ruta. Pago por parqueo.'},
-    {id:6,fecha:'2026-04-24',ruta:'Santo Domingo — La Avanzada — Carpinelo',conductor:'Duban Urrego Gómez',destino:'Santo Domingo — La Avanzada — Carpinelo',salida:'7:00 a.m.',llegada:'5:30 p.m.',pasajeros:0,valor:750000,pagoCond:500000,estadoEmp:'Servicio realizado',estadoCond:'Pagado',semana:'17',novedad:'',obs:''},
+    {id:1,fecha:'2026-04-22',ruta:'Bello Oriente — Granizal',conductor:'Orlando Sepúlveda Macías',destino:'Bello Oriente — Granizal',salida:'10:00 a.m.',llegada:'5:30 p.m.',pasajeros:0,valor:650000,pagoCond:450000,estadoCobro:'Pendiente',estadoCond:'Pendiente de pago',semana:'17',novedad:'',obs:''},
+    {id:2,fecha:'2026-04-23',ruta:'Parque Arví — Granizal — Antigua Vía Guarne — Vías Veredales de Bello',conductor:'Orlando Sepúlveda Macías',destino:'Parque Arví — Granizal — Antigua Vía Guarne — Vías Veredales de Bello',salida:'7:00 a.m.',llegada:'5:30 p.m.',pasajeros:0,valor:950000,pagoCond:600000,estadoCobro:'Pendiente',estadoCond:'Pendiente de pago',semana:'17',novedad:'',obs:''},
+    {id:3,fecha:'2026-04-23',ruta:'Bello Oriente — Granizal',conductor:'Duban Urrego Gómez',destino:'Bello Oriente — Granizal',salida:'9:00 a.m.',llegada:'5:00 p.m.',pasajeros:0,valor:650000,pagoCond:400000,estadoCobro:'Pendiente',estadoCond:'Pagado',semana:'17',novedad:'',obs:''},
+    {id:4,fecha:'2026-04-23',ruta:'Santa Elena — Pericos — Pantanillo — El Plan — Paysandú',conductor:'Adolfo Mora Otero',destino:'Santa Elena — Pericos — Pantanillo — El Plan — Paysandú',salida:'6:00 a.m.',llegada:'4:30 p.m.',pasajeros:0,valor:730000,pagoCond:450000,estadoCobro:'Pendiente',estadoCond:'Pendiente de pago',semana:'17',novedad:'',obs:''},
+    {id:5,fecha:'2026-04-24',ruta:'Novedad: Pago por parqueo',conductor:'Orlando Sepúlveda Macías',destino:'—',salida:'6:00 a.m.',llegada:'6:35 a.m.',pasajeros:0,valor:250000,pagoCond:150000,estadoCobro:'Pendiente',estadoCond:'Pendiente de pago',semana:'17',novedad:'Cancelaron la ruta. Pago por parqueo.',obs:'Cancelaron la ruta. Pago por parqueo.'},
+    {id:6,fecha:'2026-04-24',ruta:'Santo Domingo — La Avanzada — Carpinelo',conductor:'Duban Urrego Gómez',destino:'Santo Domingo — La Avanzada — Carpinelo',salida:'7:00 a.m.',llegada:'5:30 p.m.',pasajeros:0,valor:750000,pagoCond:500000,estadoCobro:'Pendiente',estadoCond:'Pagado',semana:'17',novedad:'',obs:''},
   ]);
   DB.set('cuentas',[
     {id:1,num:'004',semana:'17',periodo:'22–24 Abr 2026',fecha:'2026-04-24',valor:3980000,vence:'2026-05-02',servicios:6,estado:'Pendiente de cobro'},
@@ -1069,10 +1072,11 @@ function docLabel(status){return{ok:'✓ Vigente',warn:'⚠ Por vencer',exp:'✕
 
 function estadoBadge(e){
   const m={
-    'Servicio realizado':'bvd','Cobrada':'bvd','Pagado':'bvd','En ruta':'bam','Pendiente de cobro':'bam',
-    'Pendiente de pago':'bam','Programado':'baz','Servicio programado':'baz','Pedido realizado':'baz',
-    'Novedad':'brj','Vencida':'brj','Servicio con novedad':'brj','Abierta':'bgr','No reportado aún':'brj',
-    'Parcial':'bna','Activo':'bvd','Inactivo':'bgr','Suspendido':'brj'
+    'Pagado':'bvd','Cobrada':'bvd','Cuenta al día':'bvd','Realizado':'bvd',
+    'Cobrado':'baz','Pendiente de cobro':'bam','Parcial':'bna',
+    'Pendiente':'bam','Pendiente de pago':'bam','En ruta':'bam','Programado':'bgr',
+    'Servicio con novedad':'brj','Novedad':'brj','Vencida':'brj','Abierta':'bgr','No reportado aún':'brj',
+    'Activo':'bvd','Inactivo':'bgr','Suspendido':'brj'
   };
   return `<span class="badge ${m[e]||'bgr'}">${e}</span>`;
 }
@@ -1187,7 +1191,7 @@ function guardarRuta(){
     llegada:document.getElementById('r-llegada').value,pasajeros:document.getElementById('r-pasajeros').value||0,
     valor:Number(document.getElementById('r-valor').value)||0,
     pagoCond:Number(document.getElementById('r-pagoc').value)||0,
-    estadoEmp:document.getElementById('r-estado-emp').value,
+    estadoCobro:document.getElementById('r-estado-emp').value,
     estadoCond:document.getElementById('r-estado-cond').value,
     semana:document.getElementById('r-semana').value,
     novedad:document.getElementById('r-novedad').value,
@@ -1299,6 +1303,34 @@ document.getElementById('p-comprobante').addEventListener('change',function(){
   reader.readAsDataURL(this.files[0]);
 });
 
+function marcarRutasCobradas(semana){
+  // Al crear/guardar una cuenta, marcar rutas de esa semana como Cobrado
+  const rutas=DB.get('rutas')||[];
+  let cambios=0;
+  rutas.forEach(r=>{
+    if(String(r.semana)===String(semana) && r.estadoCobro==='Pendiente'){
+      r.estadoCobro='Cobrado';
+      cambios++;
+    }
+  });
+  if(cambios>0){ DB.set('rutas',rutas); renderAll(); }
+  return cambios;
+}
+
+function marcarRutasPagadas(semana){
+  // Al marcar cuenta como Pagada, marcar rutas como Pagado
+  const rutas=DB.get('rutas')||[];
+  let cambios=0;
+  rutas.forEach(r=>{
+    if(String(r.semana)===String(semana) && r.estadoCobro==='Cobrado'){
+      r.estadoCobro='Pagado';
+      cambios++;
+    }
+  });
+  if(cambios>0){ DB.set('rutas',rutas); renderAll(); }
+  return cambios;
+}
+
 function guardarCuenta(){
   const num=document.getElementById('cu-num').value;
   if(!num){toast('Ingresa número','terr');return}
@@ -1310,7 +1342,15 @@ function guardarCuenta(){
   const cuentas=DB.get('cuentas')||[];
   if(idEdit){const idx=cuentas.findIndex(x=>String(x.id)===String(idEdit));if(idx>-1){datos.id=cuentas[idx].id;cuentas[idx]=datos}}
   else{datos.id=uid();cuentas.push(datos)}
-  DB.set('cuentas',cuentas);cerrarModal('m-cuenta');renderAll();toast('Cuenta guardada ✓');
+  DB.set('cuentas',cuentas);
+  // Marcar rutas de esa semana como Cobrado automáticamente
+  const semCuenta=document.getElementById('cu-sem').value;
+  if(semCuenta){
+    const marcadas=marcarRutasCobradas(semCuenta);
+    if(marcadas>0) toast('Cuenta guardada ✓ — '+marcadas+' ruta(s) marcadas como Cobrado');
+    else toast('Cuenta guardada ✓');
+  } else toast('Cuenta guardada ✓');
+  cerrarModal('m-cuenta');renderAll();
 }
 
 function editarCuenta(id){
@@ -1361,7 +1401,7 @@ function eliminar(tipo,id){
 
 // Cambiar estados inline
 function cambiarEstadoRutaEmp(id,val){
-  const rutas=DB.get('rutas')||[];const r=rutas.find(x=>x.id===id);if(r){r.estadoEmp=val;DB.set('rutas',rutas);renderAll();toast('Estado actualizado ✓')}
+  const rutas=DB.get('rutas')||[];const r=rutas.find(x=>x.id===id);if(r){r.estadoCobro=val;DB.set('rutas',rutas);renderAll();toast('Estado actualizado ✓')}
 }
 function cambiarEstadoRutaCond(id,val){
   const rutas=DB.get('rutas')||[];const r=rutas.find(x=>x.id===id);if(r){r.estadoCond=val;DB.set('rutas',rutas);renderAll();toast('Estado actualizado ✓')}
@@ -1416,8 +1456,18 @@ function editarCampRuta(id,campo,val){
   toast('Ruta actualizada ✓');
 }
 function cambiarEstadoCuenta(id,estado){
-  const cuentas=DB.get('cuentas')||[];const c=cuentas.find(x=>x.id===id);
-  if(c){c.estado=estado;DB.set('cuentas',cuentas);renderAll();toast('Estado actualizado ✓')}
+  const cuentas=DB.get('cuentas')||[];const c2=cuentas.find(x=>x.id===id);
+  if(c2){
+    c2.estado=estado;
+    DB.set('cuentas',cuentas);
+    // Si se marca como Cobrada → rutas de esa semana pasan a Pagado
+    if(estado==='Cobrada'){
+      const marcadas=marcarRutasPagadas(c2.semana);
+      if(marcadas>0) toast('✓ Cuenta cobrada — '+marcadas+' ruta(s) marcadas como Pagado');
+      else toast('Estado actualizado ✓');
+    } else toast('Estado actualizado ✓');
+    renderAll();
+  }
 }
 function cambiarEstadoPago(id,estado){
   const pagos=DB.get('pagos')||[];const p=pagos.find(x=>x.id===id);
@@ -1599,15 +1649,19 @@ function renderDashboard(){
   const tod=today(),rutasHoy=rutas.filter(r=>r.fecha===tod);
   const totalCobro=rutas.reduce((s,r)=>s+Number(r.valor),0);
   const pendCuentas=cuentas.filter(c=>c.estado==='Pendiente de cobro'||c.estado==='Vencida').reduce((s,c)=>s+Number(c.valor),0);
+  // Rutas pendientes de cobrar (aún no en cuenta de cobro)
+  const rutasPendCobro=(DB.get('rutas')||[]).filter(r=>r.estadoCobro==='Pendiente').reduce((s,r)=>s+Number(r.valor||0),0);
   const pendPagos=pagos.filter(p=>p.estado!=='Pagado').reduce((s,p)=>s+Number(p.saldo),0);
   document.getElementById('kpis-dash').innerHTML=
-    kpi('Servicios hoy',rutasHoy.length,'az')+kpi('Total facturado',fmt(totalCobro),'vd','Todas las semanas')+
-    kpi('Por cobrar UNAL',fmt(pendCuentas),'am','Pendiente + vencido')+kpi('Por pagar conductores',fmt(pendPagos),'rj','Pendiente')+
+    kpi('Servicios hoy',rutasHoy.length,'az')+
+    kpi('Sin cobrar a UNAL',fmt(rutasPendCobro),'am','Pendientes de incluir en cuenta')+
+    kpi('Por cobrar UNAL',fmt(pendCuentas),'rj','Cuentas enviadas sin pago')+
+    kpi('Por pagar conductores',fmt(pendPagos),'rj','Pendiente')+
     kpi('Conductores activos',(DB.get('conductores')||[]).filter(c=>c.estado==='Activo').length,'az','');
   const th=document.getElementById('fecha-hoy');if(th)th.textContent=new Date().toLocaleDateString('es-CO',{weekday:'long',day:'numeric',month:'long'});
-  const tt=document.getElementById('t-hoy');if(tt)tt.innerHTML=rutasHoy.length?rutasHoy.map(r=>`<tr><td style="font-size:11px">${r.ruta}</td><td>${r.conductor.split(' ')[0]}</td><td>${fmt(r.valor)}</td><td>${estadoBadge(r.estadoEmp)}</td></tr>`).join(''):'<tr><td colspan="5" style="text-align:center;color:var(--tx2);padding:16px">Sin servicios hoy</td></tr>';
+  const tt=document.getElementById('t-hoy');if(tt)tt.innerHTML=rutasHoy.length?rutasHoy.map(r=>`<tr><td style="font-size:11px">${r.ruta}</td><td>${r.conductor.split(' ')[0]}</td><td>${fmt(r.valor)}</td><td>${estadoBadge(r.estadoCobro)}</td></tr>`).join(''):'<tr><td colspan="5" style="text-align:center;color:var(--tx2);padding:16px">Sin servicios hoy</td></tr>';
   const tc=document.getElementById('t-cuentas-dash');if(tc)tc.innerHTML=[...cuentas].reverse().slice(0,4).map(c=>`<tr><td>Sem ${c.semana}</td><td>${fmt(c.valor)}</td><td>${estadoBadge(c.estado)}</td></tr>`).join('');
-  const tr2=document.getElementById('t-recientes');if(tr2)tr2.innerHTML=[...rutas].reverse().slice(0,8).map(r=>`<tr><td>${fmtD(r.fecha)}</td><td><b>${r.ruta}</b></td><td style="font-size:11px">${r.conductor.split(' ')[0]}</td><td style="font-size:11px">${r.destino}</td><td>${fmt(r.valor)}</td><td>${estadoBadge(r.estadoEmp)}</td></tr>`).join('');
+  const tr2=document.getElementById('t-recientes');if(tr2)tr2.innerHTML=[...rutas].reverse().slice(0,8).map(r=>`<tr><td>${fmtD(r.fecha)}</td><td><b>${r.ruta}</b></td><td style="font-size:11px">${r.conductor.split(' ')[0]}</td><td style="font-size:11px">${r.destino}</td><td>${fmt(r.valor)}</td><td>${estadoBadge(r.estadoCobro)}</td></tr>`).join('');
   // Pagos pendientes
   const pp=document.getElementById('t-pagos-pend');if(pp){
     const pend=(DB.get('pagos')||[]).filter(p=>p.estado!=='Pagado');
@@ -1688,7 +1742,12 @@ function renderRutas(){
     </td>
     <td style="min-width:140px">
       <select onchange="cambiarEstadoRutaEmp(${r.id},this.value)" style="font-size:11px;padding:3px 6px;border-radius:5px;width:100%">
-        ${['Servicio realizado','Servicio programado','Pedido realizado','Servicio con novedad'].map(e=>`<option${r.estadoEmp===e?' selected':''}>${e}</option>`).join('')}
+        ${['Pendiente','Cobrado','Pagado','Programado'].map(e=>`<option value="${e}"${r.estadoCobro===e?' selected':''}>${
+          e==='Pendiente'?'⏳ Pendiente — sin cobrar':
+          e==='Cobrado'  ?'📋 Cobrado — en cuenta':
+          e==='Pagado'   ?'✓ Pagado — UNAL transfirió':
+          '○ Programado'
+        }</option>`).join('')}
       </select>
     </td>
     <td style="min-width:130px">
@@ -1742,9 +1801,9 @@ function renderSeguimiento(){
   wrap.innerHTML = conductores.map(c=>{
     // ── Estadísticas de viajes ──
     const misViajes  = rutas.filter(r=>r.conductor===c.nombre);
-    const realizados = misViajes.filter(r=>r.estadoEmp==='Servicio realizado').length;
-    const programados= misViajes.filter(r=>r.estadoEmp==='Servicio programado').length;
-    const novedades  = misViajes.filter(r=>r.estadoEmp==='Servicio con novedad').length;
+    const realizados = misViajes.filter(r=>r.estadoCobro==='Pendiente'||r.estadoCobro==='Cobrado'||r.estadoCobro==='Pagado').length;
+    const programados= misViajes.filter(r=>r.estadoCobro==='Programado').length;
+    const novedades  = misViajes.filter(r=>r.estadoCobro==='Novedad').length;
     const totalViajes= misViajes.length;
 
     // ── Ingresos generados (valor cobrado a UNAL en sus rutas) ──
@@ -2233,6 +2292,7 @@ function renderLiquidacion(){
 
   const rutasMes=rutas.filter(r=>r.fecha&&Number(r.fecha.split('-')[1])===mes&&Number(r.fecha.split('-')[0])===2026);
   const cuentasMes=cuentas.filter(c=>c.fecha&&Number(c.fecha.split('-')[1])===mes);
+  const rutasPendMes=(DB.get('rutas')||[]).filter(r=>r.fecha&&Number(r.fecha.split('-')[1])===mes&&r.estadoCobro==='Pendiente');
   const pagosMes=pagos.filter(p=>p.fecha&&Number(p.fecha.split('-')[1])===mes);
 
   const totalFact=rutasMes.reduce((s,r)=>s+Number(r.valor),0);
@@ -2337,7 +2397,7 @@ function exportarJSON(){
 function exportarCSVRutas(){
   const rutas=DB.get('rutas')||[];
   const headers='Fecha,Ruta,Conductor,Destino,Salida,Llegada,Pasajeros,Valor UNAL,Pago Conductor,Estado Empresa,Estado Conductor,Novedad,Semana';
-  const rows=rutas.map(r=>[r.fecha,r.ruta,r.conductor,r.destino,r.salida||'',r.llegada||'',r.pasajeros||'',r.valor,r.pagoCond,r.estadoEmp,r.estadoCond,r.novedad||'',r.semana].join(','));
+  const rows=rutas.map(r=>[r.fecha,r.ruta,r.conductor,r.destino,r.salida||'',r.llegada||'',r.pasajeros||'',r.valor,r.pagoCond,r.estadoCobro,r.estadoCond,r.novedad||'',r.semana].join(','));
   const csv=headers+'\n'+rows.join('\n');
   const blob=new Blob([csv],{type:'text/csv;charset=utf-8;'});
   const url=URL.createObjectURL(blob);
@@ -2657,7 +2717,7 @@ function confirmarSemana(){
         id:uid(), fecha:fechaStr, ruta:s.ruta, conductor:s.conductor||'',
         destino:ri.destino||'', salida:s.hora||'', llegada:'', pasajeros:0,
         valor:Number(s.valor||ri.valor||0), pagoCond:Number(s.pago||0),
-        estadoEmp:'Servicio programado', estadoCond:'Pendiente de pago',
+        estadoCobro:'Programado', estadoCond:'Pendiente de pago',
         semana:String(num), novedad:'', obs:'Desde programador sem '+num
       });
     });
