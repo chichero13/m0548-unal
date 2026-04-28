@@ -984,18 +984,37 @@ document.addEventListener('DOMContentLoaded', async () => {
 ══════════════════════════════════ -->
 <script>
 // ─── AUTH ───────────────────────────────────────
-const UH='6db6bc8342ed8019123d126575b56405090e619bc88b22c67e0af4ef4e6ea6bb';
-const PH='c3e0dcb0e1a2dbee17c4a4cbc1f1d4971364cf54508478d30e989887fefcab17';
-async function sha256(s){const b=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(s));return Array.from(new Uint8Array(b)).map(x=>x.toString(16).padStart(2,'0')).join('')}
-async function doLogin(){
-  const u=document.getElementById('l-user').value.trim(),p=document.getElementById('l-pass').value;
-  const [hu,hp]=await Promise.all([sha256(u),sha256(p)]);
-  if(hu===UH&&hp===PH){document.getElementById('login-screen').classList.add('oculto');localStorage.setItem('m0548_auth','1');renderAll();checkAlertas()}
-  else{document.getElementById('l-err').classList.add('show');document.getElementById('l-pass').value=''}
+// Auth simple — funciona en file://, GitHub Pages y cualquier servidor
+const _U = 'orlandosm13';
+const _P = 'Sm1017147157';
+
+function doLogin(){
+  const u = document.getElementById('l-user').value.trim();
+  const p = document.getElementById('l-pass').value;
+  if(u === _U && p === _P){
+    document.getElementById('login-screen').classList.add('oculto');
+    localStorage.setItem('m0548_auth','1');
+    renderAll();
+    checkAlertas();
+  } else {
+    document.getElementById('l-err').classList.add('show');
+    document.getElementById('l-pass').value = '';
+    setTimeout(()=>document.getElementById('l-err').classList.remove('show'), 3000);
+  }
 }
-function cerrarSesion(){localStorage.removeItem('m0548_auth');location.reload()}
-document.addEventListener('keydown',e=>{if(e.key==='Enter'&&!document.getElementById('login-screen').classList.contains('oculto'))doLogin()});
-if(localStorage.getItem('m0548_auth')==='1'){document.getElementById('login-screen').classList.add('oculto')}
+
+function cerrarSesion(){
+  localStorage.removeItem('m0548_auth');
+  location.reload();
+}
+
+document.addEventListener('keydown', e=>{
+  if(e.key==='Enter' && !document.getElementById('login-screen').classList.contains('oculto')) doLogin();
+});
+
+if(localStorage.getItem('m0548_auth')==='1'){
+  document.getElementById('login-screen').classList.add('oculto');
+}
 
 // ─── DB ─────────────────────────────────────────
 const DB={
