@@ -2,14 +2,14 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Proyecto M-0548 — Universidad Nacional v2.0</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 /* ═══ LOGIN ═══ */
 #login-screen{position:fixed;inset:0;background:linear-gradient(135deg,#0d1f3c 0%,#1A3A6B 55%,#0d2a4a 100%);display:flex;align-items:center;justify-content:center;z-index:9999}
 #login-screen.oculto{display:none}
-.lb{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.13);border-radius:20px;padding:42px 38px;width:370px;max-width:95vw;backdrop-filter:blur(20px);box-shadow:0 24px 64px rgba(0,0,0,.5)}
+.lb{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.13);border-radius:20px;padding:36px 28px;width:370px;max-width:94vw;backdrop-filter:blur(20px);box-shadow:0 24px 64px rgba(0,0,0,.5)}
 .lb-logo{width:56px;height:56px;background:#C0501A;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:700;color:#fff;margin:0 auto 14px}
 .lb-title{text-align:center;font-size:18px;font-weight:700;color:#fff;margin-bottom:3px;font-family:'DM Sans',sans-serif}
 .lb-sub{text-align:center;font-size:12px;color:#88AACC;margin-bottom:8px;line-height:1.5;font-family:'DM Sans',sans-serif}
@@ -43,7 +43,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--gr);color:var(--tx);min-h
 button{cursor:pointer;font-family:'DM Sans',sans-serif}
 
 /* ═══ TOPBAR ═══ */
-.topbar{background:var(--az);padding:0 20px;display:flex;align-items:center;justify-content:space-between;height:58px;position:sticky;top:0;z-index:100;box-shadow:0 2px 16px rgba(0,0,0,.25)}
+.topbar{background:var(--az);padding:0 14px;display:flex;align-items:center;justify-content:space-between;height:52px;position:sticky;top:0;z-index:100;box-shadow:0 2px 16px rgba(0,0,0,.25)}
 .tb-brand{display:flex;align-items:center;gap:10px}
 .tb-logo{width:34px;height:34px;background:var(--na);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:700;color:#fff;flex-shrink:0}
 .tb-title{font-size:12px;font-weight:600;color:#fff;line-height:1.3}
@@ -56,7 +56,7 @@ button{cursor:pointer;font-family:'DM Sans',sans-serif}
 /* ═══ NAV ═══ */
 .nav{background:var(--az2);display:flex;padding:0 16px;gap:1px;overflow-x:auto;scrollbar-width:none}
 .nav::-webkit-scrollbar{display:none}
-.nv{padding:10px 14px;border:none;background:transparent;color:#9BBCDE;font-size:12px;font-weight:500;white-space:nowrap;border-bottom:3px solid transparent;transition:all .2s}
+.nv{padding:9px 11px;border:none;background:transparent;color:#9BBCDE;font-size:11px;font-weight:500;white-space:nowrap;border-bottom:3px solid transparent;transition:all .2s}
 .nv.active{color:#fff;border-bottom-color:#fff;background:rgba(255,255,255,.08)}
 .nv:hover:not(.active){color:#ddeeff}
 
@@ -228,7 +228,24 @@ textarea{resize:vertical;min-height:65px}
 .viaje-row{display:flex;justify-content:space-between;align-items:center;padding:7px 10px;border-bottom:0.5px solid var(--gr);font-size:12px}
 .viaje-row:last-child{border-bottom:none}
 .viaje-row:hover{background:var(--gr)}
-@media(max-width:640px){.two-col,.fr,.fr3{grid-template-columns:1fr}.kpis{grid-template-columns:1fr 1fr}}
+@media(max-width:640px){
+  .two-col,.fr,.fr3{grid-template-columns:1fr}
+  .kpis{grid-template-columns:1fr 1fr}
+  .tb-title{font-size:11px}.tb-sub{display:none}
+  .tb-badge{font-size:10px;padding:2px 8px}
+  .content{padding:12px 12px}
+  .card{padding:12px 13px}
+  table{font-size:11px}
+  th,td{padding:7px 8px}
+  .sc-stats{grid-template-columns:1fr 1fr 1fr}
+  .modal{padding:16px}
+  .kpi-val{font-size:17px}
+  .btn{padding:5px 10px;font-size:11px}
+}
+@media(max-width:400px){
+  .kpis{grid-template-columns:1fr 1fr}
+  .nv{padding:8px 8px;font-size:10px}
+}
 </style>
 <!-- Firebase SDK -->
 <script type="module">
@@ -255,7 +272,8 @@ function setSyncStatus(estado){
   if(!el) return;
   if(estado==='ok')   { el.textContent='☁ Sincronizado'; el.style.color='#6EE89A'; }
   if(estado==='sync') { el.textContent='⟳ Guardando...'; el.style.color='#FFD580'; }
-  if(estado==='err')  { el.textContent='✕ Sin conexión'; el.style.color='#F09595'; }
+  if(estado==='err')  { el.textContent='✕ Sin conexión — datos locales'; el.style.color='#F09595';
+    const fw=document.getElementById('firebase-warning');if(fw)fw.style.display='flex'; }
   if(estado==='load') { el.textContent='⟳ Cargando...';  el.style.color='#AACCEE'; }
 }
 
@@ -366,7 +384,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   
   // Inicializar app
   initData();
-  if(sessionStorage.getItem('auth')==='1'){
+  if(localStorage.getItem('m0548_auth')==='1'){
     renderAll();
     checkAlertas();
   }
@@ -386,7 +404,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     <div class="lb-badge"><span>M-0548 · Sede Medellín · v2.0</span></div>
     <div class="lb-f"><label>USUARIO</label><input type="text" id="l-user" placeholder="Usuario" autocomplete="username"></div>
     <div class="lb-f"><label>CONTRASEÑA</label><input type="password" id="l-pass" placeholder="Contraseña" autocomplete="current-password"></div>
-    <button class="lb-btn" onclick="doLogin()">Ingresar al sistema →</button>
+    <button class="lb-btn" onclick="doLogin()" ontouchend="doLogin()">Ingresar al sistema →</button>
     <div class="lb-err" id="l-err">Usuario o contraseña incorrectos</div>
     <div class="lb-pie">Orlando Sepúlveda Macías · 2026</div>
   </div>
@@ -593,7 +611,8 @@ document.addEventListener('DOMContentLoaded', async () => {
 <!-- ══ BACKUP ══ -->
 <div id="backup" class="sec">
   <div class="sec-hdr"><h2>Copia de seguridad y restauración</h2></div>
-  <div class="alert info">💾 Exporta tus datos regularmente para protegerlos. Si cambias de dispositivo o navegador, importa el archivo para recuperar todo.</div>
+  <div class="alert info">💾 Exporta tus datos regularmente. Con Firebase activo los datos se sincronizan automáticamente entre dispositivos.</div>
+  <div class="alert warn" id="firebase-warning" style="display:none">⚠ Firebase no está respondiendo. Verifica que las reglas de Firestore permitan lectura/escritura (modo prueba). Ve a console.firebase.google.com → Firestore → Reglas → permite read,write: if true</div>
   <div class="two-col">
     <div class="card">
       <div class="card-hdr"><span class="card-title">📤 Exportar datos</span></div>
@@ -968,12 +987,12 @@ async function sha256(s){const b=await crypto.subtle.digest('SHA-256',new TextEn
 async function doLogin(){
   const u=document.getElementById('l-user').value.trim(),p=document.getElementById('l-pass').value;
   const [hu,hp]=await Promise.all([sha256(u),sha256(p)]);
-  if(hu===UH&&hp===PH){document.getElementById('login-screen').classList.add('oculto');sessionStorage.setItem('auth','1');renderAll();checkAlertas()}
+  if(hu===UH&&hp===PH){document.getElementById('login-screen').classList.add('oculto');localStorage.setItem('m0548_auth','1');renderAll();checkAlertas()}
   else{document.getElementById('l-err').classList.add('show');document.getElementById('l-pass').value=''}
 }
-function cerrarSesion(){sessionStorage.removeItem('auth');location.reload()}
+function cerrarSesion(){localStorage.removeItem('m0548_auth');location.reload()}
 document.addEventListener('keydown',e=>{if(e.key==='Enter'&&!document.getElementById('login-screen').classList.contains('oculto'))doLogin()});
-if(sessionStorage.getItem('auth')==='1'){document.getElementById('login-screen').classList.add('oculto')}
+if(localStorage.getItem('m0548_auth')==='1'){document.getElementById('login-screen').classList.add('oculto')}
 
 // ─── DB ─────────────────────────────────────────
 const DB={
@@ -1537,7 +1556,7 @@ function renderAll(){
   renderCuentas();renderPagos();renderFinanzas();renderNovedades();
   renderVehiculos();renderLiquidacion();renderStorageSummary();renderProgramador();
   const sl=document.getElementById('sem-lbl');if(sl)sl.textContent=semLabel();
-  if(sessionStorage.getItem('auth')==='1')checkAlertas();
+  if(localStorage.getItem('m0548_auth')==='1')checkAlertas();
 }
 
 function renderDashboard(){
@@ -2716,7 +2735,7 @@ checkAlertas=function(){
 // Si Firebase no está disponible, inicializar normalmente
 if(!window._fsListo){
   initData();
-  if(sessionStorage.getItem('auth')==='1'){renderAll();checkAlertas();}
+  if(localStorage.getItem('m0548_auth')==='1'){renderAll();checkAlertas();}
 }
 </script>
 </body>
